@@ -1,6 +1,6 @@
 # Metrics Dashboard
 
-## A _[Software and Systems Laboratory](https://ssl.cs.luc.edu/)_ Project
+## A _[Software and Systems Laboratory](https://ssl.cs.luc.edu/metrics_dashboard.html)_ Project
 
 ### **How It Works**
 
@@ -72,7 +72,7 @@ Using the [GitHub API](https://developer.github.com/v3/) we gather information a
 
     * This container also prints the results of a basic HTTP GET request
 
-        * This utilizes the requests library to serve as an example library import in a `requirements.txt`.
+        * This utilizes the [requests library](https://requests.readthedocs.io/en/master/) to serve as an example library import in a `requirements.txt`.
 
 4. The result should look like this:
 
