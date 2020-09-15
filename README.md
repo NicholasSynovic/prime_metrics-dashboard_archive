@@ -113,11 +113,11 @@ to a file called `voltest.txt` that exists in your shared folder on your host ma
 
     * This will create a Docker volume with the name `<VOLUME_NAME>`.
 
-2. Create a Docker container as described [earlier in this README.md](#HowtoRunaModule).
+2. Create a Docker container as described [earlier in this README.md](#how-to-run-a-module).
 
 3. Run `docker run -v <VOLUME_NAME>:/<VOLUME_NAME> <IMAGE_NAME> <GITHUB_URL> <PERSONAL_ACCESS_TOKEN>`
 
-    * For an understanding of what `<GITHUB_URL>` and `<PERSONAL_ACCESS_TOKEN>` are, refer to [earlier in this README.md](#HowtoRunaModule).
+    * For an understanding of what `<GITHUB_URL>` and `<PERSONAL_ACCESS_TOKEN>` are, refer to [earlier in this README.md](#how-to-run-a-module).
 
 #### _After the Container has Completed its Task_
 
