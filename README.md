@@ -109,17 +109,13 @@ to a file called `voltest.txt` that exists in your shared folder on your host ma
 
 0. Ensure that the Docker container that you want the data from is dead.
 
-1. Run `docker volume create <VOLUME_NAME>`.
+1. Run `docker volume create metrics`.
 
-    * Replace `<VOLUME_NAME>` with the name of the volume being created.
-
-        * This volume name can be anything as long as it is memorable.
-
-    * This will create a Docker volume with the name `<VOLUME_NAME>`.
+    * This will create a Docker volume with the name `metrics`.
 
 2. Create a Docker container as described [earlier in this README.md](#how-to-run-a-module).
 
-3. Run `docker run -v <VOLUME_NAME>:/<VOLUME_NAME> <IMAGE_NAME> <GITHUB_URL> <PERSONAL_ACCESS_TOKEN>`.
+3. Run `docker run -v metrics:/metrics <IMAGE_NAME> <GITHUB_URL> <PERSONAL_ACCESS_TOKEN>`.
 
     * For an understanding of what `<GITHUB_URL>` and `<PERSONAL_ACCESS_TOKEN>` are, refer to [earlier in this README.md](#how-to-run-a-module).
 
@@ -127,7 +123,7 @@ to a file called `voltest.txt` that exists in your shared folder on your host ma
 
 4. Run `docker container ls -a` and copy the Container ID (`<CONTAINER_ID>`) of the Container whose Image Name is the same as `<IMAGE_NAME>`.
 
-5. Run `docker cp <CONTAINER_ID>:/<VOLUME_NAME> <HOST_PATH>`.
+5. Run `docker cp <CONTAINER_ID>:/metrics <HOST_PATH>`.
 
     * `<HOST_PATH>` is the path where data will be exported to on the HOST MACHINE.
 
