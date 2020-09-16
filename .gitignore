@@ -214,8 +214,6 @@ database/
 #VS Code
 .vscode/
 
-# DB files
-*.db
 =======
 # Electron App
 node_modules
@@ -225,7 +223,7 @@ data-vis-win32-x64
 config.py
 __pycache__
 
-# ignore csv files 
+# ignore csv files
 *.csv
 =======
 # Byte-compiled / optimized / DLL files
