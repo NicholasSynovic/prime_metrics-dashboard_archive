@@ -1,6 +1,8 @@
 # Metrics Dashboard
 
-## A _[Software and Systems Laboratory](https://ssl.cs.luc.edu/metrics_dashboard.html)_ Project
+## This is a Platform for Producing and Observing Metrics by Mining Open-Source Software Repositories on GitHub
+
+[_Project Proposal_](https://ssl.cs.luc.edu/metrics_dashboard.html)
 
 ### **How It Works**
 
