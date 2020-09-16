@@ -6,7 +6,7 @@
 
 ### **How It Works**
 
-Using the [GitHub API](https://developer.github.com/v3/) we gather information about a repository, and use [pandas](https://pandas.pydata.org/) to display the information.
+Using the [GitHub API](https://developer.github.com/v3/) we gather information about a repository, and use [Pandas](https://pandas.pydata.org/) to display the information.
 
 ---
 
