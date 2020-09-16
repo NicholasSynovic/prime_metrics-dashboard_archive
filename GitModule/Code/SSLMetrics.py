@@ -16,21 +16,21 @@ from tqdm.contrib.concurrent import process_map
     Example: python3 LOC.py github.com/AJM10565/SSLMetrics
     Key:Value pairs are of the form => CommitHash:(Line_count,Commit_count,date,message,author)
     Requirements: git and tqdm
-    
+
     TODO's
-    ------ 
+    ------
     TODO #1:
     [May 1 11:01 PM] Thiruvathukal, George
-    Take a look at https://docs.python.org/3/library/multiprocessing.html again. I think what we really 
+    Take a look at https://docs.python.org/3/library/multiprocessing.html again. I think what we really
     want is pool.apply_async(). It behaves like a future!
     res = pool.apply_async(f, (20,))      # runs in *only* one process
     print(res.get(timeout=1))             # prints "400"
-    So you can just generate the JSON w/o writing files. Then you can collect and merge the results 
+    So you can just generate the JSON w/o writing files. Then you can collect and merge the results
     from all the "get()" calls.
 
-    
-    
-    
+
+
+
 """
 
 
@@ -55,7 +55,7 @@ def main():
     os.system("git clone https://" + repo_address + " >/dev/null 2>&1")
     os.chdir(githubRepo)
 
-    hashes = os.popen('git log --format="%H"').read().split('\n')[0:-1]
+    hashes = os.popen('git log --format="%H"').read().split("\n")[0:-1]
     line_counts = dict.fromkeys(hashes, [None, None, None, None, None])
     counts.update(line_counts)
 
@@ -82,7 +82,7 @@ def do_Cloc_and_process(fn_args):
     # print("analysing:" + commit_hash)
     timeout = 100
     # command = f'cloc --json {commit_hash} --timeout {timeout}'
-    command = f'cloc --json {commit_hash}'
+    command = f"cloc --json {commit_hash}"
     # print(f"command: {command}")
     cloc = os.popen(command).read()
     # print(cloc)
@@ -101,7 +101,9 @@ def do_Commits_and_process(fn_args):
     commit_hash, storage = fn_args
     # print(datetime.now())
     # print("analysing:" + commit_hash)
-    commit_count = len(os.popen(f'git log --format="%H" {commit_hash}').read().split('\n'))
+    commit_count = len(
+        os.popen(f'git log --format="%H" {commit_hash}').read().split("\n")
+    )
     values = storage[commit_hash]
     values[1] = commit_count
     storage[commit_hash] = values
@@ -111,8 +113,12 @@ def do_AuthorDateMessage_and_process(fn_args):
     commit_hash, storage = fn_args
     # print(datetime.now())
     # print("analysing:" + commit_hash)
-    result = os.popen('git show -s --format="%ae/t%ci/t%B" ' + commit_hash).read().split("/t")
-    author = result[0].split('@')[0]
+    result = (
+        os.popen('git show -s --format="%ae/t%ci/t%B" ' + commit_hash)
+        .read()
+        .split("/t")
+    )
+    author = result[0].split("@")[0]
     date = result[1]
     message = " ".join(result[2:])
     values = storage[commit_hash]
@@ -124,12 +130,38 @@ def do_AuthorDateMessage_and_process(fn_args):
 
 def print_part(counts):
     for key, value in counts.items():
-        print(key, ' : ', value)
+        print(key, " : ", value)
 
 
 def database_upload(counts, repo_name):
-    connection = sqlite3.connect('/metrics/' + str(repo_name) + '.db')
+    connection = sqlite3.connect("/metrics/" + str(repo_name) + ".db")
     cursor = connection.cursor()
+
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS MASTER(date DATE, commits INT(3000), issues INT(3000), defect_density INT(3000), issue_spoilage_avg INT(3000), issue_spoilage_max INT(3000), issue_spoilage_min INT(3000), lines_of_code INT(300), num_of_chars INT(300), PRIMARY KEY (date));"
+    )
+
+    cursor.execute(
+        """CREATE TABLE IF NOT EXISTS LINES_OF_CODE_NUM_OF_CHARS
+            (date VARCHAR(300) ,
+            id VARCHAR(3000),
+            total_lines VARCHAR(3000),
+            total_chars VARCHAR(3000));"""
+    )
+
+    cursor.execute(
+        """CREATE TABLE IF NOT EXISTS COMMITS
+            (author VARCHAR(3000) ,
+            comments_url VARCHAR(3000),
+            author_date VARCHAR(3000),
+            commits_url VARCHAR(3000),
+            committer VARCHAR(3000),
+            committer_date VARCHAR(3000),
+            message VARCHAR(30000),
+            comment_count VARCHAR(3000),
+            id VARCHAR(3000),
+            count VARCHAR(3000));"""
+    )
 
     sql3 = "SELECT date FROM MASTER;"
     cursor.execute(sql3)
@@ -145,7 +177,9 @@ def database_upload(counts, repo_name):
         sql1 = "INSERT INTO COMMITS (author, author_date, message, id, count) VALUES (?,?,?,?,?);"
         sql2 = "INSERT INTO LINES_OF_CODE_NUM_OF_CHARS (id, date, total_lines) VALUES (?,?,?);"
 
-        cursor.execute(sql1, (str(author), str(date), str(message), str(key), str(commit_count)))
+        cursor.execute(
+            sql1, (str(author), str(date), str(message), str(key), str(commit_count))
+        )
 
         cursor.execute(sql2, (str(key), str(date), str(line_count)))
 
@@ -158,16 +192,21 @@ def database_upload(counts, repo_name):
         date = str(date)
 
         cursor.execute(
-            "SELECT count FROM COMMITS WHERE date(author_date) == (select date(max(author_date)) from COMMITS where date(author_date) <= date('" + date + "'));")
+            "SELECT count FROM COMMITS WHERE date(author_date) == (select date(max(author_date)) from COMMITS where date(author_date) <= date('"
+            + date
+            + "'));"
+        )
         rows = cursor.fetchall()
         commits = rows[0][0]
 
         sql = "INSERT INTO MASTER (date, commits) VALUES (?,?) ON CONFLICT(date) DO UPDATE SET commits = (?);"
-        cursor.execute(
-            sql, (date, str(commits), str(commits)))
+        cursor.execute(sql, (date, str(commits), str(commits)))
 
         cursor.execute(
-            "SELECT total_lines FROM LINES_OF_CODE_NUM_OF_CHARS WHERE date(date) == (select date(max(date)) from LINES_OF_CODE_NUM_OF_CHARS where date(date) <= date('" + date + "'));")
+            "SELECT total_lines FROM LINES_OF_CODE_NUM_OF_CHARS WHERE date(date) == (select date(max(date)) from LINES_OF_CODE_NUM_OF_CHARS where date(date) <= date('"
+            + date
+            + "'));"
+        )
         rows = cursor.fetchall()
 
         try:
@@ -176,8 +215,7 @@ def database_upload(counts, repo_name):
             lines = 0
 
         sql = "INSERT INTO MASTER (date, lines_of_code) VALUES (?,?) ON CONFLICT(date) DO UPDATE SET lines_of_code = (?);"
-        cursor.execute(
-            sql, (date, str(lines), str(lines)))
+        cursor.execute(sql, (date, str(lines), str(lines)))
 
         connection.commit()
 
