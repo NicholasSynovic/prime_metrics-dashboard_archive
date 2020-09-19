@@ -89,19 +89,19 @@ Using the [GitHub API](https://developer.github.com/v3/) we gather information a
 
 ---
 
-TODO: Add proper Windows instructions
+`NOTE: This is not the final Windows guide to running this software. This section is temporary.`
 
-~~To share files between your computer and your Docker containers, you need to create a volume. This should be pretty simple on *nix machines - I haven't had a chance to test on Mac/Linux, but I have been able to make it work on Windows, which is a more complicated process.~~
+To share files between your computer and your Docker containers, you need to create a volume. This should be pretty simple on *nix machines - I haven't had a chance to test on Mac/Linux, but I have been able to make it work on Windows, which is a more complicated process.
 
-~~First, assuming you are not on an enterprise version of Windows and therefore you are using Docker Toolbox with Oracle VirtualBox, you will need to create a "Shared Folder".~~
+First, assuming you are not on an enterprise version of Windows and therefore you are using Docker Toolbox with Oracle VirtualBox, you will need to create a "Shared Folder".
 
-~~I suggest following this [tutorial](http://support.divio.com/en/articles/646695-how-to-use-a-directory-outside-c-users-with-docker-toolbox-docker-for-windows) and changing all instances of "Divio" in the commands to "metrics-vol" or something else you recognize:~~
+I suggest following this [tutorial](http://support.divio.com/en/articles/646695-how-to-use-a-directory-outside-c-users-with-docker-toolbox-docker-for-windows) and changing all instances of "Divio" in the commands to "metrics-vol" or something else you recognize:
 
-~~The second part of this process, as mentioned in the tutorial, is permanently mounting the new shared folder in your default Docker machine. The tutorial provides good instructions on how to do this, and I will note that one way to edit the `profile` document is to use the default Linux `echo` command. First do a `sudo su` to give yourself proper permissions, then run `echo -e '\nsudo mkdir /metrics-vol\nsudo mount -t vboxsf -o uid=1000,gid=50 metrics-vol /metrics-vol' >> profile`.~~
+The second part of this process, as mentioned in the tutorial, is permanently mounting the new shared folder in your default Docker machine. The tutorial provides good instructions on how to do this, and I will note that one way to edit the `profile` document is to use the default Linux `echo` command. First do a `sudo su` to give yourself proper permissions, then run `echo -e '\nsudo mkdir /metrics-vol\nsudo mount -t vboxsf -o uid=1000,gid=50 metrics-vol /metrics-vol' >> profile`.
 
-~~After following the tutorial above as described, you should be able to read and write files in the shared folder you set up on your host machine from your Docker containers at the path `/metrics-vol`, so long as you mount a volume when you run the container. This command should look like `docker run -v /metrics-vol:/metrics-vol image-name command_line_argument`~~
-~~I've included some test code in module_template/app.py that is currently commented out - if you correctly add a shared folder on your host machine, mount the folder on your default Docker machine, and mount it as a volume when you run the container (after building the image with the lines uncommented), it should write your command line argument
-to a file called `voltest.txt` that exists in your shared folder on your host machine.~~
+After following the tutorial above as described, you should be able to read and write files in the shared folder you set up on your host machine from your Docker containers at the path `/metrics-vol`, so long as you mount a volume when you run the container. This command should look like `docker run -v /metrics-vol:/metrics-vol image-name command_line_argument`
+I've included some test code in module_template/app.py that is currently commented out - if you correctly add a shared folder on your host machine, mount the folder on your default Docker machine, and mount it as a volume when you run the container (after building the image with the lines uncommented), it should write your command line argument
+to a file called `voltest.txt` that exists in your shared folder on your host machine.
 
 ### **Mac/ Linux Instructions**
 
@@ -133,22 +133,12 @@ to a file called `voltest.txt` that exists in your shared folder on your host ma
 
 #### **Running the script to run everything**
 
-TODO: Improve this section
+To run the Docker containers from `.sh` files instead of running the docker commands from the terminal:
 
-~~To run the scripts, run the following commands while in the top SSLMetrics directory:~~
+1. Make all of the `.sh` files executable using `chmod +x <SCRIPT_NAME>.sh <GITHUB_URL> <PERSONAL_ACCESS_TOKEN>`
 
-~~`chmod +x ./all_metrics.sh`~~
+    * Replace `<SCRIPT_NAME>` with the name/ path of the `.sh` script
 
-~~`chmod +x ./Commits/metrics.sh`~~
+    * For an understanding of what `<GITHUB_URL>` and `<PERSONAL_ACCESS_TOKEN>` are, refer to [earlier in this README.md](#how-to-run-a-module).
 
-~~`chmod +x ./Issues/metrics.sh`~~
-
-~~`chmod +x ./Lines_Of_Code_Num_Of_Chars/metrics.sh`~~
-
-~~`chmod +x ./Issue_Spoilage/metrics.sh`~~
-
-~~`chmod +x ./Defect_Density/metrics.sh`~~
-
-~~`./all_metrics.sh github.com/<owner>/<repo_name> <api_token>`~~
-
-~~_Note: the chmod commands need to be run only initially. After that, just run the all_metrics.sh script with the GitHub repo as the command line argument._~~
+2. Run each script using the command `./<SCRIPT_NAME>.sh`
