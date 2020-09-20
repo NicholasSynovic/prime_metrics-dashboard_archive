@@ -1,10 +1,12 @@
 # Metrics Dashboard
 
-## A _[Software and Systems Laboratory](https://ssl.cs.luc.edu/metrics_dashboard.html)_ Project
+## This is a Platform for Producing and Observing Metrics by Mining Open-Source Software Repositories on GitHub
+
+[_Project Proposal_](https://ssl.cs.luc.edu/metrics_dashboard.html)
 
 ### **How It Works**
 
-Using the [GitHub API](https://developer.github.com/v3/) we gather information about a repository, and use [pandas](https://pandas.pydata.org/) to display the information.
+Using the [GitHub API](https://developer.github.com/v3/) we gather information about a repository, and use [Pandas](https://pandas.pydata.org/) to display the information.
 
 ---
 
@@ -14,7 +16,7 @@ Using the [GitHub API](https://developer.github.com/v3/) we gather information a
 
 ---
 
-1. Create a folder for your module following the folder structure of `module_template`.
+1. Create a folder for your module.
 
     * This folder is the root folder of your module.
 
@@ -22,7 +24,7 @@ Using the [GitHub API](https://developer.github.com/v3/) we gather information a
 
 3. Inside the `code` folder, place all of your Python code for your module.
 
-    * For each library you import from PIP in **ANY** of your Python code, add the library name to a `requirements.txt` file within the `code` folder.
+    * For each library you import from [pip](https://pypi.org/project/pip/) in **ANY** of your Python code, add the library name to a `requirements.txt` file within the `code` folder.
 
 4. Copy the `Dockerfile` from the `module_template` folder into root folder of your module.
 
@@ -72,7 +74,7 @@ Using the [GitHub API](https://developer.github.com/v3/) we gather information a
 
     * This container also prints the results of a basic HTTP GET request
 
-        * This utilizes the [requests library](https://requests.readthedocs.io/en/master/) to serve as an example library import in a `requirements.txt`.
+        * This utilizes the [Requests library](https://requests.readthedocs.io/en/master/) to serve as an example library import in a `requirements.txt`.
 
 4. The result should look like this:
 
@@ -86,6 +88,8 @@ Using the [GitHub API](https://developer.github.com/v3/) we gather information a
 ### **Windows Instructions**
 
 ---
+
+`NOTE: This is not the final Windows guide to running this software. This section is temporary.`
 
 To share files between your computer and your Docker containers, you need to create a volume. This should be pretty simple on *nix machines - I haven't had a chance to test on Mac/Linux, but I have been able to make it work on Windows, which is a more complicated process.
 
@@ -103,19 +107,15 @@ to a file called `voltest.txt` that exists in your shared folder on your host ma
 
 ---
 
-0. Ensure that the Docker container that you want the data from is dead
+0. Ensure that the Docker container that you want the data from is dead.
 
-1. Run `docker volume create <VOLUME_NAME>`
+1. Run `docker volume create metrics`.
 
-    * Replace `<VOLUME_NAME>` with the name of the volume being created.
-
-        * This volume name can be anything as long as it is memorable
-
-    * This will create a Docker volume with the name `<VOLUME_NAME>`.
+    * This will create a Docker volume with the name `metrics`.
 
 2. Create a Docker container as described [earlier in this README.md](#how-to-run-a-module).
 
-3. Run `docker run -v <VOLUME_NAME>:/<VOLUME_NAME> <IMAGE_NAME> <GITHUB_URL> <PERSONAL_ACCESS_TOKEN>`
+3. Run `docker run -v metrics:/metrics <IMAGE_NAME> <GITHUB_URL> <PERSONAL_ACCESS_TOKEN>`.
 
     * For an understanding of what `<GITHUB_URL>` and `<PERSONAL_ACCESS_TOKEN>` are, refer to [earlier in this README.md](#how-to-run-a-module).
 
@@ -123,30 +123,22 @@ to a file called `voltest.txt` that exists in your shared folder on your host ma
 
 4. Run `docker container ls -a` and copy the Container ID (`<CONTAINER_ID>`) of the Container whose Image Name is the same as `<IMAGE_NAME>`.
 
-5. Run `docker cp <CONTAINER_ID>:/<VOLUME_NAME> <HOST_PATH>`
+5. Run `docker cp <CONTAINER_ID>:/metrics <HOST_PATH>`.
 
     * `<HOST_PATH>` is the path where data will be exported to on the HOST MACHINE.
 
 #### **Running FE Flask Server to Display Data**
 
-`docker run -v metrics:/metrics -p 5000:5000 <name_of_image>`
+`docker run -v metrics:/metrics -p 5000:5000 <name_of_image>`.
 
 #### **Running the script to run everything**
 
-To run the scripts, run the following commands while in the top SSLMetrics directory:
+To run the Docker containers from `.sh` files instead of running the docker commands from the terminal:
 
-`chmod +x ./all_metrics.sh`
+1. Make all of the `.sh` files executable using `chmod +x <SCRIPT_NAME>.sh <GITHUB_URL> <PERSONAL_ACCESS_TOKEN>`
 
-`chmod +x ./Commits/metrics.sh`
+    * Replace `<SCRIPT_NAME>` with the name/ path of the `.sh` script
 
-`chmod +x ./Issues/metrics.sh`
+    * For an understanding of what `<GITHUB_URL>` and `<PERSONAL_ACCESS_TOKEN>` are, refer to [earlier in this README.md](#how-to-run-a-module).
 
-`chmod +x ./Lines_Of_Code_Num_Of_Chars/metrics.sh`
-
-`chmod +x ./Issue_Spoilage/metrics.sh`
-
-`chmod +x ./Defect_Density/metrics.sh`
-
-`./all_metrics.sh github.com/<owner>/<repo_name> <api_token>`
-
-_Note: the chmod commands need to be run only initially. After that, just run the all_metrics.sh script with the GitHub repo as the command line argument._
+2. Run each script using the command `./<SCRIPT_NAME>.sh`
