@@ -28,7 +28,7 @@ if [ -z "$3" ]
 fi
 
 # Set VOLUMENAME
-VOLUMENAME="commits"
+VOLUMENAME="defectdensity"
 
 # Create docker volume
 docker volume create $VOLUMENAME
@@ -55,4 +55,4 @@ docker volume rm $VOLUMENAME
 # echo "Deleting ALL DOCKER CONTAINERS AND VOLUMES"
 # docker system prune -a --volumes
 
-echo "Metrics created and stored in" $DIR"/metrics"
+echo "Metrics created and stored in" $3"/metrics"
