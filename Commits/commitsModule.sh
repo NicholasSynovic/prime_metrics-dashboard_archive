@@ -1,22 +1,29 @@
 #!/usr/bin/env bash
 
-# get current directory
-# DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Get cwd
+DIR="$(pwd)"
 
-#create volume
-# docker volume create metrics
+# Create docker volume
+docker volume create metrics
 
-# build and run docker, then get container id
+# Build and run docker volume, then get the container ID of the last ran container
 docker build . -t code
 docker run -v metrics:/metrics code $1 $2
-CONTAINERID=$(docker ps -q -n 1)
 
-#copy volume data to current directory
-# docker cp $CONTAINERID:/metrics $DIR
+CONTAINERID="$(docker ps -q -n 1)"
 
-# cleanup
-# remove containers, images, and volumes
-echo "stopping docker"
+# Copy volume data to the cwd
+# TODO: Fix this so that it actually copies data
+docker cp $CONTAINERID:/metrics $DIR
+
+# Remove created docker containers and volumes after the container has been stopped
+echo "Stopping docker container" $CONTAINERID
 docker stop $CONTAINERID
-# docker system prune -a --volumes
-echo "Metrics created"
+
+# TODO: Create code that deletes the container based off of CONTAINERID
+# TODO: Create code that deletes the volume based off of VOLUMENAME
+
+echo "Deleting ALL DOCKER CONTAINERS AND VOLUMES"
+docker system prune -a --volumes
+
+echo "Metrics created and stored in" $DIR"/metrics"
