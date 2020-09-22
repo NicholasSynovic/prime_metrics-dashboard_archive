@@ -1,22 +1,51 @@
 #!/usr/bin/env bash
 
-# get current directory
-# DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# IF statements from https://stackoverflow.com/a/6482403
 
-#create volume
-# docker volume create metrics
+if [ $# -eq 0 ]
+  then
+    echo "No URL or Export Location arguments supplied."
+    exit
+fi
 
-# build and run docker, then get container id
+if [ -z "$1" ]
+  then
+    echo "No URL argument supplied."
+    exit
+fi
+
+if [ -z "$2" ]
+  then
+    echo "No Export Location argument supplied."
+    exit
+fi
+
+# Set VOLUMENAME
+VOLUMENAME="gitmodule"
+
+# Create docker volume
+docker volume create $VOLUMENAME
+
+# Build and run docker volume, then get the container ID of the last ran container
 docker build . -t code
-docker run -v metrics:/metrics code --url="$1"
-CONTAINERID=$(docker ps -q -n 1)
+docker run -v $VOLUMENAME:/metrics code --url="$1"
 
-#copy volume data to current directory
-# docker cp $CONTAINERID:/metrics $DIR
+CONTAINERID="$(docker ps -q -n 1)"
 
-# cleanup
-# remove containers, images, and volumes
-#echo "stopping docker"
-#docker stop $CONTAINERID
+# Copy volume data to the CWD
+docker container cp $CONTAINERID:/metrics $2
+
+# Remove created docker containers and volumes after the container has been stopped
+echo "Stopping docker container" $CONTAINERID
+docker stop $CONTAINERID
+
+echo "Deleting container with ID:" $CONTAINERID
+docker rm $CONTAINERID
+
+echo "Deleting volume with NAME:" $VOLUMENAME
+docker volume rm $VOLUMENAME
+
+# echo "Deleting ALL DOCKER CONTAINERS AND VOLUMES"
 # docker system prune -a --volumes
-echo "Metrics created"
+
+echo "Metrics created and stored in" $2"/metrics"
