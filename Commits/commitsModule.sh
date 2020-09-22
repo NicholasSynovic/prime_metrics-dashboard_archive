@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Get cwd
+# Get CWD
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Create docker volume
@@ -14,8 +14,7 @@ CONTAINERID="$(docker ps -q -n 1)"
 
 echo $CONTAINERID
 
-# Copy volume data to the cwd
-# TODO: Fix this so that it actually copies data
+# Copy volume data to the CWD
 docker cp $CONTAINERID:/metrics $DIR
 
 # Remove created docker containers and volumes after the container has been stopped
