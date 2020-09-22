@@ -10,12 +10,10 @@ docker volume create metrics
 docker build -t commits .
 docker run -v metrics:/metrics commits $1 $2
 
-CONTAINERID="$(docker ps -q -n 1)"
-
-echo $CONTAINERID
+CONTAINERID=$(docker ps -q -n 1)
 
 # Copy volume data to the CWD
-docker cp $CONTAINERID:/metrics $DIR
+docker container cp $CONTAINERID:/metrics $DIR
 
 # Remove created docker containers and volumes after the container has been stopped
 echo "Stopping docker container" $CONTAINERID
@@ -23,6 +21,9 @@ docker stop $CONTAINERID
 
 # TODO: Create code that deletes the container based off of CONTAINERID
 # TODO: Create code that deletes the volume based off of VOLUMENAME
+
+echo "Deleting container with ID:" $CONTAINERID
+docker rm $CONTAINERID
 
 echo "Deleting ALL DOCKER CONTAINERS AND VOLUMES"
 docker system prune -a --volumes
