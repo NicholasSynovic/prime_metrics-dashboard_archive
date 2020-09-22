@@ -10,8 +10,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 docker volume create $VOLUMENAME
 
 # Build and run docker volume, then get the container ID of the last ran container
-docker build -t commits .
-docker run -v $VOLUMENAME:/metrics commits $1 $2
+docker build . -t code
+docker run -v $VOLUMENAME:/metrics code $1 $2
 
 CONTAINERID="$(docker ps -q -n 1)"
 
