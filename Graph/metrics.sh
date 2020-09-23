@@ -1,22 +1,40 @@
 #!/usr/bin/env bash
 
-# get current directory
-# DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# IF statements from https://stackoverflow.com/a/6482403
 
-#create volume
-# docker volume create metrics
+if [ $# -eq 0 ]
+  then
+    echo "No DB File Path arguement supplied."
+    exit
+fi
 
-# build and run docker, then get container id
+if [ -z "$1" ]
+  then
+    echo "No DB File Path argument supplied."
+    exit
+fi
+
+# Set VOLUMENAME
+VOLUMENAME="graph"
+
+# Create docker volume
+docker volume create $VOLUMENAME
+
+# Build and run docker volume, then get the container ID of the last ran container
 docker build . -t code
-docker run -v metrics:/metrics -p 5000:5000 code $1
-CONTAINERID=$(docker ps -q -n 1)
+docker run -v $VOLUMENAME:/metrics code $1
 
-#copy volume data to current directory
-# docker cp $CONTAINERID:/metrics $DIR
+CONTAINERID="$(docker ps -q -n 1)"
 
-# cleanup
-# remove containers, images, and volumes
-#echo "stopping docker"
-#docker stop $CONTAINERID
+# Remove created docker containers and volumes after the container has been stopped
+echo "Stopping docker container" $CONTAINERID
+docker stop $CONTAINERID
+
+echo "Deleting container with ID:" $CONTAINERID
+docker rm $CONTAINERID
+
+echo "Deleting volume with NAME:" $VOLUMENAME
+docker volume rm $VOLUMENAME
+
+# echo "Deleting ALL DOCKER CONTAINERS AND VOLUMES"
 # docker system prune -a --volumes
-echo "Metrics created"
