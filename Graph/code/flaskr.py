@@ -8,6 +8,7 @@ from contextlib import closing
 
 # Extracting name from args
 dbname = sys.argv[1].split("/")[-1]
+print(dbname)
 
 
 # create our little application :)
