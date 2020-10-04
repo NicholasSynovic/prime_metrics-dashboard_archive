@@ -46,43 +46,46 @@ class Logic:
                 commits_url = "NA"
                 comments_url = "NA"
 
+                # for the following item, pass in the x param into the functions
+                # code was split into function for testing purposes 
+
                 try:
-                    author = self.data[x]["commit"]["author"]["name"]
+                    author = self.get_author_name(x)
                 except KeyError:
                     pass
                 except AttributeError:
                     pass
 
                 try:
-                    committer = self.data[x]["commit"]["committer"]["name"]
+                    committer = self.get_committer_name(x)
                 except KeyError:
                     pass
                 except AttributeError:
                     pass
 
                 try:
-                    message = self.data[x]["commit"]["message"]
+                    message = self.get_message(x)
                 except KeyError:
                     pass
                 except AttributeError:
                     pass
 
                 try:
-                    comment_count = self.data[x]["commit"]["comment_count"]
+                    comment_count = self.get_comment_count(x)
                 except KeyError:
                     pass
                 except AttributeError:
                     pass
 
                 try:
-                    commits_url = self.data[x]["commit"]["url"]
+                    commits_url = self.get_comment_url(x)
                 except KeyError:
                     pass
                 except AttributeError:
                     pass
 
                 try:
-                    comments_url = self.data[x]["comments_url"]
+                    comments_url = self.comments_url(x)
                 except KeyError:
                     pass
                 except AttributeError:
@@ -90,12 +93,7 @@ class Logic:
 
                 # Scrapes and sanitizes the time related data
                 try:
-                    author_date = (
-                        self.data[x]["commit"]["author"]["date"]
-                        .replace("T", " ")
-                        .replace("Z", " ")
-                    )
-                    author_date = datetime.strptime(author_date, "%Y-%m-%d %H:%M:%S ")
+                    author_date = self.get_author_date(x)
                 except KeyError:
                     pass
                 except AttributeError:
@@ -153,3 +151,31 @@ class Logic:
                 print(self.responseHeaders)
                 break
             break
+    
+    # get author name: self, x -> string (author's name)
+    def get_author_name(self, x):
+        return self.data[x]["commit"]["author"]["name"]
+
+    def get_committer_name(self, x):
+        return self.data[x]["commit"]["committer"]["name"]
+    
+    def get_message(self, x):
+        return self.data[x]["commit"]["message"]
+
+    def get_comment_count(self, x):
+        return self.data[x]["commit"]["comment_count"]
+
+    def get_commits_url(self, x):
+        return self.data[x]["commit"]["url"]
+
+    def get_comments_url(self, x):
+        return self.data[x]["comments_url"]
+
+    def get_author_date(self, x):
+        author_date = (
+            self.data[x]["commit"]["author"]["date"]
+            .replace("T", " ")
+            .replace("Z", " ")
+        )
+        author_date = datetime.strptime(author_date, "%Y-%m-%d %H:%M:%S ")
+        return author_date
