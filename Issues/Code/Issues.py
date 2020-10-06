@@ -9,12 +9,12 @@ This is logic to analyze the data from the githubAPI Issues Request API and stor
 
     def __init__(self, gha: GitHubAPI= None, data: dict = None, responseHeaders: tuple = None, cursor: Cursor = None, connection: Connection = None):
         '''
-Initializes the class and sets class variables that are to be used only in this class instance.\n
-:param gha: An instance of the githubAPI class.\n
-:param data: The dictionary of data that is returned from the API call.\n
-:param responseHeaders: The dictionary of data that is returned with the API call.\n
-:param cursor: The database cursor.\n
-:param connection: The database connection.
+    Initializes the class and sets class variables that are to be used only in this class instance.\n
+    :param gha: An instance of the githubAPI class.\n
+    :param data: The dictionary of data that is returned from the API call.\n
+    :param responseHeaders: The dictionary of data that is returned with the API call.\n
+    :param cursor: The database cursor.\n
+    :param connection: The database connection.
         '''
         self.gha = gha
         self.data = data
