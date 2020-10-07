@@ -2,6 +2,6 @@ FROM python:3.7
 RUN mkdir -p /metrics
 COPY Code/ /app
 WORKDIR /app
-#ENTRYPOINT ["python", "./SSLMetrics.py"]
+ENTRYPOINT ["python", "./SSLMetrics.py"]
 # -u param to show python logs
-ENTRYPOINT ["python", "-u", "./SSLMetrics.py"]
+# ENTRYPOINT ["python", "-u", "./SSLMetrics.py"]
