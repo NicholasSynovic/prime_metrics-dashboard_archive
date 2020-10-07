@@ -52,7 +52,7 @@ docker rm $CONTAINERID
 echo "Deleting volume with NAME:" $VOLUMENAME
 docker volume rm $VOLUMENAME
 
-# echo "Deleting ALL DOCKER CONTAINERS AND VOLUMES"
-# docker system prune -a --volumes
+echo "Deleting ALL DOCKER CONTAINERS AND VOLUMES"
+docker system prune -a --volumes
 
 echo "Metrics created and stored in" $3"/metrics"

@@ -34,9 +34,6 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
             except (KeyError,AttributeError):
                 return None
 
-        # tst = "NA"
-        # tst = tryParam(x["user"]["login"]) if tryParam(x["user"]["login"]) is not None else tst
-        # print("tst is: ", tst)
         def callTryParam(data):
             ''' sets data to 'NA' if parsing fails '''
             return tryParam(data) if tryParam(data) is not None else "NA"
@@ -91,12 +88,10 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
                 closed_at = callTryParam(x["closed_at"])
                 closed_at = closed_at.replace("T", " ").replace("Z"," ") if closed_at != "NA" else closed_at
                 closed_at = datetime.strptime(closed_at, "%Y-%m-%d %H:%M:%S ") if closed_at != "NA" else closed_at 
-                print("closed at: ", closed_at)
                 # created_at = callTryParam(x["created_at"].replace("T", " ").replace("Z", " "))
                 created_at = callTryParam(x["created_at"])
                 created_at = created_at.replace("T", " ").replace("Z", " ") if created_at != "NA" else created_at
                 created_at = datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S ") if created_at != "NA" else created_at
-                print("Created at: ", created_at)
                 updated_at = callTryParam(x["updated_at"])
                 updated_at = updated_at.replace("T", " ").replace("Z", " ") if updated_at != "NA" else updated_at
                 updated_at = datetime.strptime(updated_at, "%Y-%m-%d %H:%M:%S ") if updated_at != "NA" else updated_at
