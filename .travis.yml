@@ -8,4 +8,4 @@ script:
     - travis-sphinx build -n -s docs
 
 after_success:
-    - travis-sphinx deploy -b main
+    - travis-sphinx deploy -b gh-[ages]
