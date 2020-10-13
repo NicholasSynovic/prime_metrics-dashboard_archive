@@ -8,7 +8,7 @@ This page is simply a table of contents for the other pages in this section. Ple
 .. toctree::
     :caption: Further Reading
     :name: abouttoc
-    :maxdepth: 2
+    :maxdepth: 1
 
     /about/abstract.rst
     /about/architecture.rst
