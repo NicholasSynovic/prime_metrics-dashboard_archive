@@ -83,7 +83,6 @@ html_theme_options = {
     "display_version": False,
     "prev_next_buttons_location": "None",
     "style_external_links": True,
-    # "vcs_pageview_mode": "blob",
     "style_nav_header_background": "maroon",
     # Sphinx_RTD_Theme TOCTREE Options
     # "collapse_navigation": True,
