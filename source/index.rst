@@ -10,9 +10,18 @@ You have reached the homepage for the *SSL Metrics Dashboard* open source projec
 
 
 .. toctree::
-    :maxdepth: 1
-    :hidden:
+    :maxdepth: 4
+    :numbered:
+    :titlesonly:
+    :caption: Table of Contents
+    :name: mastertoc
 
     /about/index.rst
-    /blogs/index.rst
     /documentation/index.rst
+    /blogs/index.rst
+
+* :ref:`genindex`
+
+..  Uncomment these when they become implementable
+    * :ref:`modindex`
+    * :ref:`search`

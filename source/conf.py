@@ -88,7 +88,7 @@ html_theme_options = {
     # Sphinx_RTD_Theme TOCTREE Options
     # "collapse_navigation": True,
     # "sticky_navigation": True,
-    # "navigation_depth": 4,
+    "navigation_depth": 4,
     # "includehidden": True,
     "titles_only": True,
 }
