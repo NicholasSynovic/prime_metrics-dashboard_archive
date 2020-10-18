@@ -36,33 +36,34 @@ Calls classes and methods to analyze and interpret data.
         '''
         # Gets and stores data from the root api endpoint
         self.set_Data(endpoint="")
-        repoConcptionDateTime = datetime.strptime(self.data[0]['created_at'].replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")
+        # repoConcptionDateTime = datetime.strptime(self.data[0]['created_at'].replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")
         
-        # Index 0 = Current datetime, Index -1 = conception datetime
-        datetimeList = self.generate_DateTimeList(rCDT=repoConcptionDateTime)
+        # # Index 0 = Current datetime, Index -1 = conception datetime
+        # datetimeList = self.generate_DateTimeList(rCDT=repoConcptionDateTime)
 
         # Gets and stores data from the commits api endpoint
         self.set_Data(endpoint="commits")
         Commits.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],cursor=self.dbCursor, connection=self.dbConnection).parser()
 
-        # Adds all of the datetimes to the SQL database
+        # TODO: confirm that the master table is going to be deleted 
+        # Adds all of the datetimes to the SQL database 
         # Bewary of changing
-        for foo in datetimeList:
+        # for foo in datetimeList:
 
-            date = datetime.strptime(foo[:10], "%Y-%m-%d")
+        #     date = datetime.strptime(foo[:10], "%Y-%m-%d")
 
-            date = str(date)
+        #     date = str(date)
 
-            self.dbCursor.execute(
-                "SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + date + "');")
-            rows = self.dbCursor.fetchall()
-            commits = rows[0][0]
+        #     self.dbCursor.execute(
+        #         "SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + date + "');")
+        #     rows = self.dbCursor.fetchall()
+        #     commits = rows[0][0]
 
-            sql = "INSERT INTO MASTER (date, commits) VALUES (?,?) ON CONFLICT(date) DO UPDATE SET commits = (?);"
-            self.dbCursor.execute(
-                sql, (date, str(commits), str(commits)))
+            # sql = "INSERT INTO MASTER (date, commits) VALUES (?,?) ON CONFLICT(date) DO UPDATE SET commits = (?);"
+            # self.dbCursor.execute(
+            #     sql, (date, str(commits), str(commits)))
 
-            self.dbConnection.commit()
+            # self.dbConnection.commit()
 
     def generate_DateTimeList(self, rCDT: datetime) -> list:
         '''

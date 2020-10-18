@@ -64,7 +64,6 @@ sample_data_dict = {
         'html_url': 'https://github.com/Steph99rod/Overpriced-CollegeT/commit/ec7b3d36efb4ae21e4e02ffc8b4b70b1904d704f'}]}
 sample_commit = Commits.Logic(gha=None, data=[sample_data_dict], responseHeaders=None,cursor=None, connection=None)
 
-
 class TestCommits(object):
 
         # testing the Commits class
