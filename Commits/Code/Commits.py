@@ -36,82 +36,16 @@ class Logic:
         """
         while True:
             for x in range(len(self.data)):
-                # Values below are the values that are to be returned/set if parsing FAILS
-                author = "NA"
-                author_date = "NA"
-                committer = "NA"
-                committer_date = "NA"
-                message = "NA"  # Message associated with the commit
-                comment_count = "NA"  # Number of comments per commit
-                commits_url = "NA"
-                comments_url = "NA"
-
-                # for the following item, pass in the x param into the functions
-                # code was split into function for testing purposes 
-
-                try:
-                    author = self.get_author_name(x)
-                except KeyError:
-                    pass
-                except AttributeError:
-                    pass
-
-                try:
-                    committer = self.get_committer_name(x)
-                except KeyError:
-                    pass
-                except AttributeError:
-                    pass
-
-                try:
-                    message = self.get_message(x)
-                except KeyError:
-                    pass
-                except AttributeError:
-                    pass
-
-                try:
-                    comment_count = self.get_comment_count(x)
-                except KeyError:
-                    pass
-                except AttributeError:
-                    pass
-
-                try:
-                    commits_url = self.get_comment_url(x)
-                except KeyError:
-                    pass
-                except AttributeError:
-                    pass
-
-                try:
-                    comments_url = self.comments_url(x)
-                except KeyError:
-                    pass
-                except AttributeError:
-                    pass
-
-                # Scrapes and sanitizes the time related data
-                try:
-                    author_date = self.get_author_date(x)
-                except KeyError:
-                    pass
-                except AttributeError:
-                    pass
-
-                try:
-                    committer_date = (
-                        self.data[x]["commit"]["committer"]["date"]
-                        .replace("T", " ")
-                        .replace("Z", " ")
-                    )
-                    committer_date = datetime.strptime(
-                        committer_date, "%Y-%m-%d %H:%M:%S "
-                    )
-                except KeyError:
-                    pass
-                except AttributeError:
-                    pass
+                
+                # retrieve data from github dict 
+                author         = self.get_github_data(self.get_author_name,    x)
+                committer      = self.get_github_data(self.get_committer_name, x)
+                message        = self.get_github_data(self.get_message,        x)
+                comment_count  = self.get_github_data(self.get_comment_count,  x)
+                commits_url    = self.get_github_data(self.get_commits_url,    x)
+                comments_url   = self.get_github_data(self.get_commits_url,    x)
+                author_date    = self.get_github_data(self.get_author_date,    x) 
+                committer_date = self.get_github_data(self.get_committer_date, x) 
 
                 # Stores the data into a SQL database
                 sql = "INSERT INTO COMMITS (author, author_date, committer, committer_date, commits_url, message, comment_count, comments_url) VALUES (?,?,?,?,?,?,?,?);"
@@ -137,10 +71,8 @@ class Logic:
                     'rel="next"' not in foo
                 ):  # Breaks if there is no rel="next" text in key Link
                     break
-
                 else:
                     bar = foo.split(",")
-
                     for x in bar:
                         if 'rel="next"' in x:
                             url = x[x.find("<") + 1 : x.find(">")]
@@ -152,26 +84,61 @@ class Logic:
                 break
             break
     
-    # get author name: self, x -> string (author's name)
-    def get_author_name(self, x):
+
+    def get_author_name(self, x) -> str:
+        """
+        purpose: get the author's name 
+        arg1 :  x -> a key in the of the main class attribute self.data
+        return type: string 
+        """
         return self.data[x]["commit"]["author"]["name"]
 
-    def get_committer_name(self, x):
+    def get_committer_name(self, x) -> str:
+        """
+        purpose: get the committer's name 
+        arg1 :  x -> a key in the of the main class attribute self.data
+        return type: string 
+        """
         return self.data[x]["commit"]["committer"]["name"]
     
-    def get_message(self, x):
+    def get_message(self, x) -> str:
+        """
+        purpose: get the message attached to the commit 
+        arg1 :  x -> a key in the of the main class attribute self.data
+        return type: string 
+        """
         return self.data[x]["commit"]["message"]
 
-    def get_comment_count(self, x):
+    def get_comment_count(self, x) -> int:
+        """
+        purpose: get the number of comments  
+        arg1 :  x -> a key in the of the main class attribute self.data
+        return type: int 
+        """
         return self.data[x]["commit"]["comment_count"]
 
-    def get_commits_url(self, x):
+    def get_commits_url(self, x) -> str:
+        """
+        purpose: get the commit's url  
+        arg1 :  x -> a key in the of the main class attribute self.data
+        return type: string (url) 
+        """
         return self.data[x]["commit"]["url"]
 
-    def get_comments_url(self, x):
+    def get_comments_url(self, x) -> str:
+        """
+        purpose: get the comments's url 
+        arg1 :  x -> a key in the of the main class attribute self.data
+        return type: string (url)
+        """
         return self.data[x]["comments_url"]
 
-    def get_author_date(self, x):
+    def get_author_date(self, x) -> datetime:
+        """
+        purpose: get the author date of the commit as well as cleaning up the date format 
+        arg1 :  x -> a key in the of the main class attribute self.data
+        return type: datetime object 
+        """
         author_date = (
             self.data[x]["commit"]["author"]["date"]
             .replace("T", " ")
@@ -179,3 +146,36 @@ class Logic:
         )
         author_date = datetime.strptime(author_date, "%Y-%m-%d %H:%M:%S ")
         return author_date
+    
+    def get_committer_date(self, x) -> datetime:
+        """
+        purpose: get the commiter date of the commit as well as cleaning up the date format 
+        arg1 :  x -> a key in the of the main class attribute self.data
+        return type: datetime object 
+        """
+        committer_date = (
+            self.data[x]["commit"]["committer"]["date"]
+            .replace("T", " ")
+            .replace("Z", " ")
+        )
+        committer_date = datetime.strptime(
+            committer_date, "%Y-%m-%d %H:%M:%S "
+        )
+        return committer_date
+
+
+    def get_github_data(self, other_func, x):
+        """
+        purpose: a higher order function to try obtaining the data from the class function and return NA if not obtainable 
+        arg1 :  other_func -> another function to perform 
+        arg2 :  x -> a key in the of the main class attribute self.data, will act as a paramter to arg1
+        return type: datetime object 
+        """
+        try:
+            return_string = other_func(x)
+        except KeyError:
+            return_string = "NA"
+        except AttributeError:
+            return_string = "NA"
+        return return_string
+    

@@ -3,6 +3,7 @@ import Commits
 from datetime import datetime
 
 # to run: cd into Code folder and type into the command line-> pytest -v TestCommits.py
+# TODO: make tests more dynamic
 
 sample_data_dict = {
         'sha': '691dd7efce02ea932803ea2aea248af62aa98bc8', 
@@ -63,26 +64,17 @@ sample_data_dict = {
         'html_url': 'https://github.com/Steph99rod/Overpriced-CollegeT/commit/ec7b3d36efb4ae21e4e02ffc8b4b70b1904d704f'}]}
 sample_commit = Commits.Logic(gha=None, data=[sample_data_dict], responseHeaders=None,cursor=None, connection=None)
 
+
 class TestCommits(object):
 
         # testing the Commits class
-        def test_get_author_name(self):
-                assert sample_commit.get_author_name(0) == "Steph99rod"
+        def test_get_github_data(self):
+                assert sample_commit.get_github_data(sample_commit.get_author_name, 0) == "Steph99rod"
+                assert sample_commit.get_github_data(sample_commit.get_committer_name, 0) == "GitHub"
+                assert sample_commit.get_github_data(sample_commit.get_message, 0) == "Add files via upload"
+                assert sample_commit.get_github_data(sample_commit.get_comment_count, 0) == 0
+                assert sample_commit.get_github_data(sample_commit.get_commits_url, 0) == "https://api.github.com/repos/Steph99rod/Overpriced-CollegeT/git/commits/691dd7efce02ea932803ea2aea248af62aa98bc8"
+                assert sample_commit.get_github_data(sample_commit.get_comments_url, 0) == "https://api.github.com/repos/Steph99rod/Overpriced-CollegeT/commits/691dd7efce02ea932803ea2aea248af62aa98bc8/comments"
+                assert sample_commit.get_github_data(sample_commit.get_author_date, 0) == datetime(2016, 8, 12, 15, 23, 48)
+                assert sample_commit.get_github_data(sample_commit.get_committer_date, 0) == datetime(2016, 8, 12, 15, 23, 48)
 
-        def test_get_committer_name(self):
-                assert sample_commit.get_committer_name(0) == "GitHub"
-
-        def test_get_message(self):
-                assert sample_commit.get_message(0)  == "Add files via upload"
-
-        def test_get_comment_count(self):
-                assert sample_commit.get_comment_count(0) == 0
-        
-        def test_get_commits_url(self):
-                assert sample_commit.get_commits_url(0) == 'https://api.github.com/repos/Steph99rod/Overpriced-CollegeT/git/commits/691dd7efce02ea932803ea2aea248af62aa98bc8'
-
-        def test_get_comments_url(self):
-                assert sample_commit.get_comments_url(0) == 'https://api.github.com/repos/Steph99rod/Overpriced-CollegeT/commits/691dd7efce02ea932803ea2aea248af62aa98bc8/comments'
-        
-        def test_get_author_date(self):
-                assert sample_commit.get_author_date(0) == datetime(2016, 8, 12, 15, 23, 48)
