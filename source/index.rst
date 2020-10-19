@@ -3,11 +3,10 @@
 Hello World.
 ============
 
-You have reached the homepage for the *SSL Metrics Dashboard* open source project.
+You have reached the homepage for the :abbr:`SSL (Software and Systems Laboratory)` Metrics Dashboard open source project.
 
 .. attention::
     This site is a work in progress as of October 7th, 2020.
-
 
 .. toctree::
     :maxdepth: 4

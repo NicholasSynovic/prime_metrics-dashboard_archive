@@ -1,7 +1,11 @@
 :github_url: https://github.com/SoftwareSystemsLaboratory/Metrics-Dashboard
 
+.. header:: |today|
+
 Architecture
 ============
+
+:Authors: Nicholas M. Synovic
 
 .. contents:: Table of Contents
     :depth: 2
@@ -13,7 +17,7 @@ Architecture
 Overview
 --------
 
-The current architecture of the `SSL Metrics Dashboard <../index.html>`_ is fairly simple and straightforward.
+The current architecture of the :doc: `SSL Metrics Dashboard <../index>` is fairly simple and straightforward.
 
 There are essentially three tiers to the dashboard that are built on top of each other. In the order of the lowest tier to the highest tier, there is the:
 
