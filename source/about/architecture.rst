@@ -5,13 +5,13 @@
 Architecture
 ============
 
-
 .. contents:: Table of Contents
     :depth: 2
     :local:
     :backlinks: top
 
 .. _overview_link:
+
 .. index:: overview
 
 Overview
