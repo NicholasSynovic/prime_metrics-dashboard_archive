@@ -19,9 +19,3 @@ You have reached the homepage for the *SSL Metrics Dashboard* open source projec
     /about/index.rst
     /documentation/index.rst
     /blogs/index.rst
-
-* :ref:`genindex`
-
-..  Uncomment these when they become implementable
-    * :ref:`modindex`
-    * :ref:`search`
