@@ -1,7 +1,5 @@
 :github_url: https://github.com/SoftwareSystemsLaboratory/Metrics-Dashboard
 
-.. index:: architecture
-
 Architecture
 ============
 
@@ -11,8 +9,6 @@ Architecture
     :backlinks: top
 
 .. _overview_link:
-
-.. index:: overview
 
 Overview
 --------
@@ -35,12 +31,11 @@ Each one of these tiers rightfully deserves their own subsection for a complete 
 
 * :ref:`Calculations Tier <calculations_tier_link>` is responsible for taking the information in the :doc:`SQLlite Database <projectTooling>` and performing math to generate software metrics.
 
-* :ref:`Graph Tier <graph_tier_link>` is responsible for accessing the :doc:SQLite Database <projectTooling>` table and graphing said values. Since the metrics are calculated for every day since the repository's creation, the graphs can allow for developers, project managers, and the public eye to monitor the health and growth of a project over time.
+* :ref:`Graph Tier <graph_tier_link>` is responsible for accessing the :doc:`SQLite Database <projectTooling>` table and graphing said values. Since the metrics are calculated for every day since the repository's creation, the graphs can allow for developers, project managers, and the public eye to monitor the health and growth of a project over time.
 
 * :ref:`Execution Tier <execution_tier_link>` is responsible for wrapping all of the previously mentioned tiers together. Furthermore, this tier is responsible for the parallelization of tasks and transforming the user's input (that's :doc:`YOU <userGuide>`!) into data that the other tiers can utilize.
 
 .. _main_pipeline_link:
-.. index:: main pipeline
 
 Main Pipeline
 -------------
@@ -66,14 +61,13 @@ The first of these points is trivial to answer. While the second and third point
 
 To provide an answer to the first point, the :ref:`Execution Tier <execution_tier_link>` is missing from this pipeline diagram is because it simply does not fit in. The :ref:`Execution Tier <execution_tier_link>` is purely meant to spin up all of the other tiers by providing helper functions. These functions mostly revolve around I/O operations such as ensuring that **CENTRAL** has been created and passing along command-line arguments to the tiers so that they can format their outputs correctly.
 
-The second point has a more technical answer. Essentially, there is no bottleneck in practice, only in the diagram. This is because :doc: SQLite <projectTooling>` has a feature called **Write-Ahead Logging (WAL)** which can be learned about `here <https://sqlite.org/wal.html>`_. What these features allows `SSL Metrics Dashboard <../index.html>`_ to do is write to different tables all at once without worrying about a race condition. This is an enforced safety feature because every module writes to its own specific table.
+The second point has a more technical answer. Essentially, there is no bottleneck in practice, only in the diagram. This is because :doc: `SQLite <projectTooling>` has a feature called **Write-Ahead Logging (WAL)** which can be learned about `here <https://sqlite.org/wal.html>`_. What these features allows `SSL Metrics Dashboard <../index.html>`_ to do is write to different tables all at once without worrying about a race condition. This is an enforced safety feature because every module writes to its own specific table.
 
 Unlike the second point, there is an actual bottleneck between the :ref:`Calculations Tier <calculations_tier_link>` and the :ref:`Graph Tier <graph_tier_link>`. This is because the :ref:`Graph Tier <graph_tier_link>` needs to make sure that all of the data has been calculated before displaying a graph. Without this bottleneck, graphs could be presented as incomplete at best and downright wrong at worst. Thus, there is a bottleneck between the modules to enforce that the graphs will be accurate.
 
 This does not mean that every calculation needs to be completed before they are graphed. Rather, it means that each specific calculation must be completed before its specific graph(s) can be displayed. Thus, if one calculation is taking longer than another, that works. The completed calculation can be plotted and displayed.
 
 .. _github_api_link:
-.. index:: GitHub API overview
 
 GitHub API
 ^^^^^^^^^^
@@ -104,7 +98,6 @@ This custom handler can:
 * Return the response headers from the aforementioned GET call
 
 .. _data_collection_tier_link:
-.. index:: data collection tier
 
 Data Collection Tier
 ^^^^^^^^^^^^^^^^^^^^
@@ -131,7 +124,6 @@ Below is a diagram of how a :ref:`Data Collection Tier <data_collection_tier_lin
     Pipeline for Metrics Dashboard :ref:`Data Collection Tier <data_collection_tier_link>`. :download:`Source <files/dataCollectionTier.drawio>`
 
 .. _calculations_tier_link:
-.. index:: calculations tier
 
 Calculations Tier
 ^^^^^^^^^^^^^^^^^
@@ -157,7 +149,6 @@ Below is a diagram of how a :ref:`Calculations Tier <calculations_tier_link>` mo
     Pipeline for Metrics Dashboard :ref:`Calculations Tier <calculations_tier_link>`. :download:`Source <files/calculationsTier.drawio>`
 
 .. _graph_tier_link:
-.. index:: graph tier
 
 Graph Tier
 ^^^^^^^^^^
@@ -170,7 +161,6 @@ Graph Tier
 
 
 .. _execution_pipeline_link:
-.. index:: execution pipeline
 
 Execution Pipeline
 ------------------
