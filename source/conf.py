@@ -66,7 +66,7 @@ math_number_all = False
 # Options for HTML Output
 
 html_theme = "sphinx_rtd_theme"
-# html_theme = "alabaster"
+# html_theme = "alabaster"  # Used for debugging RST calls
 html_theme_options = {
     "nosidebar": True,
     # "sidebarwidth"
