@@ -1,7 +1,5 @@
 :github_url: https://github.com/SoftwareSystemsLaboratory/Metrics-Dashboard
 
-.. header:: |today|
-
 Architecture
 ============
 
@@ -21,30 +19,30 @@ The current architecture of the :doc: `SSL Metrics Dashboard <../index>` is fair
 
 There are essentially three tiers to the dashboard that are built on top of each other. In the order of the lowest tier to the highest tier, there is the:
 
-1. :ref:`Data Collection Tier <data_collection_tier_link>`
-2. :ref:`Calculations Tier <calculations_tier_link>`
-3. :ref:`Graph Tier <graph_tier_link>`
-4. :ref:`Execution Tier <execution_tier_link>`
+1. :ref: `Data Collection Tier <data_collection_tier_link>`
+2. :ref: `Calculations Tier <calculations_tier_link>`
+3. :ref: `Graph Tier <graph_tier_link>`
+4. :ref: `Execution Tier <execution_tier_link>`
 
-.. note::
+.. important::
     The :ref:`Execution Tier <execution_tier_link>` is more of a wrapper that wraps tiers together. None the less, it should have its own spot on this list as of how important it is.
 
 Each one of these tiers rightfully deserves their own subsection for a complete explanation as to what they do. However, in essence, the:
 
-* :ref:`Data Collection Tier <data_collection_tier_link>` is responsible for accessing the GitHub API and collecting information on a specific repository.
+* :ref: `Data Collection Tier <data_collection_tier_link>` is responsible for accessing the GitHub API and collecting information on a specific repository.
 
-* :ref:`Calculations Tier <calculations_tier_link>` is responsible for taking the information in the :doc:`SQLlite Database <projectTooling>` and performing math to generate software metrics.
+* :ref: `Calculations Tier <calculations_tier_link>` is responsible for taking the information in the :doc: `SQLlite Database <projectTooling>` and performing math to generate software metrics.
 
-* :ref:`Graph Tier <graph_tier_link>` is responsible for accessing the :doc:`SQLite Database <projectTooling>` table and graphing said values. Since the metrics are calculated for every day since the repository's creation, the graphs can allow for developers, project managers, and the public eye to monitor the health and growth of a project over time.
+* :ref: `Graph Tier <graph_tier_link>` is responsible for accessing the :doc: `SQLite Database <projectTooling>` table and graphing said values. Since the metrics are calculated for every day since the repository's creation, the graphs can allow for developers, project managers, and the public eye to monitor the health and growth of a project over time.
 
-* :ref:`Execution Tier <execution_tier_link>` is responsible for wrapping all of the previously mentioned tiers together. Furthermore, this tier is responsible for the parallelization of tasks and transforming the user's input (that's :doc:`YOU <userGuide>`!) into data that the other tiers can utilize.
+* :ref: `Execution Tier <execution_tier_link>` is responsible for wrapping all of the previously mentioned tiers together. Furthermore, this tier is responsible for the parallelization of tasks and transforming the user's input (that's :doc: `YOU! <userGuide>`) into data that the other tiers can utilize.
 
 .. _main_pipeline_link:
 
 Main Pipeline
 -------------
 
-The pipeline is essentially how `SSL Metrics Dashboard <../index.html>`_ collects, handles, and stores data. Some of the steps of the pipeline were described above, however, this subsection is meant to provide a concrete understanding of the pipeline that is in place.
+The pipeline is how :doc: `SSL Metrics Dashboard <../index>` collects, handles, and stores data. Some of the steps of the pipeline were described above, however, this subsection is meant to provide a concrete understanding of the pipeline that is in place.
 
 Quite frankly, the pipeline is best described using a diagram. So please take a look at the one below.
 
@@ -53,13 +51,13 @@ Quite frankly, the pipeline is best described using a diagram. So please take a 
     :alt: Pipeline for Metrics Dashboard without the :ref:`Execution Tier <execution_tier_link>`.
     :align: center
 
-    Pipeline for Metrics Dashboard without the Execution tier. :download:`Source <files/pipelineNoExecution.drawio>`
+    Pipeline for Metrics Dashboard without the Execution tier. :download: `Source. <files/pipelineNoExecution.drawio>`
 
 Looking at the pipeline as it stands, there are a few key items to point out:
 
-1. There is no :ref:`Execution Tier <execution_tier_link>` in this pipeline diagram.
-2. There appears to be a bottleneck that prevents the :ref:`Calculations Tier <calculations_tier_link>` from running until the data from the :ref:`Data Collection Tier <data_collection_tier_link>` tier has been stored into the table **CENTRAL**.
-3. There appears to be another bottleneck that prevents the :ref:`Graph Tier <graph_tier_link>` from running until the data from the :ref:`Calculations Tier <calculations_tier_link>` has been stored into **CENTRAL**.
+1. There is no :ref: `Execution Tier <execution_tier_link>` in this pipeline diagram.
+2. There appears to be a bottleneck that prevents the :ref: `Calculations Tier <calculations_tier_link>` from running until the data from the :ref: `Data Collection Tier <data_collection_tier_link>` tier has been stored into the table **CENTRAL**.
+3. There appears to be another bottleneck that prevents the :ref: `Graph Tier <graph_tier_link>` from running until the data from the :ref: `Calculations Tier <calculations_tier_link>` has been stored into **CENTRAL**.
 
 The first of these points is trivial to answer. While the second and third points do have technical and practical reasons for why they appear as they are in the graph.
 

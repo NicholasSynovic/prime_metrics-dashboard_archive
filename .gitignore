@@ -447,3 +447,7 @@ database/
 
 # Sphinx build directory
 build
+
+# Eclipse project files
+.project
+.pydevproject

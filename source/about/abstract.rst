@@ -1,7 +1,5 @@
 :github_url: https://github.com/SoftwareSystemsLaboratory/Metrics-Dashboard/blob/main/source/about/abstract.rst
 
-.. index:
-
 Abstract
 ========
 
@@ -17,3 +15,7 @@ Abstract
     G. K. Thiruvathukal and A. Miller, “Metrics Dashboard — Software and Systems Laboratory vv0.3.1,” Software and Systems Laboratory Research and Publications: Metrics Dashboard. https://ssl.cs.luc.edu/metrics_dashboard.html (accessed Oct. 7 2020).
 
 .. _George K. Thiruvathukal: https://thiruvathukal.com/
+
+Test
+----
+

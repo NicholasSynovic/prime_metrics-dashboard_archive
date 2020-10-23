@@ -1,5 +1,5 @@
 # Project Information
-project = "SSL Metrics Dashboard"
+project = "Software and Systems Laboratory Metrics Dashboard"
 copyright = "2020, Software and Systems Laboratory"
 author = "Software and Systems Laboratory"
 version = "0.01"
