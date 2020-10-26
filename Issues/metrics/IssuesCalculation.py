@@ -63,7 +63,8 @@ class Calculations:
         return ""
     #TODO: Define tostring function, 
 
-
+    #TODO: Issue maintainer response time
+    #TODO: average days to close an issue
 
 #test
 A = Calculations("alt-tab-macos.db")
