@@ -24,6 +24,12 @@ class Calculations:
 
         return conn
 
+    def get_total_issues(self,conn):
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*) from ISSUES ")
+        result = cur.fetchall()[0][0]
+        return result
+
     def count_rows_by_col_value(self,col,value,conn):
         cur = conn.cursor()
         cur.execute("SELECT COUNT(*) {columnS} from ISSUES where {columnS}='{valueS}'".format(valueS=value,columnS=col))
@@ -38,20 +44,33 @@ class Calculations:
         closed_count = self.count_rows_by_col_value("state","closed",conn)
         return closed_count
 
-    def get_issues_effiency(self,conn):
+    def get_closed_to_open_ratio(self,conn):
         open_count = self.get_open_count(conn)
         closed_count = self.get_closed_count(conn)
-        issues_efficiency = open_count / closed_count
-        return issues_efficiency
+        ratio = round((open_count / closed_count),2)
+        return ratio
+
+    def get_closing_efficiency(self,conn):
+        total = self.get_total_issues(conn)
+        closed_count = self.get_closed_count(conn)
+        closing_efficiency = round((closed_count / total),2)
+        closing_efficiency_percent = closing_efficiency * 100
+        result = str(closing_efficiency_percent) + "%"
+        return result
 
         
+    def __str__(self):
+        return ""
+    #TODO: Define tostring function, 
+
 
 
 #test
 A = Calculations("alt-tab-macos.db")
 print(A.get_open_count(A.conn))
 print(A.get_closed_count(A.conn))
-print(A.get_issues_effiency(A.conn))
+print(A.get_closed_to_open_ratio(A.conn))
+print(A.get_closing_efficiency(A.conn))
 
         
 
