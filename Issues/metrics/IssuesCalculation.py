@@ -113,7 +113,7 @@ class Calculations:
         result += "Total number of issues: " + total + "\n"
         result += "Closed to open ratio: " + ratio + "\n"
         result += "closing_efficiency: " + closing_efficiency + "\n"
-        result += "Average time taken to close issue: " + average_close_time + "\n"
+        result += "Average time taken to close issues: " + average_close_time +" days" "\n"
         return result
     #TODO: Define tostring function, 
 
