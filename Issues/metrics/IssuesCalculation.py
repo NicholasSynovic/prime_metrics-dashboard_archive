@@ -1,15 +1,5 @@
 import sqlite3 
-# import pandas as pd
-# db_file = "alt-tab-macos.db"
-# conn = sqlite3.connect(db_file)
-# decide if to use sql or pandas for the calculations
-# df = pd.read_sql_query("select state from ISSUES", conn)
 #TODO: ADD Documentation later
-# cur = conn.cursor()
-# cur.execute("SELECT COUNT(*) state from ISSUES where state='closed'")
-# print(cur.fetchall()[0][0])
-
-
 class Calculations:
     def __init__(self, db_file):
         # self.db_file = db_file
