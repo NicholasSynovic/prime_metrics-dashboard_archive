@@ -1,6 +1,5 @@
 import sqlite3 
 from sqlite3 import Cursor, Connection
-#TODO: ADD Documentation later
 class Calculations:
     def __init__(self, db_file: str) -> None:
         ''' 
@@ -29,7 +28,7 @@ class Calculations:
         '''
         cur = conn.cursor()
         cur.execute("SELECT COUNT(*) from ISSUES ")
-        result = cur.fetchall()[0][0]
+        result = cur.fetchall()[0][0] # get first item in tuple
         cur.close()
         return result
 
@@ -42,7 +41,7 @@ class Calculations:
         '''
         cur = conn.cursor()
         cur.execute("SELECT COUNT(*) {columnS} from ISSUES where {columnS}='{valueS}'".format(valueS=value,columnS=col))
-        result = cur.fetchall()[0][0] # get first item in tuples
+        result = cur.fetchall()[0][0] # get first item in tuple
         cur.close()
         return result
 
