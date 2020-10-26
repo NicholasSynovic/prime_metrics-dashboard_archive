@@ -2,7 +2,6 @@ import sqlite3
 #TODO: ADD Documentation later
 class Calculations:
     def __init__(self, db_file):
-        # self.db_file = db_file
         self.conn = self.create_connection(db_file)
 
     def create_connection(self,db_file):
@@ -18,12 +17,14 @@ class Calculations:
         cur = conn.cursor()
         cur.execute("SELECT COUNT(*) from ISSUES ")
         result = cur.fetchall()[0][0]
+        cur.close()
         return result
 
     def count_rows_by_col_value(self,col,value,conn):
         cur = conn.cursor()
         cur.execute("SELECT COUNT(*) {columnS} from ISSUES where {columnS}='{valueS}'".format(valueS=value,columnS=col))
         result = cur.fetchall()[0][0] # get first item in tuples
+        cur.close()
         return result
 
     def get_open_count(self,conn):
@@ -37,10 +38,11 @@ class Calculations:
     def get_closed_to_open_ratio(self,conn):
         open_count = self.get_open_count(conn)
         closed_count = self.get_closed_count(conn)
-        ratio = round((open_count / closed_count),2)
+        ratio = round((closed_count/ open_count),2)
         return ratio
 
     def get_closing_efficiency(self,conn):
+        ''' '''
         total = self.get_total_issues(conn)
         closed_count = self.get_closed_count(conn)
         closing_efficiency = round((closed_count / total),2)
@@ -69,10 +71,6 @@ class Calculations:
 #test
 A = Calculations("alt-tab-macos.db")
 print(A)
-# print(A.get_open_count(A.conn))
-# print(A.get_closed_count(A.conn))
-# print(A.get_closed_to_open_ratio(A.conn))
-# print(A.get_closing_efficiency(A.conn))
 
         
 
