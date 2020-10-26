@@ -50,7 +50,17 @@ class Calculations:
 
         
     def __str__(self):
-        return ""
+        opened = str(self.get_open_count(self.conn))
+        closed = str(self.get_closed_count(self.conn))
+        total = str(self.get_total_issues(self.conn))
+        ratio = str(self.get_closed_to_open_ratio(self.conn))
+        closing_efficiency = str(self.get_closing_efficiency(self.conn))
+        result = "Number of opened issues: " + opened + "\n"
+        result += "Number of closed issues: " + closed + "\n"
+        result += "Total number of issues: " + total + "\n"
+        result += "Closed to open ratio: " + ratio + "\n"
+        result += "closing_efficiency: " + closing_efficiency
+        return result
     #TODO: Define tostring function, 
 
     #TODO: Issue maintainer response time
@@ -58,10 +68,11 @@ class Calculations:
 
 #test
 A = Calculations("alt-tab-macos.db")
-print(A.get_open_count(A.conn))
-print(A.get_closed_count(A.conn))
-print(A.get_closed_to_open_ratio(A.conn))
-print(A.get_closing_efficiency(A.conn))
+print(A)
+# print(A.get_open_count(A.conn))
+# print(A.get_closed_count(A.conn))
+# print(A.get_closed_to_open_ratio(A.conn))
+# print(A.get_closing_efficiency(A.conn))
 
         
 
