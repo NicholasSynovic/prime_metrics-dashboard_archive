@@ -73,7 +73,7 @@ class Calculations:
 
     def get_closing_efficiency(self,conn):
         ''' 
-        Based on the principle of work efficiency in physics, efficiency = output/input, where output = closed issues, input = total issues
+        Returns efficiency, based on the principle of efficiency in physics, efficiency = output/input, where output = closed issues, input = total issues
         :param conn: The db connection
         '''
         total = self.get_total_issues(conn)
@@ -84,6 +84,10 @@ class Calculations:
         return result
 
     def get_avg_days_to_close_issue(self,conn):
+        ''' 
+        Returns average number of days it takes to close an Issue
+        :param conn: The db connection
+        '''
         cur = conn.cursor()
         query = "SELECT julianday(closed_at) - julianday(created_at) from ISSUES where state='closed'"
         cur.execute(query)
@@ -103,12 +107,14 @@ class Calculations:
         total = str(self.get_total_issues(self.conn))
         ratio = str(self.get_closed_to_open_ratio(self.conn))
         closing_efficiency = str(self.get_closing_efficiency(self.conn))
+        average_close_time = str(self.get_avg_days_to_close_issue(self.conn))
         result = "Number of opened issues: " + opened + "\n"
         result += "Number of closed issues: " + closed + "\n"
         result += "Total number of issues: " + total + "\n"
         result += "Closed to open ratio: " + ratio + "\n"
         result += "closing_efficiency: " + closing_efficiency + "\n"
-        return result + str(self.get_avg_days_to_close_issue(self.conn))
+        result += "Average time taken to close issue: " + average_close_time + "\n"
+        return result
     #TODO: Define tostring function, 
 
     #TODO: Issue maintainer response time
