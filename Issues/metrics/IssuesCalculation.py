@@ -114,6 +114,6 @@ class Calculations:
 
     #TODO: Issue maintainer response time
 
-#test
-A = Calculations("alt-tab-macos.db")
-print(A)
+# #test
+# A = Calculations("alt-tab-macos.db")
+# print(A)
