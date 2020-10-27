@@ -7,6 +7,9 @@ class TestIssuesCalculation(unittest.TestCase):
         self.testCalc = Calculations("alt-tab-macos.db")
         self.conn = self.testCalc.conn
 
+    def test_successful_db_conn(self):
+        result = self.conn
+        self.assertFalse(result is None)
     def test_total_issues(self):
         expected = 639 
         result = self.testCalc.get_total_issues(self.conn)
