@@ -11,7 +11,7 @@ class TestIssuesCalculation(unittest.TestCase):
         result = self.conn
         self.assertFalse(result is None)
     def test_total_issues(self):
-        expected = 639 
+ g      expected = 639 
         result = self.testCalc.get_total_issues(self.conn)
         self.assertTrue(expected == result)
 
