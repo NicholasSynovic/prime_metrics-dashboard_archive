@@ -112,8 +112,4 @@ class Calculations:
         result += "Average time taken to close issues: " + average_close_time +" days" "\n"
         return result
 
-    #TODO: Issue maintainer response time
 
-# #test
-# A = Calculations("alt-tab-macos.db")
-# print(A)
