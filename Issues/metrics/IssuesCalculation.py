@@ -112,4 +112,3 @@ class Calculations:
         result += "Average time taken to close issues: " + average_close_time +" days" "\n"
         return result
 
-

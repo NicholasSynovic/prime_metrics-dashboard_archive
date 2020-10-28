@@ -11,22 +11,22 @@ class TestIssuesCalculation(unittest.TestCase):
         result = self.conn
         self.assertFalse(result is None)
     def test_total_issues(self):
- g      expected = 639 
+        expected = 645 
         result = self.testCalc.get_total_issues(self.conn)
         self.assertTrue(expected == result)
 
     def test_get_open_count(self):
-        expected = 54 
+        expected = 52 
         result = self.testCalc.get_open_count(self.conn)
         self.assertTrue(expected == result)
 
     def test_get_closed_count(self):
-        expected = 585
+        expected = 593
         result = self.testCalc.get_closed_count(self.conn)
         self.assertTrue(expected == result)
 
     def test_get_closed_to_open_ratio(self):
-        expected = 10.83
+        expected = 11.4
         result = self.testCalc.get_closed_to_open_ratio(self.conn)
         self.assertTrue(expected == result)
 
@@ -36,7 +36,7 @@ class TestIssuesCalculation(unittest.TestCase):
         self.assertTrue(expected == result)
 
     def test_get_avg_to_close_issue(self):
-        expected = 15.95
+        expected = 16.05
         result = self.testCalc.get_avg_days_to_close_issue(self.conn)
         self.assertTrue(expected == result)
 
