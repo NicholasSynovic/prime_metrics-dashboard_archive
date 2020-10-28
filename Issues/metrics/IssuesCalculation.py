@@ -98,6 +98,9 @@ class Calculations:
         return avg
         
     def __str__(self) -> str:
+        ''' 
+        String representation of the class Calculations
+        '''
         opened = str(self.get_open_count(self.conn))
         closed = str(self.get_closed_count(self.conn))
         total = str(self.get_total_issues(self.conn))
