@@ -54,25 +54,26 @@ class Logic:
                     (
                         str(author),
                         str(author_date),
-                        str(committer_date),
                         str(committer),
+                        str(committer_date),
                         str(commits_url),
                         str(message),
                         str(comment_count),
                         str(comments_url),
                     ),
                 )
+
                 self.dbConnection.commit()
 
             # Below checks to see if there are any links related to the data returned
             try:
-                foo = self.responseHeaders["Link"]
+                key_link = self.responseHeaders["Link"]
                 if (
-                    'rel="next"' not in foo
+                    'rel="next"' not in key_link
                 ):  # Breaks if there is no rel="next" text in key Link
                     break
                 else:
-                    bar = foo.split(",")
+                    bar = key_link.split(",")
                     for x in bar:
                         if 'rel="next"' in x:
                             url = x[x.find("<") + 1 : x.find(">")]
@@ -83,7 +84,6 @@ class Logic:
                 print(self.responseHeaders)
                 break
             break
-    
 
     def get_author_name(self, x) -> str:
         """

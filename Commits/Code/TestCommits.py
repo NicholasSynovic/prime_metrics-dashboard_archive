@@ -1,6 +1,7 @@
 import pytest
 import Commits
 from datetime import datetime
+import requests 
 
 # to run: cd into Code folder and type into the command line-> pytest -v TestCommits.py
 # TODO: make tests more dynamic
@@ -77,3 +78,7 @@ class TestCommits(object):
                 assert sample_commit.get_github_data(sample_commit.get_author_date, 0) == datetime(2016, 8, 12, 15, 23, 48)
                 assert sample_commit.get_github_data(sample_commit.get_committer_date, 0) == datetime(2016, 8, 12, 15, 23, 48)
 
+        def test_connection(self):
+                url = "https://github.com/Steph99rod/Overpriced-CollegeT"
+                page = requests.get(url)
+                assert page.status_code == 200

@@ -37,11 +37,11 @@ Will also generate the keys.txt file, get data from it, and potentially write da
         '''
         
         if len(self.args) > 2:
-            sys.exit("Too Many Args")
+            sys.exit("ERROR: Too Many Args")
         try:
             self.githubURL = self.args[0]
         except IndexError:
-            sys.exit("No URL Arg")
+            sys.exit("ERROR: No URL Arg")
         try:
             self.githubToken = self.args[1]
             self.th.write(token=self.githubToken)
@@ -62,12 +62,12 @@ Further checks are made on the URL in the GitHubAPI.py file. It is possible for 
         '''
         
         if self.githubURL.find("github.com/") == -1:
-            sys.exit("Invalid URL Arg")
+            sys.exit("ERROR: Invalid URL Arg")
 
         foo = self.githubURL.split("/")
 
         if len(foo) > 5:
-            sys.exit("Invalid URL Arg")
+            sys.exit("ERROR: Invalid URL Arg")
 
         self.githubUser = foo[-2]
         self.githubRepo = foo[-1]
