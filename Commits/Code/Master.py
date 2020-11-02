@@ -33,52 +33,68 @@ Initalizes the class and sets class variables that are to be used only in this c
     def program(self) -> None:
         '''
 Calls classes and methods to analyze and interpret data.
+Computing and inserting calculations into the calculations table. 
         '''
         # Gets and stores data from the root api endpoint
-        self.set_Data(endpoint="")
-        repoConcptionDateTime = datetime.strptime(self.data[0]['created_at'].replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")
-        
-        # Index 0 = Current datetime, Index -1 = conception datetime
-        datetimeList = self.generate_DateTimeList(rCDT=repoConcptionDateTime)
-
+        self.set_Data(endpoint="")# %%
+ 
         # Gets and stores data from the commits api endpoint
         self.set_Data(endpoint="commits")
         Commits.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],cursor=self.dbCursor, connection=self.dbConnection).parser()
+    
+        # get all the times from the commits table
+        self.dbCursor.execute(
+            "SELECT committer_date FROM COMMITS;")
+        date_rows = self.dbCursor.fetchall()
+        
+        # calculate average time between commit
+        total_times = []
+        total_time_differences = []
+        for row in date_rows:
+            date = datetime.strptime(
+            row[0], "%Y-%m-%d %H:%M:%S")
+            total_times.append(date)
 
-        # Adds all of the datetimes to the SQL database
-        # Bewary of changing
-        for foo in datetimeList:
+        # only if the list is greater than two 
+        if len(total_times) >= 2:
+            for t in range(len(total_times)-1):
+                time_difference  = abs(total_times[t] - total_times[t+1])
+                total_time_differences.append(time_difference.total_seconds())
+            
+            value = str(sum(total_time_differences) / len(total_time_differences))
+        else:
+            value = "N/A"
 
-            date = datetime.strptime(foo[:10], "%Y-%m-%d")
+        # average time between commits
+        calc_name = "Average Time Between Commits (secs)"
+        
+        # Stores the data into a SQL database
+        sql = "INSERT INTO COMMITS_CALCULATIONS (calc_name, value) VALUES (?,?);"
+        self.dbCursor.execute(
+        sql,
+        (
+            str(calc_name),
+            str(value)
+        ),
+    )
 
-            date = str(date)
-
-            self.dbCursor.execute(
-                "SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + date + "');")
-            rows = self.dbCursor.fetchall()
-            commits = rows[0][0]
-
-            sql = "INSERT INTO MASTER (date, commits) VALUES (?,?) ON CONFLICT(date) DO UPDATE SET commits = (?);"
-            self.dbCursor.execute(
-                sql, (date, str(commits), str(commits)))
-
-            self.dbConnection.commit()
+        self.dbConnection.commit()
 
     def generate_DateTimeList(self, rCDT: datetime) -> list:
         '''
 Creates a list of datetimes from the repository conception datetime till today's current datetime.\n
 :param rCDT: Repository conception datetime. This is found in the root api call of a repository.
         '''
-        foo = []
+        dates_in_specific_format = []
         today = datetime.today()
         if rCDT.strftime("%Y-%m-%d") == today.strftime("%Y-%m-%d"):
-            foo.append(str(today))
+            dates_in_specific_format.append(str(today))
         else:
-            foo.append(str(today))
+            dates_in_specific_format.append(str(today))
             while (today > rCDT):
                 today = today - timedelta(days=1)
-                foo.append(str(today))
-        return foo
+                dates_in_specific_format.append(str(today))
+        return dates_in_specific_format
 
     def get_Data(self) -> dict:
         '''
