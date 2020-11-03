@@ -19,10 +19,21 @@ class DataCollection:
         )
 
         parser.add_argument(
-            "url", help="The GitHub URL of the project that is to be analyzed", type=str
+            "--url",
+            "-u",
+            nargs=1,
+            default="https://github.com/SoftwareSystemsLaboratory/Metrics-Dashboard",
+            type=str,
+            required=True,
+            help="The GitHub URL of the project that is to be analyzed",
         )
         parser.add_argument(
-            "token",
+            "--token",
+            "-t",
+            nargs=1,
+            default="",
+            type=str,
+            required=True,
             help="The GitHub Personal Access Token that is used to properly interact with the GitHub REST API",
         )
 

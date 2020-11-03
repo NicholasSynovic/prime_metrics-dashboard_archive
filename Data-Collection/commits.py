@@ -1,13 +1,13 @@
 from datetime import datetime
 from sqlite3 import Connection, Cursor
 
-from githubAPI import GitHubAPI
+from githubConnector import GitHubConnector
 
 
 class Commits:
     def __init__(
         self,
-        gha: GitHubAPI = None,
+        gha: GitHubConnector = None,
         data: dict = None,
         responseHeaders: tuple = None,
         cursor: Cursor = None,
