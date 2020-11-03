@@ -2,11 +2,11 @@ import argparse
 from argparse import Namespace
 from sqlite3 import Connection, Cursor
 
-import libs.databaseConnector as DatabaseConnector
-import libs.main
+import databaseConnector as DatabaseConnector
+import main as Main
 
 
-class SSLMetrics:
+class DataCollection:
     def __init__(self) -> None:
         pass
 
@@ -48,8 +48,7 @@ class SSLMetrics:
     def launch(
         self, githubUserName: str, githubRepositoryName: str, githubRepositoryURL
     ) -> None:
-        # TODO: Implement CMD Line arguements into the code here
-        Master.Logic(
+        Main.Logic(
             username=self.githubUser,
             repository=self.githubRepo,
             token=self.githubToken,
@@ -60,7 +59,7 @@ class SSLMetrics:
 
 
 if __name__ == "__main__":
-    s = SSLMetrics()
+    s = DataCollection()
 
     args = s.arguementHandling()
 
