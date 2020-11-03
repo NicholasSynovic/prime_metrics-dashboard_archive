@@ -1,10 +1,8 @@
 import argparse
 from argparse import Namespace
 
-import main
 
-
-class DataCollection:
+class CMDLineInterface:
     def arguementHandling(self) -> Namespace:
         parser = argparse.ArgumentParser(
             prog="SSL Metrics Dashboard Defect Density Module",
@@ -68,21 +66,21 @@ class DataCollection:
         pass
 
 
-if __name__ == "__main__":
-    s = DataCollection()
+# if __name__ == "__main__":
+#     s = DataCollection()
 
-    args = s.arguementHandling()
+#     args = s.arguementHandling()
 
-    url = args.url[0]
-    token = args.token[0]
-    outFile = args.outFile[0]
+#     url = args.url[0]
+#     token = args.token[0]
+#     outFile = args.outFile[0]
 
-    parsedValues = s.stripURL(url=args.url[0])
+#     parsedValues = s.stripURL(url=args.url[0])
 
-    s.startDataCollection(
-        repository=parsedValues[0],
-        repositoryURL=url,
-        username=parsedValues[1],
-        token=token,
-        outFile=outFile,
-    )
+#     s.startDataCollection(
+#         repository=parsedValues[0],
+#         repositoryURL=url,
+#         username=parsedValues[1],
+#         token=token,
+#         outFile=outFile,
+#     )

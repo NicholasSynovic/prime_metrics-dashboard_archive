@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlite3 import Connection, Cursor
 
-from githubConnector import GitHubConnector
+from libs.githubConnector import GitHubConnector
 
 
 class Commits:

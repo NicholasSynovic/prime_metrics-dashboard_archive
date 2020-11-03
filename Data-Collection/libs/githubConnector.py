@@ -6,14 +6,16 @@ class GitHubConnector:
     def __init__(self, oauthToken: str = None) -> None:
         self.token = oauthToken
 
-    def getConnection(self, url: str) -> Response:
+    def openConnection(self, url: str) -> Response:
         headers = {
             "Accept": "application/vnd.github.v3+json",
             "User-Agent": "Metrics-Dashboard",
             "Authorization": "token {}".format(self.token),
         }
 
-        return requests.get(url=url, headers=headers)
+        return headers
+
+        # return requests.get(url=url, headers=headers)
 
     def retrunJSON(self, response: Response) -> dict:
         return response.json()

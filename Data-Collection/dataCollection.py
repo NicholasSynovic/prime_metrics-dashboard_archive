@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from sqlite3 import Connection, Cursor
 
-import commits
-from githubConnector import GitHubConnector
+# import commits
+from libs import *
 
 
 class Main:
