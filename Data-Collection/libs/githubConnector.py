@@ -13,11 +13,9 @@ class GitHubConnector:
             "Authorization": "token {}".format(self.token),
         }
 
-        return headers
+        return requests.get(url=url, headers=headers)
 
-        # return requests.get(url=url, headers=headers)
-
-    def retrunJSON(self, response: Response) -> dict:
+    def returnJSON(self, response: Response) -> dict:
         return response.json()
 
     def parseResponseHeaders(self, response: Response) -> dict:
@@ -27,3 +25,16 @@ class GitHubConnector:
             "X-RateLimit-Remaining": response.headers["X-RateLimit-Remaining"],
             "X-RateLimit-Reset": response.headers["X-RateLimit-Reset"],
         }
+
+    def returnRateLimit(self) -> int:
+        headers = {
+            "Accept": "application/vnd.github.v3+json",
+            "User-Agent": "Metrics-Dashboard",
+            "Authorization": "token {}".format(self.token),
+        }
+
+        data = requests.get(
+            url="https://api.github.com/rate_limit", headers=headers
+        ).json()
+
+        return data["resources"]["core"]["remaining"]

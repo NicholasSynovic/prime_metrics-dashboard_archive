@@ -1,24 +1,30 @@
 from datetime import datetime
 from sqlite3 import Connection, Cursor
 
-from libs.githubConnector import GitHubConnector
+from libs import *
 
 
 class Commits:
     def __init__(
         self,
-        gha: GitHubConnector = None,
-        data: dict = None,
-        responseHeaders: tuple = None,
-        cursor: Cursor = None,
-        connection: Connection = None,
+        dbConnection: Connection,
+        dbCursor: Cursor,
+        oauthToken: str,
+        repository: str,
+        username: str,
     ):
+        self.connection = dbConnection
+        self.cursor = dbCursor
+        self.githubConnection = GitHubConnector(oauthToken=oauthToken)
+        self.url = (
+            "https://api.github.com/repos/{}/{}/commits?per_page=100&page={}".format(
+                username,
+                repository,
+            )
+        )
 
-        self.gha = gha
-        self.data = data
-        self.responseHeaders = responseHeaders
-        self.dbCursor = cursor
-        self.dbConnection = connection
+    def getData(self) -> dict:
+        self.githubConnection.openConnection(url=self.url)
 
     def parser(self) -> None:
 
@@ -65,46 +71,3 @@ class Commits:
                 print(self.responseHeaders)
                 break
             break
-
-    def get_author_name(self, x) -> str:
-        return self.data[x]["commit"]["author"]["name"]
-
-    def get_committer_name(self, x) -> str:
-        return self.data[x]["commit"]["committer"]["name"]
-
-    def get_message(self, x) -> str:
-        return self.data[x]["commit"]["message"]
-
-    def get_comment_count(self, x) -> int:
-        return self.data[x]["commit"]["comment_count"]
-
-    def get_commits_url(self, x) -> str:
-        return self.data[x]["commit"]["url"]
-
-    def get_comments_url(self, x) -> str:
-        return self.data[x]["comments_url"]
-
-    def get_author_date(self, x) -> datetime:
-        author_date = (
-            self.data[x]["commit"]["author"]["date"].replace("T", " ").replace("Z", " ")
-        )
-        author_date = datetime.strptime(author_date, "%Y-%m-%d %H:%M:%S ")
-        return author_date
-
-    def get_committer_date(self, x) -> datetime:
-        committer_date = (
-            self.data[x]["commit"]["committer"]["date"]
-            .replace("T", " ")
-            .replace("Z", " ")
-        )
-        committer_date = datetime.strptime(committer_date, "%Y-%m-%d %H:%M:%S ")
-        return committer_date
-
-    def get_github_data(self, other_func, x):
-        try:
-            return_string = other_func(x)
-        except KeyError:
-            return_string = "NA"
-        except AttributeError:
-            return_string = "NA"
-        return return_string
