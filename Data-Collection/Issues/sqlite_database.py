@@ -1,19 +1,21 @@
 import sqlite3
 import os
 
+
 def open_connection(repo_name):
-	'''
-This is some SQL code that creates the tables and columns in a database named after the repository its data is holding.
-	'''    
-	try:
-		connection = sqlite3.connect('/metrics/' + str(repo_name) + '.db')
-	except sqlite3.OperationalError:
-		connection = sqlite3.connect('/metrics/' + str(repo_name) + '.db')
+    """
+    This is some SQL code that creates the tables and columns in a database named after the repository its data is holding.
+    """
+    try:
+        connection = sqlite3.connect("/metrics/" + str(repo_name) + ".db")
+    except sqlite3.OperationalError:
+        connection = sqlite3.connect("/metrics/" + str(repo_name) + ".db")
 
-	cursor = connection.cursor()
+    cursor = connection.cursor()
 
-# Create table - ISSUES
-	cursor.execute('''CREATE TABLE IF NOT EXISTS ISSUES
+    # Create table - ISSUES
+    cursor.execute(
+        """CREATE TABLE IF NOT EXISTS ISSUES
 		(user VARCHAR(3000) ,
 		user_id VARCHAR(3000) ,
 		issue_id VARCHAR(3000) ,
@@ -38,20 +40,21 @@ This is some SQL code that creates the tables and columns in a database named af
 		comment_node_id VARCHAR(3000) ,
 		comment_created_at VARCHAR(3000) ,
 		comment_updated_at VARCHAR(3000) ,
-		comment_body VARCHAR(3000)) ;''')
+		comment_body VARCHAR(3000)) ;"""
+    )
 
-	# # Create table - MASTER
-	# cursor.execute("CREATE TABLE IF NOT EXISTS MASTER(date DATE, commits INT(3000), issues INT(3000), defect_density INT(3000), issue_spoilage_avg INT(3000), issue_spoilage_max INT(3000), issue_spoilage_min INT(3000), lines_of_code INT(300), PRIMARY KEY (date));")
-        #
-        #
-	# # Create table - COMMITS
-	# cursor.execute("CREATE TABLE IF NOT EXISTS COMMITS (author VARCHAR(3000), id VARCHAR(3000), author_date VARCHAR(3000), message VARCHAR(30000), count VARCHAR(3000));")
-        #
-	# cursor.execute('''CREATE TABLE IF NOT EXISTS LINES_OF_CODE_NUM_OF_CHARS
-        #     (date DATE,
-        #     id VARCHAR(3000),
-        #     total_lines VARCHAR(3000));''')
-	
-	connection.commit()
+    # # Create table - MASTER
+    # cursor.execute("CREATE TABLE IF NOT EXISTS MASTER(date DATE, commits INT(3000), issues INT(3000), defect_density INT(3000), issue_spoilage_avg INT(3000), issue_spoilage_max INT(3000), issue_spoilage_min INT(3000), lines_of_code INT(300), PRIMARY KEY (date));")
+    #
+    #
+    # # Create table - COMMITS
+    # cursor.execute("CREATE TABLE IF NOT EXISTS COMMITS (author VARCHAR(3000), id VARCHAR(3000), author_date VARCHAR(3000), message VARCHAR(30000), count VARCHAR(3000));")
+    #
+    # cursor.execute('''CREATE TABLE IF NOT EXISTS LINES_OF_CODE_NUM_OF_CHARS
+    #     (date DATE,
+    #     id VARCHAR(3000),
+    #     total_lines VARCHAR(3000));''')
 
-	return cursor, connection
+    connection.commit()
+
+    return cursor, connection

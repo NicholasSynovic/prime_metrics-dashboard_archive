@@ -1,15 +1,10 @@
 import argparse
 from argparse import Namespace
-from sqlite3 import Connection, Cursor
 
-import databaseConnector as DatabaseConnector
-import main as Main
+import main
 
 
 class DataCollection:
-    def __init__(self) -> None:
-        pass
-
     def arguementHandling(self) -> Namespace:
         parser = argparse.ArgumentParser(
             prog="SSL Metrics Dashboard Defect Density Module",
@@ -48,34 +43,29 @@ class DataCollection:
 
         return parser.parse_args()
 
-    def stripURL(
-        self,
-        url: str = "https://github.com/SoftwareSystemsLaboratory/Metrics-Dashboard",
-    ) -> list:
-        if self.githubURL.find("github.com/") == -1:
-            exit("Invalid URL Arg")
+    def stripURL(self, url: str) -> list:
+        if url.find("github.com/") == -1:
+            exit("❗ Invalid URL Arg: {}".format(url))
 
         splitURL = self.githubURL.split("/")
 
         if len(splitURL) != 5:
-            exit("Invalid URL Arg")
+            exit("❗ Invalid URL Arg")
 
-        githubUserName = splitURL[-2]
-        githubRepositoryName = splitURL[-1]
+        username = splitURL[-2]
+        repository = splitURL[-1]
 
-        return [githubUserName, githubRepositoryName]
+        return [repository, username]
 
-    def launch(
-        self, githubUserName: str, githubRepositoryName: str, githubRepositoryURL
+    def startDataCollection(
+        self,
+        repository: str,
+        repositoryURL: str,
+        username: str,
+        token: str,
+        outfile: str,
     ) -> None:
-        Main.Logic(
-            username=self.githubUser,
-            repository=self.githubRepo,
-            token=self.githubToken,
-            tokenList=self.githubTokenList,
-            cursor=self.dbCursor,
-            connection=self.dbConnection,
-        ).program()
+        pass
 
 
 if __name__ == "__main__":
@@ -83,9 +73,19 @@ if __name__ == "__main__":
 
     args = s.arguementHandling()
 
-    s.stripURL(url=args.url)
+    url = args.url[0]
+    token = args.token[0]
+    outfile = args.outfile[0]
 
-    s.launch()
+    parsedValues = s.stripURL(url=args.url[0])
+
+    s.startDataCollection(
+        repository=parsedValues[0],
+        repositoryURL=url,
+        username=parsedValues[1],
+        token=token,
+        outfile=outfile,
+    )
 
 else:
-    print("SSLMetrics.py is meant to ran by itself and not imported as a module.")
+    print("dataCollection.py is meant to ran by itself and not imported as a module.")
