@@ -15,7 +15,7 @@ class GitHubConnector:
 
         return requests.get(url=url, headers=headers)
 
-    def createJSON(self, response: Response) -> dict:
+    def retrunJSON(self, response: Response) -> dict:
         return response.json()
 
     def parseResponseHeaders(self, response: Response) -> dict:
