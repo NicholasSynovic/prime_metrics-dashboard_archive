@@ -1,124 +1,71 @@
-from sqlite3 import Cursor, Connection  # Need these for determining type
-import Master
-from TokenHandler import TokenHandler
-import sqlite_database
-import sys
+from sqlite3 import Connection, Cursor
+import Defect_Density.Code.DatabaseConnector as DatabaseConnector
+import Defect_Density.Code.Main
+import argparse
+from argparse import Namespace
 
 
 class SSLMetrics:
-    '''
-This is what should be called to actually run the SSL Metrics tool.\n
-Call this tool in the command line as: python SSLMetrics.py {GitHub URL} {Optional Token}
-    '''
-
     def __init__(self) -> None:
-        '''
-Initializes the program and sets class variables that are going to be used as the initial values across the program.\n
-Required command line arguements:\n
-GitHub URL (https://github.com/{Username}/{Repository})\n
-Optional command line arguements:\n
-GitHub Personal Access Token
-        '''
-        self.args = sys.argv[1:]  # All of the command line args excluding the filename
-        self.githubURL = None
-        self.githubUser = None
-        self.githubRepo = None
-        self.githubToken = None
-        self.githubTokenList = None # This is pulled from keys.txt
-        self.dbCursor = None  # Database specific variable
-        self.dbConnection = None  # Database specific variables
-        self.th = TokenHandler()    # Class instance to write and read tokens to tokens.txt
+        pass
 
-    def parseArgs(self) -> None:
-        '''
-This is a REQUIRED method.\n
-Logic to parse the list of command line arguements to make sure that they meet program requirements.\n
-Will also generate the keys.txt file, get data from it, and potentially write data to it as well.
-        '''
-        
-        if len(self.args) > 2:
-            sys.exit("ERROR: Too Many Args")
-        try:
-            self.githubURL = self.args[0]
-        except IndexError:
-            sys.exit("ERROR: No URL Arg")
-        try:
-            self.githubToken = self.args[1]
-            self.th.write(token=self.githubToken)
-            self.githubTokenList = self.th.read()
-        except IndexError:  # There was no token as an arg
-            self.githubTokenList = self.th.read()
-            try:
-                self.githubToken = self.githubTokenList[0]
-            except IndexError:
-                pass
+    def arguementHandling(self) -> Namespace:
+        parser = argparse.ArgumentParser(
+            prog="SSL Metrics Dashboard Defect Density Module",
+            usage="To collect, store, parse, and calculate information related to the Defect Density software metric.",
+            description="This module will access the GitHub REST API to gather information about a specific repository pertaining to Defect Density.\n\n Afterwards, the data will be analyzed and displayed as graphs.",
+            epilog="This program was created by the Loyola University Chicago Software and Systems Laboratory.",
+        )
 
-    def stripURL(self) -> None:
-        '''
-This is a REQUIRED method.
-Logic to parse the URL arguement to make sure it contains both a username and a repository.\n
-Logic will error out if an invalid URL is the arguement.\n
-Further checks are made on the URL in the GitHubAPI.py file. It is possible for a URL to pass these tests here, however the program will error out if it fails other tests down the road.
-        '''
-        
+        parser.add_argument(
+            "url", help="The GitHub URL of the project that is to be analyzed", type=str
+        )
+        parser.add_argument(
+            "token",
+            help="The GitHub Personal Access Token that is used to properly interact with the GitHub REST API",
+        )
+
+        return parser.parse_args()
+
+    def stripURL(
+        self,
+        url: str = "https://github.com/SoftwareSystemsLaboratory/Metrics-Dashboard",
+    ) -> list:
         if self.githubURL.find("github.com/") == -1:
-            sys.exit("ERROR: Invalid URL Arg")
+            exit("Invalid URL Arg")
 
-        foo = self.githubURL.split("/")
+        splitURL = self.githubURL.split("/")
 
-        if len(foo) > 5:
-            sys.exit("ERROR: Invalid URL Arg")
+        if len(splitURL) != 5:
+            exit("Invalid URL Arg")
 
-        self.githubUser = foo[-2]
-        self.githubRepo = foo[-1]
+        githubUserName = splitURL[-2]
+        githubRepositoryName = splitURL[-1]
 
-    def launch(self) -> None:
-        '''
-This is a REQUIRED method.\n
-Logic to actually begin the analysis.
-        '''
-        self.dbCursor, self.dbConnection = sqlite_database.open_connection(
-            self.githubRepo)  # Unsure of what this code does due to lack of knowledge on how the database works
-        Master.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, tokenList=self.githubTokenList, cursor=self.dbCursor, connection=self.dbConnection).program()
+        return [githubUserName, githubRepositoryName]
 
-    def get_Args(self) -> list:
-        '''
-Returns the class variable args.
-        '''
-        return self.args
+    def launch(
+        self, githubUserName: str, githubRepositoryName: str, githubRepositoryURL
+    ) -> None:
+        # TODO: Implement CMD Line arguements into the code here
+        Master.Logic(
+            username=self.githubUser,
+            repository=self.githubRepo,
+            token=self.githubToken,
+            tokenList=self.githubTokenList,
+            cursor=self.dbCursor,
+            connection=self.dbConnection,
+        ).program()
 
-    def get_GitHubURL(self) -> str:
-        '''
-Returns the class variable githubURL.
-        '''
-        return self.githubURL
 
-    def get_GitHubUser(self) -> str:
-        '''
-Returns the class variable githubUser
-        '''
-        return self.githubUser
+if __name__ == "__main__":
+    s = SSLMetrics()
 
-    def get_GitHubRepo(self) -> str:
-        '''
-Returns the class variable githubRepo.
-        '''
-        return self.githubRepo
+    args = s.arguementHandling()
 
-    def get_DbCursor(self) -> Cursor:
-        '''
-Returns the class variable dbCursor.
-        '''
-        return self.dbCursor
+    s.stripURL(url=args.url)
 
-    def get_DbConnection(self) -> Connection:
-        '''
-Returns the class variable dbConnection.
-        '''
-        return self.dbConnection
+    s.launch()
 
-s = SSLMetrics()
-s.parseArgs()
-s.stripURL()
-s.launch()
-sys.exit(0)
+else:
+    print("SSLMetrics.py is meant to ran by itself and not imported as a module.")
