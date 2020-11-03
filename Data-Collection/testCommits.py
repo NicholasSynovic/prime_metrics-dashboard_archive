@@ -1,6 +1,7 @@
-import pytest
-import Commits
 from datetime import datetime
+
+import Commits
+import pytest
 import requests
 
 # to run: cd into Code folder and type into the command line-> pytest -v TestCommits.py
