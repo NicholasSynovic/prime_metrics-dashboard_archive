@@ -1,5 +1,7 @@
+pandas
 sphinx
 sphinx-rtd-theme
 requests
 tqdm
 travis-sphinx
+flask
