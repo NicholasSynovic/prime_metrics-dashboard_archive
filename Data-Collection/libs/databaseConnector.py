@@ -16,7 +16,7 @@ class DatabaseConnector:
                 database.close()
             return True
 
-    def openDatabaseConnection(self) -> list:
+    def openDatabaseConnection(self) -> Connection:
         databaseConnection = sqlite3.connect(self.file)
         return databaseConnection
 
