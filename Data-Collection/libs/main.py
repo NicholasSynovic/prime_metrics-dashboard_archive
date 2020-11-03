@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
-from githubAPI import GitHubAPI
-from sqlite3 import Cursor, Connection
+from sqlite3 import Connection, Cursor
+
 import Commits
+from githubAPI import GitHubAPI
+
 
 class Logic:
     '''

@@ -1,8 +1,9 @@
-from sqlite3 import Connection, Cursor
-import Defect_Density.Code.DatabaseConnector as DatabaseConnector
-import Defect_Density.Code.Main
 import argparse
 from argparse import Namespace
+from sqlite3 import Connection, Cursor
+
+import libs.databaseConnector as DatabaseConnector
+import libs.main
 
 
 class SSLMetrics:
