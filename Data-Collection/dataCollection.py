@@ -33,7 +33,7 @@ class DataCollection:
         )
         parser.add_argument(
             "-f",
-            "--outfile",
+            "--outFile",
             nargs=1,
             default="Metrics-Dashboard",
             type=str,
@@ -63,7 +63,7 @@ class DataCollection:
         repositoryURL: str,
         username: str,
         token: str,
-        outfile: str,
+        outFile: str,
     ) -> None:
         pass
 
@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
     url = args.url[0]
     token = args.token[0]
-    outfile = args.outfile[0]
+    outFile = args.outFile[0]
 
     parsedValues = s.stripURL(url=args.url[0])
 
@@ -84,8 +84,5 @@ if __name__ == "__main__":
         repositoryURL=url,
         username=parsedValues[1],
         token=token,
-        outfile=outfile,
+        outFile=outFile,
     )
-
-else:
-    print("dataCollection.py is meant to ran by itself and not imported as a module.")

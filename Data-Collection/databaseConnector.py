@@ -3,82 +3,67 @@ from sqlite3 import Connection, Cursor
 
 
 class DatabaseConnector:
-    def __init__(self, fileName: str = "DefectDensity.db") -> None:
-        self.fileName = fileName
-        self.filePath = "metrics/{}".format(fileName)
+    def __init__(self, databaseFileName: str) -> None:
+        self.file = databaseFileName
 
     def createDatabase(self) -> bool:
         try:
-            with open(self.filePath, "r") as database:
+            with open(self.file, "r") as database:
                 database.close()
             return False
         except FileNotFoundError:
-            with open(self.filePath, "w") as database:
+            with open(self.file, "w") as database:
                 database.close()
             return True
 
     def openDatabaseConnection(self) -> list:
-        databaseConnection = sqlite3.connect(self.filePath)
-        return [databaseConnection, self.filePath]
+        databaseConnection = sqlite3.connect(self.file)
+        return databaseConnection
 
     def executeSQL(
         self,
         sql: str,
-        databaseConnection: list,
+        databaseConnection: Connection,
         options: tuple = None,
         commit: bool = False,
     ) -> bool:
-        connection = databaseConnection[0]
-
+        connection = databaseConnection
         if options is None:
             connection.execute(sql)
         else:
             connection.execute(sql, options)
-
         if commit:
             connection.commit()
-
         return commit
 
-    def commitSQL(self, databaseConnection: list) -> bool:
-        # TODO: Implement proper logging or errors
-        connection = databaseConnection[0]
-
+    def commitSQL(self, databaseConnection: Connection) -> bool:
+        connection = databaseConnection
         try:
             connection.commit()
             return True
         except Exception as error:
-            print(error)
+            print("❗ {}".format(error))
             return False
 
-    def closeDatabaseConnection(self, databaseConnection: list) -> bool:
-        connection = databaseConnection[0]
-        filePath = databaseConnection[1]
-
+    def closeDatabaseConnection(self, databaseConnection: Connection) -> bool:
         try:
-            if connection:
-                connection.close()
+            if databaseConnection:
+                databaseConnection.close()
                 return True
 
         except Exception as error:
-            # TODO: Implement proper logging or errors
-            print("{} Connection still active for: ".format(filePath))
-            print(error)
+            print("❗ Database connection still active for: {}".format(self.file))
+            print("❗ {}".format(error))
             return False
 
-    def changeFile(self, fileName: str, create: bool = True) -> str:
-        self.fileName = fileName
-        self.filePath = "metrics/" + fileName
-
+    def changeFile(self, databaseFileName: str, create: bool = True) -> str:
+        self.file = databaseFileName
         if create:
             fileCreatedAlready = self.createDatabase()
-
             if fileCreatedAlready:
-                return "{} was created at {}".format(self.fileName, self.filePath)
-
+                return "✔️ {} was created at {}".format(self.fileName, self.file)
             else:
-                return "{} has already been created at {}".format(
-                    self.fileName, self.filePath
+                return "❗ {} has already been created at {}".format(
+                    self.fileName, self.file
                 )
-
-        return "Changed file to {} at {}".format(self.fileName, self.filePath)
+        return "✔️ Changed file to {} at {}".format(self.fileName, self.file)
