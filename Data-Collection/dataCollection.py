@@ -3,7 +3,7 @@ from sqlite3 import Connection, Cursor
 from commits import Commits
 from libs.cmdLineInterface import arguementHandling
 from libs.databaseConnector import DatabaseConnector
-from openIssues import OpenIssues
+from issues import Issues
 
 
 class DataCollection:
@@ -57,7 +57,7 @@ class DataCollection:
             username=self.username,
         )
 
-        openIssueCollector = OpenIssues(
+        issueCollector = Issues(
             dbConnection=self.dbConnector,
             oauthToken=self.token,
             repository=self.repository,
@@ -65,7 +65,7 @@ class DataCollection:
         )
 
         _collectData(commitsCollector)
-        _collectData(openIssueCollector)
+        _collectData(issueCollector)
 
 
 if __name__ == "__main__":

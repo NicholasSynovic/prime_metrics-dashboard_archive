@@ -42,7 +42,7 @@
         "x-github-media-type": "unknown, github.v3",
         "x-xss-protection": "1; mode=block"
     },
-    "openIssues": {
+    "issues": {
         "server": "GitHub.com",
         "date": "Sun, 08 Nov 2020 19: 28: 18 GMT",
         "content-type": "application/json; charset=utf-8",

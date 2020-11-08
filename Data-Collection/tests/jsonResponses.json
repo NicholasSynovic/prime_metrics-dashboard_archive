@@ -7991,7 +7991,7 @@
             ]
         }
     ],
-    "openIssues": [
+    "issues": [
         {
             "url": "https://api.github.com/repos/SoftwareSystemsLaboratory/Metrics-Dashboard/issues/10",
             "repository_url": "https://api.github.com/repos/SoftwareSystemsLaboratory/Metrics-Dashboard",

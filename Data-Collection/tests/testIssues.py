@@ -8,7 +8,7 @@ from requests import Response
 
 sys.path.append("../")
 
-from openIssues import OpenIssues
+from issues import Issues
 from libs.databaseConnector import DatabaseConnector
 from libs.githubConnector import GitHubConnector
 
@@ -22,14 +22,14 @@ class TestCommits(unittest.TestCase):
         self.dbConnection.executeSQL(sql=commitsSQL, commit=True)
 
         with open("jsonResponses.json", "r") as file:
-            self.openIssuesResponse = load(file)["openIssues"]
+            self.issuesResponse = load(file)["issues"]
             file.close()
 
         with open("jsonResponseHeaders.json", "r") as file:
-            self.openIssuesResponseHeaders = load(file)["openIssues"]
+            self.issuesResponseHeaders = load(file)["issues"]
             file.close()
 
-        self.openIssuesCollector = OpenIssues(
+        self.issuesCollector = Issues(
             dbConnection=self.dbConnection,
             oauthToken="CHANGE ME",
             repository="Metrics-Dashboard",
@@ -37,17 +37,17 @@ class TestCommits(unittest.TestCase):
         )
 
     def test_Commits(self):
-        assert self.openIssuesCollector.currentPage == 1
-        assert self.openIssuesCollector.repository == "Metrics-Dashboard"
-        assert self.openIssuesCollector.username == "SoftwareSystemsLaboratory"
+        assert self.issuesCollector.currentPage == 1
+        assert self.issuesCollector.repository == "Metrics-Dashboard"
+        assert self.issuesCollector.username == "SoftwareSystemsLaboratory"
 
     def test_getData(self):
-        data = self.openIssuesCollector.getData()
+        data = self.issuesCollector.getData()
         assert data[1].status_code == 200
         self.assertIsInstance(data[0], list)
 
     def test_insertData(self):
-        self.openIssuesCollector.insertData(dataset=self.openIssuesResponse)
+        self.issuesCollector.insertData(dataset=self.issuesResponse)
 
     # TODO: Create a proper test for this function
     # def test_IterateNext(self):

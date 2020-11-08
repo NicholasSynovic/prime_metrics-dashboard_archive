@@ -6,7 +6,7 @@ from libs.databaseConnector import DatabaseConnector
 from libs.githubConnector import GitHubConnector
 
 
-class OpenIssues:
+class Issues:
     def __init__(
         self,
         dbConnection: DatabaseConnector,
@@ -19,10 +19,8 @@ class OpenIssues:
         self.githubConnection = GitHubConnector(oauthToken=oauthToken)
         self.repository = repository
         self.username = username
-        self.url = (
-            "https://api.github.com/repos/{}/{}/issues?per_page=100&page={}".format(
-                username, repository, self.currentPage
-            )
+        self.url = "https://api.github.com/repos/{}/{}/issues?state=all&per_page=100&page={}".format(
+            username, repository, self.currentPage
         )
 
     def getData(self) -> list:
