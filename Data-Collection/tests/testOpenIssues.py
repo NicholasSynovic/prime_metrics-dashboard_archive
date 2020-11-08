@@ -22,11 +22,11 @@ class TestCommits(unittest.TestCase):
         self.dbConnection.executeSQL(sql=commitsSQL, commit=True)
 
         with open("jsonResponses.json", "r") as file:
-            self.openIssuesResponse = load(file)["commits"]
+            self.openIssuesResponse = load(file)["openIssues"]
             file.close()
 
         with open("jsonResponseHeaders.json", "r") as file:
-            self.openIssuesResponseHeaders = load(file)["commits"]
+            self.openIssuesResponseHeaders = load(file)["openIssues"]
             file.close()
 
         self.openIssuesCollector = OpenIssues(
