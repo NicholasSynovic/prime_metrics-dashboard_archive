@@ -1,8 +1,7 @@
-import threading
 from sqlite3 import Connection, Cursor
 
-from libs import *
 from commits import Commits
+from libs import *
 from openIssues import OpenIssues
 
 
@@ -60,15 +59,6 @@ class DataCollection:
 
         _collectData(openIssueCollector)
         _collectData(commitsCollector)
-
-        # thread1 = threading.Thread(target=_collectData, args=[commitsCollector])
-        # thread2 = threading.Thread(target=_collectData, args=[openIssueCollector])
-
-        # thread1.start()
-        # thread2.start
-
-        # thread1.join()
-        # thread2.join()
 
 
 dc = DataCollection(

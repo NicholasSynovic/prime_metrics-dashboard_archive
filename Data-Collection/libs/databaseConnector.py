@@ -1,6 +1,5 @@
 import sqlite3
-from sqlite3 import Connection, Cursor
-from sqlite3 import IntegrityError, OperationalError
+from sqlite3 import Connection, Cursor, IntegrityError, OperationalError
 
 
 class DatabaseConnector:

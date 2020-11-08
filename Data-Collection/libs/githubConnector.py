@@ -1,6 +1,7 @@
+import re
+
 import requests
 from requests import Request, Response
-import re
 
 
 class GitHubConnector:
