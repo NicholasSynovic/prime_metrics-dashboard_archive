@@ -28,7 +28,7 @@ with open("jsonResponseHeaders.json", "r") as file:
 
 commitsCollector = Commits(
     dbConnection=dbConnection,
-    oauthToken="18c3c5e0ae7336feed264704c0946b6f80fc7f31",
+    oauthToken="CHANGE ME",
     repository="Metrics-Dashboard",
     username="SoftwareSystemsLaboratory",
 )
