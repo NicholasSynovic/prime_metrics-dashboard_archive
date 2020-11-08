@@ -53,19 +53,3 @@ class Commits:
             )
         )
         return True
-        # try:
-        #     key_link = self.responseHeaders["Link"]
-        #     if 'rel="next"' not in key_link:
-        #         break
-        #     else:
-        #         bar = key_link.split(",")
-        #         for x in bar:
-        #             if 'rel="next"' in x:
-        #                 url = x[x.find("<") + 1 : x.find(">")]
-        #                 self.data = self.gha.access_GitHubAPISpecificURL(url=url)
-        #                 self.responseHeaders = self.gha.get_ResponseHeaders()
-        #                 self.parser()
-        # except KeyError:
-        #     print(self.responseHeaders)
-        #     break
-        # break

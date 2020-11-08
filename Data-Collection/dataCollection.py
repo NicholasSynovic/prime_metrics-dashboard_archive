@@ -58,7 +58,7 @@ dc.createFileTablesColumns(t)
 
 c = Commits(
     dbConnection=t,
-    oauthToken="1be86e557ba54e7f5edd6b2054ae129d8dfec09d",
+    oauthToken="",
     repository="Metrics-Dashboard",
     username="NicholasSynovic",
     page=1,
