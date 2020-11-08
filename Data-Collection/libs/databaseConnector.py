@@ -1,5 +1,6 @@
 import sqlite3
 from sqlite3 import Connection, Cursor
+from sqlite3 import OperationalError
 
 
 class DatabaseConnector:
@@ -28,13 +29,17 @@ class DatabaseConnector:
         commit: bool = False,
     ) -> bool:
         connection = databaseConnection
-        if options is None:
-            connection.execute(sql)
-        else:
-            connection.execute(sql, options)
+        try:
+            if options is None:
+                connection.execute(sql)
+            else:
+                connection.execute(sql, options)
+        except OperationalError:
+            return False
         if commit:
             connection.commit()
-        return commit
+            return True
+        return "Waiting to commit"
 
     def commitSQL(self, databaseConnection: Connection) -> bool:
         connection = databaseConnection

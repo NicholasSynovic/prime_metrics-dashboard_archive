@@ -42,27 +42,26 @@ class DataCollection:
         )
 
     def startDataCollection(self) -> None:
-        pass
+        databaseConnection = self.checkForFile()
+        self.createFileTablesColumns(dbConnection=databaseConnection)
+
+        commitsCollector = Commits(
+            dbConnection=databaseConnection,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+        )
+
+        commitsData = commitsCollector.getData()
+        commitsCollector.insertData(dataset=commitsData[0])
+        commitsCollector.iterateNext(commitsData[1])
 
 
 dc = DataCollection(
-    oauthToken=10,
-    outfile="dicks.db",
-    repository="temp",
-    username="temp",
-)
-
-t = dc.checkForFile()
-
-dc.createFileTablesColumns(t)
-
-c = Commits(
-    dbConnection=t,
-    oauthToken="",
+    oauthToken="54a7765ecac4f78aa9cf1edfe060b03509abe26e",
+    outfile=r"test.db",
     repository="Metrics-Dashboard",
     username="NicholasSynovic",
-    page=1,
 )
 
-data = c.getData()
-c.iteratePages(data[1])
+dc.startDataCollection()

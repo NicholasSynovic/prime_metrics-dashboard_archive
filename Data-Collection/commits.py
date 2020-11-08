@@ -10,16 +10,15 @@ class Commits:
         oauthToken: str,
         repository: str,
         username: str,
-        page: int,
     ):
         self.connection = dbConnection
-        self.currentPage = page
+        self.currentPage = 1
         self.githubConnection = GitHubConnector(oauthToken=oauthToken)
         self.repository = repository
         self.username = username
         self.url = (
             "https://api.github.com/repos/{}/{}/commits?per_page=100&page={}".format(
-                username, repository, page
+                username, repository, self.currentPage
             )
         )
 
