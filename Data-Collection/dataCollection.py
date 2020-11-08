@@ -35,6 +35,12 @@ class DataCollection:
     def startDataCollection(self) -> None:
         def _collectData(collector) -> None:
             while True:
+                print(
+                    """...\tDownloading information from:
+   \t{}\n""".format(
+                        collector.url
+                    )
+                )
                 data = collector.getData()
                 collector.insertData(dataset=data[0])
                 if not collector.iterateNext(data[1]):
@@ -57,15 +63,21 @@ class DataCollection:
             username=self.username,
         )
 
-        _collectData(openIssueCollector)
         _collectData(commitsCollector)
+        _collectData(openIssueCollector)
 
 
-dc = DataCollection(
-    oauthToken="54a7765ecac4f78aa9cf1edfe060b03509abe26e",
-    outfile=r"test.db",
-    repository="numpy",
-    username="numpy",
-)
+if __name__ == "__main__":
+    cmdLineArgs = arguementHandling()
 
-dc.startDataCollection()
+    prepository = cmdLineArgs.url[0].split()
+    print(prepository)
+
+    dc = DataCollection(
+        oauthToken=cmdLineArgs.token[0],
+        outfile=cmdLineArgs.outfile[0],
+        repository=cmdLineArgs.url[0].split("/")[-1],
+        username=cmdLineArgs.url[0].split("/")[-2],
+    )
+
+    dc.startDataCollection()

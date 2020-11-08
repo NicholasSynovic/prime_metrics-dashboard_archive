@@ -19,11 +19,14 @@ class GitHubConnector:
 
     def parseResponseHeaders(self, response: Response) -> dict:
         def _findLastPage() -> int:
-            links = response.headers["Link"].split(",")
-            for link in links:
-                if link.find('rel="last"') != -1:
-                    return int("".join(re.findall("=([0-9]+)>", link)))
-            return -1
+            try:
+                links = response.headers["Link"].split(",")
+                for link in links:
+                    if link.find('rel="last"') != -1:
+                        return int("".join(re.findall("=([0-9]+)>", link)))
+                return -1
+            except KeyError:
+                return -1
 
         return {
             "Status-Code": response.status_code,

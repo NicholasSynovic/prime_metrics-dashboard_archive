@@ -14,7 +14,7 @@ class OpenIssues:
         username: str,
     ):
         self.connection = dbConnection
-        self.currentPage = 20
+        self.currentPage = 1
         self.githubConnection = GitHubConnector(oauthToken=oauthToken)
         self.repository = repository
         self.username = username
@@ -76,11 +76,6 @@ class OpenIssues:
             )
 
     def iterateNext(self, responseHeaders: Response) -> bool:
-        print(
-            {self.url},
-            {self.currentPage},
-            {self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]},
-        )
         if (
             self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]
             == -1

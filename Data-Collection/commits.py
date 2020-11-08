@@ -14,7 +14,7 @@ class Commits:
         username: str,
     ):
         self.connection = dbConnection
-        self.currentPage = 245
+        self.currentPage = 1
         self.githubConnection = GitHubConnector(oauthToken=oauthToken)
         self.repository = repository
         self.username = username
@@ -43,11 +43,6 @@ class Commits:
             )
 
     def iterateNext(self, responseHeaders: Response) -> bool:
-        print(
-            {self.url},
-            {self.currentPage},
-            {self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]},
-        )
         if (
             self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]
             == -1

@@ -1,3 +1,3 @@
-from .cmdLineInterface import CMDLineInterface
+from .cmdLineInterface import arguementHandling
 from .databaseConnector import DatabaseConnector
 from .githubConnector import GitHubConnector
