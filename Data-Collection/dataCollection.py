@@ -1,7 +1,8 @@
 from sqlite3 import Connection, Cursor
 
 from commits import Commits
-from libs import *
+from libs.cmdLineInterface import arguementHandling
+from libs.databaseConnector import DatabaseConnector
 from openIssues import OpenIssues
 
 

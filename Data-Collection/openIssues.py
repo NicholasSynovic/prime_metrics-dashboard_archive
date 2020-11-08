@@ -2,7 +2,8 @@ from sqlite3 import Connection, Cursor
 
 from requests import Response
 
-from libs import *
+from libs.databaseConnector import DatabaseConnector
+from libs.githubConnector import GitHubConnector
 
 
 class OpenIssues:
