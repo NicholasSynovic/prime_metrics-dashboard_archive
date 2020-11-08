@@ -1,9 +1,3 @@
-# This file creates the tables necessary for data collection as well as all of the columns needed to do so
-# This file starts all of the data collection files and insertes the data into the database where it needs to go
-
-# 3: Start collecting data
-
-from datetime import datetime, timedelta
 from sqlite3 import Connection, Cursor
 
 from libs import *
