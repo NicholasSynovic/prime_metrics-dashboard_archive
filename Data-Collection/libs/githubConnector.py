@@ -17,12 +17,19 @@ class GitHubConnector:
         return requests.get(url=url, headers=headers)
 
     def parseResponseHeaders(self, response: Response) -> dict:
+        def _findLastPage() -> int:
+            links = response.headers["Link"].split(",")
+            for link in links:
+                if link.find('rel="last"') != -1:
+                    return int("".join(re.findall("=([0-9]+)>", link)))
+            return -1
+
         return {
             "Status-Code": response.status_code,
             "X-RateLimit-Limit": response.headers["X-RateLimit-Limit"],
             "X-RateLimit-Remaining": response.headers["X-RateLimit-Remaining"],
             "X-RateLimit-Reset": response.headers["X-RateLimit-Reset"],
-            "Last-Page": re.findall("=(\d)>", response.headers["Link"])[-1],
+            "Last-Page": _findLastPage(),
         }
 
     def returnRateLimit(self) -> int:

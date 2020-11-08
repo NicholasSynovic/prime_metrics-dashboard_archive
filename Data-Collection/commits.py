@@ -6,13 +6,13 @@ from libs import *
 class Commits:
     def __init__(
         self,
-        dbConnection: Connection,
+        dbConnection: DatabaseConnector,
         oauthToken: str,
         repository: str,
         username: str,
     ):
         self.connection = dbConnection
-        self.currentPage = 1
+        self.currentPage = 245
         self.githubConnection = GitHubConnector(oauthToken=oauthToken)
         self.repository = repository
         self.username = username
@@ -34,15 +34,21 @@ class Commits:
             message = dataset[dataPoint]["commit"]["message"]
             commentCount = dataset[dataPoint]["commit"]["comment_count"]
 
-            sql = "INSERT INTO COMMITS (SHA, Commit_Date, Author, Message, Comment_Count) VALUES (?,?,?,?,?);"
+            sql = "INSERT OR IGNORE INTO COMMITS (SHA, Commit_Date, Author, Message, Comment_Count) VALUES (?,?,?,?,?);"
 
-            self.connection.execute(sql, (sha, date, author, message, commentCount))
-            self.connection.commit()
+            self.connection.executeSQL(
+                sql, (sha, date, author, message, commentCount), True
+            )
 
     def iterateNext(self, responseHeaders: Response) -> bool:
+        print(
+            {self.url},
+            {self.currentPage},
+            {self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]},
+        )
         if (
-            self.currentPage
-            == self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]
+            self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]
+            == -1
         ):
             return False
         self.currentPage += 1

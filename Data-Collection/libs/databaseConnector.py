@@ -1,11 +1,12 @@
 import sqlite3
 from sqlite3 import Connection, Cursor
-from sqlite3 import OperationalError
+from sqlite3 import IntegrityError, OperationalError
 
 
 class DatabaseConnector:
     def __init__(self, databaseFileName: str) -> None:
         self.file = databaseFileName
+        self.databaseConnection = None
 
     def createDatabase(self) -> bool:
         try:
@@ -17,18 +18,17 @@ class DatabaseConnector:
                 database.close()
             return True
 
-    def openDatabaseConnection(self) -> Connection:
+    def openDatabaseConnection(self) -> None:
         databaseConnection = sqlite3.connect(self.file)
-        return databaseConnection
+        self.databaseConnection = databaseConnection
 
     def executeSQL(
         self,
         sql: str,
-        databaseConnection: Connection,
         options: tuple = None,
         commit: bool = False,
     ) -> bool:
-        connection = databaseConnection
+        connection = self.databaseConnection
         try:
             if options is None:
                 connection.execute(sql)
@@ -39,7 +39,7 @@ class DatabaseConnector:
         if commit:
             connection.commit()
             return True
-        return "Waiting to commit"
+        return "❗ Waiting to commit"
 
     def commitSQL(self, databaseConnection: Connection) -> bool:
         connection = databaseConnection
