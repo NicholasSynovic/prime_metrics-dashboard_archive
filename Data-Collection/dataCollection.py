@@ -7,6 +7,7 @@ from contributors import Contributors
 from issueEvents import IssueEvents
 from issues import Issues
 from labels import Labels
+from languages import Languages
 from libs.cmdLineInterface import arguementHandling
 from libs.databaseConnector import DatabaseConnector
 from milestones import Milestones
@@ -48,6 +49,8 @@ class DataCollection:
 
         labelsSQL = "CREATE TABLE Labels (ID INTEGER, Name TEXT, Description TEXT, Color TEXT, Default_Label TEXT, PRIMARY KEY(ID))"
 
+        languagesSQL = "CREATE TABLE Languages (ID INTEGER, Language TEXT, Bytes_of_Code INTEGER, PRIMARY KEY(ID))"
+
         milestonesSQL = "CREATE TABLE Milestones (ID INTEGER, Number INTEGER, State TEXT, Title TEXT, Description TEXT, Creator TEXT, Open_Issues INTEGER, Closed_Issues INTEGER, Created_At TEXT, Updated_At TEXT, Closed_At TEXT, Due_On TEXT, PRIMARY KEY(ID))"
 
         repositorySQL = "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Description TEXT, Fork TEXT, Created_At TEXT, Updated_At TEXT, Pushed_At TEXT, Size INTEGER, Stars INTEGER, Watchers INTEGER, Language TEXT, Has_Issues TEXT, Has_Projects TEXT, Has_Downloads TEXT, Has_Wiki TEXT, Has_Pages TEXT, Forks INTEGER, Archived TEXT, Disabled TEXT, Open_Issues INTEGER, License TEXT, Organization TEXT, Network_Count INTEGER, Subscribers INTEGER, Private TEXT, PRIMARY KEY(ID))"
@@ -59,6 +62,7 @@ class DataCollection:
         self.dbConnector.executeSQL(sql=issuesSQL, commit=True)
         self.dbConnector.executeSQL(sql=issueEventsSQL, commit=True)
         self.dbConnector.executeSQL(sql=labelsSQL, commit=True)
+        self.dbConnector.executeSQL(sql=languagesSQL, commit=True)
         self.dbConnector.executeSQL(sql=milestonesSQL, commit=True)
         self.dbConnector.executeSQL(sql=repositorySQL, commit=True)
 
@@ -128,6 +132,13 @@ class DataCollection:
             username=self.username,
         )
 
+        languageCollector = Languages(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+        )
+
         milestoneCollector = Milestones(
             dbConnection=self.dbConnector,
             oauthToken=self.token,
@@ -145,10 +156,11 @@ class DataCollection:
         # _collectData(assigneeCollector)
         # _collectData(commentCollector)
         # _collectData(commitsCollector)
-        _collectData(contributorCollector)
+        # _collectData(contributorCollector)
         # _collectData(issueCollector)
         # _collectData(issueEventCollector)
         # _collectData(labelCollector)
+        # _collectData(languageCollector)
         # _collectData(milestoneCollector)
         # _collectData(repositoryCollector)
 
