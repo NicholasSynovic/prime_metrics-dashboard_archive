@@ -1,6 +1,7 @@
 from sqlite3 import Connection
 
 from assignees import Assignees
+from branches import Branches
 from comments import Comments
 from commits import Commits
 from contributors import Contributors
@@ -13,6 +14,7 @@ from libs.databaseConnector import DatabaseConnector
 from milestones import Milestones
 from repository import Repository
 from tags import Tags
+from teams import Teams
 
 
 class DataCollection:
@@ -38,6 +40,8 @@ class DataCollection:
 
         assigneesSQL = "CREATE TABLE Assigness (ID INTEGER, Login TEXT, Type TEXT, Site_Admin TEXT, PRIMARY KEY(ID))"
 
+        branchesSQL = "CREATE TABLE Branches (ID INTEGER, Name TEXT, Commit_SHA TEXT, PRIMARY KEY(ID))"
+
         commentsSQL = "CREATE TABLE Comments (ID INTEGER, Author TEXT, Author_Association TEXT, Message TEXT, Created_At TEXT, Updated_At TEXT, PRIMARY KEY(ID))"
 
         commitsSQL = "CREATE TABLE Commits (SHA TEXT, Commit_Date TEXT, Author TEXT, Message TEXT, Comment_Count INTEGER, PRIMARY KEY(SHA));"
@@ -58,7 +62,10 @@ class DataCollection:
 
         tagsSQL = "CREATE TABLE Tags (Node_ID TEXT, Name TEXT, PRIMARY KEY(Node_ID))"
 
+        teamsSQL = "CREATE TABLE Teams (ID INTEGER, Name TEXT, Description TEXT, Privacy TEXT, Permission TEXT, Parent TEXT, PRIMARY KEY(ID))"
+
         self.dbConnector.executeSQL(sql=assigneesSQL, commit=True)
+        self.dbConnector.executeSQL(sql=branchesSQL, commit=True)
         self.dbConnector.executeSQL(sql=commentsSQL, commit=True)
         self.dbConnector.executeSQL(sql=commitsSQL, commit=True)
         self.dbConnector.executeSQL(sql=contributorsSQL, commit=True)
@@ -69,6 +76,7 @@ class DataCollection:
         self.dbConnector.executeSQL(sql=milestonesSQL, commit=True)
         self.dbConnector.executeSQL(sql=repositorySQL, commit=True)
         self.dbConnector.executeSQL(sql=tagsSQL, commit=True)
+        self.dbConnector.executeSQL(sql=teamsSQL, commit=True)
 
     def startDataCollection(self) -> None:
         def _collectData(collector) -> None:
@@ -88,6 +96,13 @@ class DataCollection:
         self.createFileTablesColumns(dbConnection=databaseConnection)
 
         assigneeCollector = Assignees(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+        )
+
+        branchCollector = Branches(
             dbConnection=self.dbConnector,
             oauthToken=self.token,
             repository=self.repository,
@@ -164,7 +179,15 @@ class DataCollection:
             username=self.username,
         )
 
+        teamCollector = Teams(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+        )
+
         # _collectData(assigneeCollector)
+        _collectData(branchCollector)
         # _collectData(commentCollector)
         # _collectData(commitsCollector)
         # _collectData(contributorCollector)
@@ -174,7 +197,8 @@ class DataCollection:
         # _collectData(languageCollector)
         # _collectData(milestoneCollector)
         # _collectData(repositoryCollector)
-        _collectData(tagCollector)
+        # _collectData(tagCollector)
+        # _collectData(teamCollector)
 
 
 if __name__ == "__main__":
