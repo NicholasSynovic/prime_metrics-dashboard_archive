@@ -19,9 +19,7 @@ class Repository:
         self.githubConnection = GitHubConnector(oauthToken=oauthToken)
         self.repository = repository
         self.username = username
-        self.url = "https://api.github.com/repos/{}/{}".format(
-            username, repository, self.currentPage
-        )
+        self.url = "https://api.github.com/repos/{}/{}".format(username, repository)
 
     def getData(self) -> list:
         response = self.githubConnection.openConnection(url=self.url)
@@ -99,6 +97,6 @@ class Repository:
 
         self.currentPage += 1
         self.url = "https://api.github.com/repos/{}/{}/".format(
-            self.username, self.repository, self.currentPage
+            self.username, self.repository
         )
         return True

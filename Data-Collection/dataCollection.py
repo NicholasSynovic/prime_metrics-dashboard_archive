@@ -3,6 +3,7 @@ from sqlite3 import Connection
 from assignees import Assignees
 from comments import Comments
 from commits import Commits
+from contributors import Contributors
 from issueEvents import IssueEvents
 from issues import Issues
 from labels import Labels
@@ -32,25 +33,29 @@ class DataCollection:
         self.dbConnector.openDatabaseConnection()
 
     def createFileTablesColumns(self, dbConnection: Connection) -> bool:
-        repositorySQL = "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Description TEXT, Fork TEXT, Created_At TEXT, Updated_At TEXT, Pushed_At TEXT, Size INTEGER, Stars INTEGER, Watchers INTEGER, Language TEXT, Has_Issues TEXT, Has_Projects TEXT, Has_Downloads TEXT, Has_Wiki TEXT, Has_Pages TEXT, Forks INTEGER, Archived TEXT, Disabled TEXT, Open_Issues INTEGER, License TEXT, Organization TEXT, Network_Count INTEGER, Subscribers INTEGER, Private TEXT, PRIMARY KEY(ID))"
-
-        milestonesSQL = "CREATE TABLE Milestones (ID INTEGER, Number INTEGER, State TEXT, Title TEXT, Description TEXT, Creator TEXT, Open_Issues INTEGER, Closed_Issues INTEGER, Created_At TEXT, Updated_At TEXT, Closed_At TEXT, Due_On TEXT, PRIMARY KEY(ID))"
-
-        labelsSQL = "CREATE TABLE Labels (ID INTEGER, Name TEXT, Description TEXT, Color TEXT, Default_Label TEXT, PRIMARY KEY(ID))"
-
-        issueEventsSQL = "CREATE TABLE Issue_Events (ID INTEGER, Actor TEXT, Type TEXT, Site_Admin TEXT, Event TEXT, Assignee TEXT, Assigner TEXT, Created_At TEXT, PRIMARY KEY(ID))"
-
-        commitsSQL = "CREATE TABLE Commits (SHA TEXT,Commit_Date TEXT, Author TEXT, Message TEXT, Comment_Count INTEGER, PRIMARY KEY(SHA));"
-
-        issuesSQL = "CREATE TABLE Issues (ID INTEGER, Count INTEGER, Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, Created_At TEXT, Updated_At TEXT, Closed_At TEXT, PRIMARY KEY(ID));"
 
         assigneesSQL = "CREATE TABLE Assigness (ID INTEGER, Login TEXT, Type TEXT, Site_Admin TEXT, PRIMARY KEY(ID))"
 
         commentsSQL = "CREATE TABLE Comments (ID INTEGER, Author TEXT, Author_Association TEXT, Message TEXT, Created_At TEXT, Updated_At TEXT, PRIMARY KEY(ID))"
 
+        commitsSQL = "CREATE TABLE Commits (SHA TEXT, Commit_Date TEXT, Author TEXT, Message TEXT, Comment_Count INTEGER, PRIMARY KEY(SHA));"
+
+        contributorsSQL = "CREATE TABLE Contributors (ID TEXT, Login TEXT, Type TEXT, Site_Admin TEXT, Contributions TEXT, PRIMARY KEY(ID))"
+
+        issuesSQL = "CREATE TABLE Issues (ID INTEGER, Count INTEGER, Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, Created_At TEXT, Updated_At TEXT, Closed_At TEXT, PRIMARY KEY(ID));"
+
+        issueEventsSQL = "CREATE TABLE Issue_Events (ID INTEGER, Actor TEXT, Type TEXT, Site_Admin TEXT, Event TEXT, Assignee TEXT, Assigner TEXT, Created_At TEXT, PRIMARY KEY(ID))"
+
+        labelsSQL = "CREATE TABLE Labels (ID INTEGER, Name TEXT, Description TEXT, Color TEXT, Default_Label TEXT, PRIMARY KEY(ID))"
+
+        milestonesSQL = "CREATE TABLE Milestones (ID INTEGER, Number INTEGER, State TEXT, Title TEXT, Description TEXT, Creator TEXT, Open_Issues INTEGER, Closed_Issues INTEGER, Created_At TEXT, Updated_At TEXT, Closed_At TEXT, Due_On TEXT, PRIMARY KEY(ID))"
+
+        repositorySQL = "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Description TEXT, Fork TEXT, Created_At TEXT, Updated_At TEXT, Pushed_At TEXT, Size INTEGER, Stars INTEGER, Watchers INTEGER, Language TEXT, Has_Issues TEXT, Has_Projects TEXT, Has_Downloads TEXT, Has_Wiki TEXT, Has_Pages TEXT, Forks INTEGER, Archived TEXT, Disabled TEXT, Open_Issues INTEGER, License TEXT, Organization TEXT, Network_Count INTEGER, Subscribers INTEGER, Private TEXT, PRIMARY KEY(ID))"
+
         self.dbConnector.executeSQL(sql=assigneesSQL, commit=True)
         self.dbConnector.executeSQL(sql=commentsSQL, commit=True)
         self.dbConnector.executeSQL(sql=commitsSQL, commit=True)
+        self.dbConnector.executeSQL(sql=contributorsSQL, commit=True)
         self.dbConnector.executeSQL(sql=issuesSQL, commit=True)
         self.dbConnector.executeSQL(sql=issueEventsSQL, commit=True)
         self.dbConnector.executeSQL(sql=labelsSQL, commit=True)
@@ -95,6 +100,13 @@ class DataCollection:
             username=self.username,
         )
 
+        contributorCollector = Contributors(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+        )
+
         issueCollector = Issues(
             dbConnection=self.dbConnector,
             oauthToken=self.token,
@@ -130,14 +142,15 @@ class DataCollection:
             username=self.username,
         )
 
-        _collectData(assigneeCollector)
-        _collectData(commentCollector)
-        _collectData(commitsCollector)
-        _collectData(issueCollector)
-        _collectData(issueEventCollector)
-        _collectData(labelCollector)
-        _collectData(milestoneCollector)
-        _collectData(repositoryCollector)
+        # _collectData(assigneeCollector)
+        # _collectData(commentCollector)
+        # _collectData(commitsCollector)
+        _collectData(contributorCollector)
+        # _collectData(issueCollector)
+        # _collectData(issueEventCollector)
+        # _collectData(labelCollector)
+        # _collectData(milestoneCollector)
+        # _collectData(repositoryCollector)
 
 
 if __name__ == "__main__":
