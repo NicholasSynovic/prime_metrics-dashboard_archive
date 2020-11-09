@@ -6,7 +6,7 @@ from libs.databaseConnector import DatabaseConnector
 from libs.githubConnector import GitHubConnector
 
 
-class Milestones:
+class Repository:
     def __init__(
         self,
         dbConnection: DatabaseConnector,
@@ -28,40 +28,67 @@ class Milestones:
         return [response.json(), response]
 
     def insertData(self, dataset: dict) -> None:
-        for dataPoint in range(len(dataset)):
-            id = dataset[dataPoint]["id"]
-            number = dataset[dataPoint]["number"]
-            state = dataset[dataPoint]["state"]
-            title = dataset[dataPoint]["title"]
-            description = dataset[dataPoint]["description"]
-            creator = dataset[dataPoint]["creator"]["login"]
-            openIssues = dataset[dataPoint]["open_issues"]
-            closedIssues = dataset[dataPoint]["closed_issues"]
-            createdAt = dataset[dataPoint]["created_at"]
-            updatedAt = dataset[dataPoint]["updated_at"]
-            closedAt = dataset[dataPoint]["closed_at"]
-            dueOn = dataset[dataPoint]["due_on"]
+        id = dataset["id"]
+        name = dataset["name"]
+        owner = dataset["owner"]["login"]
+        description = dataset["description"]
+        fork = str(dataset["fork"])
+        createdAt = dataset["created_at"]
+        updatedAt = dataset["updated_at"]
+        pushedAt = dataset["pushed_at"]
+        size = dataset["size"]
+        stars = dataset["stargazers_count"]
+        watchers = dataset["watchers_count"]
+        language = dataset["language"]
+        hasIssues = str(dataset["has_issues"])
+        hasProjects = str(dataset["has_projects"])
+        hasDownloads = str(dataset["has_downloads"])
+        hasWiki = str(dataset["has_wiki"])
+        hasPages = str(dataset["has_pages"])
+        forks = dataset["forks_count"]
+        archived = str(dataset["archived"])
+        disabled = str(dataset["disabled"])
+        openIssues = dataset["open_issues_count"]
+        license = dataset["license"]["name"]
+        organization = dataset["organization"]["login"]
+        networkCount = dataset["network_count"]
+        subscribers = dataset["subscribers_count"]
+        private = str(dataset["private"])
 
-            sql = "INSERT OR IGNORE INTO Milestones (ID, Number, State, Title, Description , Creator, Open_Issues, Closed_Issues, Created_At, Updated_At, Closed_At, Due_On) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+        sql = "INSERT OR IGNORE INTO Repository (ID, Name, Owner, Description, Fork, Created_At, Updated_At, Pushed_At, Size, Stars, Watchers, Language, Has_Issues, Has_Projects, Has_Downloads, Has_Wiki, Has_Pages, Forks, Archived, Disabled, Open_Issues, License, Organization, Network_Count, Subscribers, Private) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
-            self.connection.executeSQL(
-                sql,
-                (
-                    id,
-                    number,
-                    state,
-                    title,
-                    description,
-                    creator,
-                    openIssues,
-                    closedIssues,
-                    createdAt,
-                    updatedAt,
-                    closedAt,
-                    dueOn,
-                ),
-                True,
-            )
+        self.connection.executeSQL(
+            sql,
+            (
+                id,
+                name,
+                owner,
+                description,
+                fork,
+                createdAt,
+                updatedAt,
+                pushedAt,
+                size,
+                stars,
+                watchers,
+                language,
+                hasIssues,
+                hasProjects,
+                hasDownloads,
+                hasWiki,
+                hasPages,
+                forks,
+                archived,
+                disabled,
+                openIssues,
+                license,
+                organization,
+                networkCount,
+                subscribers,
+                private,
+            ),
+            True,
+        )
 
     def iterateNext(self, responseHeaders: Response) -> bool:
         if (

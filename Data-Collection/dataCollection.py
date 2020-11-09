@@ -1,4 +1,4 @@
-from sqlite3 import Connection, Cursor
+from sqlite3 import Connection
 
 from assignees import Assignees
 from comments import Comments
@@ -9,6 +9,7 @@ from labels import Labels
 from libs.cmdLineInterface import arguementHandling
 from libs.databaseConnector import DatabaseConnector
 from milestones import Milestones
+from repository import Repository
 
 
 class DataCollection:
@@ -31,6 +32,8 @@ class DataCollection:
         self.dbConnector.openDatabaseConnection()
 
     def createFileTablesColumns(self, dbConnection: Connection) -> bool:
+        repositorySQL = "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Description TEXT, Fork TEXT, Created_At TEXT, Updated_At TEXT, Pushed_At TEXT, Size INTEGER, Stars INTEGER, Watchers INTEGER, Language TEXT, Has_Issues TEXT, Has_Projects TEXT, Has_Downloads TEXT, Has_Wiki TEXT, Has_Pages TEXT, Forks INTEGER, Archived TEXT, Disabled TEXT, Open_Issues INTEGER, License TEXT, Organization TEXT, Network_Count INTEGER, Subscribers INTEGER, Private TEXT, PRIMARY KEY(ID))"
+
         milestonesSQL = "CREATE TABLE Milestones (ID INTEGER, Number INTEGER, State TEXT, Title TEXT, Description TEXT, Creator TEXT, Open_Issues INTEGER, Closed_Issues INTEGER, Created_At TEXT, Updated_At TEXT, Closed_At TEXT, Due_On TEXT, PRIMARY KEY(ID))"
 
         labelsSQL = "CREATE TABLE Labels (ID INTEGER, Name TEXT, Description TEXT, Color TEXT, Default_Label TEXT, PRIMARY KEY(ID))"
@@ -45,13 +48,14 @@ class DataCollection:
 
         commentsSQL = "CREATE TABLE Comments (ID INTEGER, Author TEXT, Author_Association TEXT, Message TEXT, Created_At TEXT, Updated_At TEXT, PRIMARY KEY(ID))"
 
-        self.dbConnector.executeSQL(sql=milestonesSQL, commit=True)
-        self.dbConnector.executeSQL(sql=labelsSQL, commit=True)
-        self.dbConnector.executeSQL(sql=issueEventsSQL, commit=True)
-        self.dbConnector.executeSQL(sql=commitsSQL, commit=True)
-        self.dbConnector.executeSQL(sql=issuesSQL, commit=True)
         self.dbConnector.executeSQL(sql=assigneesSQL, commit=True)
         self.dbConnector.executeSQL(sql=commentsSQL, commit=True)
+        self.dbConnector.executeSQL(sql=commitsSQL, commit=True)
+        self.dbConnector.executeSQL(sql=issuesSQL, commit=True)
+        self.dbConnector.executeSQL(sql=issueEventsSQL, commit=True)
+        self.dbConnector.executeSQL(sql=labelsSQL, commit=True)
+        self.dbConnector.executeSQL(sql=milestonesSQL, commit=True)
+        self.dbConnector.executeSQL(sql=repositorySQL, commit=True)
 
     def startDataCollection(self) -> None:
         def _collectData(collector) -> None:
@@ -70,14 +74,14 @@ class DataCollection:
         databaseConnection = self.checkForFile()
         self.createFileTablesColumns(dbConnection=databaseConnection)
 
-        milestoneCollector = Milestones(
+        assigneeCollector = Assignees(
             dbConnection=self.dbConnector,
             oauthToken=self.token,
             repository=self.repository,
             username=self.username,
         )
 
-        labelCollector = Labels(
+        commentCollector = Comments(
             dbConnection=self.dbConnector,
             oauthToken=self.token,
             repository=self.repository,
@@ -98,20 +102,6 @@ class DataCollection:
             username=self.username,
         )
 
-        assigneeCollector = Assignees(
-            dbConnection=self.dbConnector,
-            oauthToken=self.token,
-            repository=self.repository,
-            username=self.username,
-        )
-
-        commentCollector = Comments(
-            dbConnection=self.dbConnector,
-            oauthToken=self.token,
-            repository=self.repository,
-            username=self.username,
-        )
-
         issueEventCollector = IssueEvents(
             dbConnection=self.dbConnector,
             oauthToken=self.token,
@@ -119,13 +109,35 @@ class DataCollection:
             username=self.username,
         )
 
-        _collectData(milestoneCollector)
-        _collectData(labelCollector)
-        _collectData(issueEventCollector)
-        _collectData(commentCollector)
+        labelCollector = Labels(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+        )
+
+        milestoneCollector = Milestones(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+        )
+
+        repositoryCollector = Repository(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+        )
+
         _collectData(assigneeCollector)
+        _collectData(commentCollector)
         _collectData(commitsCollector)
         _collectData(issueCollector)
+        _collectData(issueEventCollector)
+        _collectData(labelCollector)
+        _collectData(milestoneCollector)
+        _collectData(repositoryCollector)
 
 
 if __name__ == "__main__":
