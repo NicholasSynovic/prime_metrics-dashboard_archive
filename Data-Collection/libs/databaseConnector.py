@@ -1,5 +1,5 @@
-from os import error
 import sqlite3
+from os import error
 from sqlite3 import Connection, Cursor, IntegrityError, OperationalError
 
 

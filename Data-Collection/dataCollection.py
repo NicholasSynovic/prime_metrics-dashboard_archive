@@ -1,13 +1,13 @@
 from sqlite3 import Connection, Cursor
 
 from assignees import Assignees
+from comments import Comments
 from commits import Commits
+from issueEvents import IssueEvents
+from issues import Issues
+from labels import Labels
 from libs.cmdLineInterface import arguementHandling
 from libs.databaseConnector import DatabaseConnector
-from issues import Issues
-from comments import Comments
-from issueEvents import IssueEvents
-from labels import Labels
 from milestones import Milestones
 
 
@@ -120,12 +120,12 @@ class DataCollection:
         )
 
         _collectData(milestoneCollector)
-        # _collectData(labelCollector)
-        # _collectData(issueEventCollector)
-        # _collectData(commentCollector)
-        # _collectData(assigneeCollector)
-        # _collectData(commitsCollector)
-        # _collectData(issueCollector)
+        _collectData(labelCollector)
+        _collectData(issueEventCollector)
+        _collectData(commentCollector)
+        _collectData(assigneeCollector)
+        _collectData(commitsCollector)
+        _collectData(issueCollector)
 
 
 if __name__ == "__main__":
