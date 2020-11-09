@@ -34,7 +34,8 @@ class DatabaseConnector:
                 connection.execute(sql)
             else:
                 connection.execute(sql, options)
-        except OperationalError:
+        except OperationalError as error:
+            print("❗ {}".format(error))
             return False
         if commit:
             connection.commit()

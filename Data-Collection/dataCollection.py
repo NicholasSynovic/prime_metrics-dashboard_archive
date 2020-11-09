@@ -7,6 +7,7 @@ from libs.databaseConnector import DatabaseConnector
 from issues import Issues
 from comments import Comments
 from issueEvents import IssueEvents
+from labels import Labels
 
 
 class DataCollection:
@@ -29,7 +30,7 @@ class DataCollection:
         self.dbConnector.openDatabaseConnection()
 
     def createFileTablesColumns(self, dbConnection: Connection) -> bool:
-        labelsSQL = "CREATE TABLE Labels (ID INTEGER, Name TEXT, Description TEXT, Color TEXT, Default TEXT, PRIMARY KEY(ID))"
+        labelsSQL = "CREATE TABLE Labels (ID INTEGER, Name TEXT, Description TEXT, Color TEXT, Default_Label TEXT, PRIMARY KEY(ID))"
 
         issueEventsSQL = "CREATE TABLE Issue_Events (ID INTEGER, Actor TEXT, Type TEXT, Site_Admin TEXT, Event TEXT, Assignee TEXT, Assigner TEXT, Created_At TEXT, PRIMARY KEY(ID))"
 
@@ -41,6 +42,7 @@ class DataCollection:
 
         commentsSQL = "CREATE TABLE Comments (ID INTEGER, Author TEXT, Author_Association TEXT, Message TEXT, Created_At TEXT, Updated_At TEXT, PRIMARY KEY(ID))"
 
+        self.dbConnector.executeSQL(sql=labelsSQL, commit=True)
         self.dbConnector.executeSQL(sql=issueEventsSQL, commit=True)
         self.dbConnector.executeSQL(sql=commitsSQL, commit=True)
         self.dbConnector.executeSQL(sql=issuesSQL, commit=True)
@@ -63,6 +65,13 @@ class DataCollection:
 
         databaseConnection = self.checkForFile()
         self.createFileTablesColumns(dbConnection=databaseConnection)
+
+        labelCollector = Labels(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+        )
 
         commitsCollector = Commits(
             dbConnection=self.dbConnector,
@@ -99,6 +108,7 @@ class DataCollection:
             username=self.username,
         )
 
+        _collectData(labelCollector)
         _collectData(issueEventCollector)
         _collectData(commentCollector)
         _collectData(assigneeCollector)
