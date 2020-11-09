@@ -2,6 +2,7 @@ from sqlite3 import Connection
 
 from assignees import Assignees
 from branches import Branches
+from collaborators import Collaborators
 from comments import Comments
 from commits import Commits
 from contributors import Contributors
@@ -42,6 +43,8 @@ class DataCollection:
 
         branchesSQL = "CREATE TABLE Branches (ID INTEGER, Name TEXT, Commit_SHA TEXT, PRIMARY KEY(ID))"
 
+        collaboratorsSQL = "CREATE TABLE Collaborators (ID INTEGER, Login TEXT, Type TEXT, Site_Admin TEXT, Can_Pull TEXT, Can_Push TEXT, Is_Admin TEXT, PRIMARY KEY(ID))"
+
         commentsSQL = "CREATE TABLE Comments (ID INTEGER, Author TEXT, Author_Association TEXT, Message TEXT, Created_At TEXT, Updated_At TEXT, PRIMARY KEY(ID))"
 
         commitsSQL = "CREATE TABLE Commits (SHA TEXT, Commit_Date TEXT, Author TEXT, Message TEXT, Comment_Count INTEGER, PRIMARY KEY(SHA));"
@@ -66,6 +69,7 @@ class DataCollection:
 
         self.dbConnector.executeSQL(sql=assigneesSQL, commit=True)
         self.dbConnector.executeSQL(sql=branchesSQL, commit=True)
+        self.dbConnector.executeSQL(sql=collaboratorsSQL, commit=True)
         self.dbConnector.executeSQL(sql=commentsSQL, commit=True)
         self.dbConnector.executeSQL(sql=commitsSQL, commit=True)
         self.dbConnector.executeSQL(sql=contributorsSQL, commit=True)
@@ -103,6 +107,13 @@ class DataCollection:
         )
 
         branchCollector = Branches(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+        )
+
+        collaboratorCollector = Collaborators(
             dbConnection=self.dbConnector,
             oauthToken=self.token,
             repository=self.repository,
@@ -187,7 +198,8 @@ class DataCollection:
         )
 
         # _collectData(assigneeCollector)
-        _collectData(branchCollector)
+        # _collectData(branchCollector)
+        _collectData(collaboratorCollector)
         # _collectData(commentCollector)
         # _collectData(commitsCollector)
         # _collectData(contributorCollector)
