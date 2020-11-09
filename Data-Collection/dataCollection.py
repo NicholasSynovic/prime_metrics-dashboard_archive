@@ -12,6 +12,7 @@ from libs.cmdLineInterface import arguementHandling
 from libs.databaseConnector import DatabaseConnector
 from milestones import Milestones
 from repository import Repository
+from tags import Tags
 
 
 class DataCollection:
@@ -55,6 +56,8 @@ class DataCollection:
 
         repositorySQL = "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Description TEXT, Fork TEXT, Created_At TEXT, Updated_At TEXT, Pushed_At TEXT, Size INTEGER, Stars INTEGER, Watchers INTEGER, Language TEXT, Has_Issues TEXT, Has_Projects TEXT, Has_Downloads TEXT, Has_Wiki TEXT, Has_Pages TEXT, Forks INTEGER, Archived TEXT, Disabled TEXT, Open_Issues INTEGER, License TEXT, Organization TEXT, Network_Count INTEGER, Subscribers INTEGER, Private TEXT, PRIMARY KEY(ID))"
 
+        tagsSQL = "CREATE TABLE Tags (Node_ID TEXT, Name TEXT, PRIMARY KEY(Node_ID))"
+
         self.dbConnector.executeSQL(sql=assigneesSQL, commit=True)
         self.dbConnector.executeSQL(sql=commentsSQL, commit=True)
         self.dbConnector.executeSQL(sql=commitsSQL, commit=True)
@@ -65,6 +68,7 @@ class DataCollection:
         self.dbConnector.executeSQL(sql=languagesSQL, commit=True)
         self.dbConnector.executeSQL(sql=milestonesSQL, commit=True)
         self.dbConnector.executeSQL(sql=repositorySQL, commit=True)
+        self.dbConnector.executeSQL(sql=tagsSQL, commit=True)
 
     def startDataCollection(self) -> None:
         def _collectData(collector) -> None:
@@ -153,6 +157,13 @@ class DataCollection:
             username=self.username,
         )
 
+        tagCollector = Tags(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+        )
+
         # _collectData(assigneeCollector)
         # _collectData(commentCollector)
         # _collectData(commitsCollector)
@@ -163,6 +174,7 @@ class DataCollection:
         # _collectData(languageCollector)
         # _collectData(milestoneCollector)
         # _collectData(repositoryCollector)
+        _collectData(tagCollector)
 
 
 if __name__ == "__main__":
