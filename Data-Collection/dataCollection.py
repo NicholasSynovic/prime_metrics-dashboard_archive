@@ -5,6 +5,7 @@ from commits import Commits
 from libs.cmdLineInterface import arguementHandling
 from libs.databaseConnector import DatabaseConnector
 from issues import Issues
+from comments import Comments
 
 
 class DataCollection:
@@ -33,9 +34,12 @@ class DataCollection:
 
         assigneesSQL = "CREATE TABLE Assignees (ID INTEGER, Login TEXT, Type TEXT, Site_Admin TEXT, PRIMARY KEY(ID))"
 
+        commentsSQL = "CREATE TABLE Comments (ID INTEGER, Author TEXT, Author_Association TEXT, Message TEXT, Created_At TEXT, Updated_At TEXT, PRIMARY KEY(ID))"
+
         self.dbConnector.executeSQL(sql=commitsSQL, commit=True)
         self.dbConnector.executeSQL(sql=issuesSQL, commit=True)
         self.dbConnector.executeSQL(sql=assigneesSQL, commit=True)
+        self.dbConnector.executeSQL(sql=commentsSQL, commit=True)
 
     def startDataCollection(self) -> None:
         def _collectData(collector) -> None:
@@ -75,6 +79,14 @@ class DataCollection:
             username=self.username,
         )
 
+        commentCollector = Comments(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+        )
+
+        _collectData(commentCollector)
         _collectData(assigneeCollector)
         _collectData(commitsCollector)
         _collectData(issueCollector)

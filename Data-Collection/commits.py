@@ -37,7 +37,7 @@ class Commits:
             message = dataset[dataPoint]["commit"]["message"]
             commentCount = dataset[dataPoint]["commit"]["comment_count"]
 
-            sql = "INSERT OR IGNORE INTO COMMITS (SHA, Commit_Date, Author, Message, Comment_Count) VALUES (?,?,?,?,?);"
+            sql = "INSERT OR IGNORE INTO Commits (SHA, Commit_Date, Author, Message, Comment_Count) VALUES (?,?,?,?,?);"
 
             self.connection.executeSQL(
                 sql, (sha, date, author, message, commentCount), True

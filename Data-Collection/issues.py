@@ -56,7 +56,7 @@ class Issues:
             updatedAt = dataset[dataPoint]["updated_at"]
             closedAt = dataset[dataPoint]["closed_at"]
 
-            sql = "INSERT OR IGNORE INTO ISSUES (ID, Count, Title, Author, Assignees, Labels, Created_At, Updated_At, Closed_At) VALUES (?,?,?,?,?,?,?,?,?);"
+            sql = "INSERT OR IGNORE INTO Issues (ID, Count, Title, Author, Assignees, Labels, Created_At, Updated_At, Closed_At) VALUES (?,?,?,?,?,?,?,?,?);"
 
             self.connection.executeSQL(
                 sql,
