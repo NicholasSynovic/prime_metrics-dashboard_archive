@@ -1,5 +1,3 @@
-from sqlite3 import Connection, Cursor
-
 from requests import Response
 
 from libs.databaseConnector import DatabaseConnector
