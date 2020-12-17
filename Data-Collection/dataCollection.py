@@ -3,6 +3,7 @@ from sqlite3 import Connection
 from assignees import Assignees
 from branches import Branches
 from collaborators import Collaborators
+from communityMetrics import CommunityMetrics
 from issueComments import IssueComments
 from commits import Commits
 from contributors import Contributors

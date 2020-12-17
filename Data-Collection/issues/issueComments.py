@@ -1,3 +1,5 @@
+# List issue comments in the repository (https://docs.github.com/en/free-pro-team@latest/rest/reference/issues#list-issue-comments-for-a-repository)
+
 from requests import Response
 
 from libs.databaseConnector import DatabaseConnector

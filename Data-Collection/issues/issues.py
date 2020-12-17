@@ -1,3 +1,5 @@
+# Gets Repository Issues (https://docs.github.com/en/free-pro-team@latest/rest/reference/issues#list-repository-issues)
+
 from requests import Response
 
 from libs.databaseConnector import DatabaseConnector

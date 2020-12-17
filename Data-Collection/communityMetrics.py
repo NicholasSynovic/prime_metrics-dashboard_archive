@@ -1,10 +1,12 @@
+# TODO: FINISH ME
+
 from requests import Response
 
 from libs.databaseConnector import DatabaseConnector
 from libs.githubConnector import GitHubConnector
 
 
-class Assignees:
+class CommunityMetrics:
     def __init__(
         self,
         dbConnection: DatabaseConnector,
@@ -17,10 +19,8 @@ class Assignees:
         self.githubConnection = GitHubConnector(oauthToken=oauthToken)
         self.repository = repository
         self.username = username
-        self.url = (
-            "https://api.github.com/repos/{}/{}/assignees?per_page=100&page={}".format(
-                username, repository, self.currentPage
-            )
+        self.url = "https://api.github.com/repos/{}/{}/contributors?anon=true&per_page=100&page={}".format(
+            username, repository, self.currentPage
         )
 
     def getData(self) -> list:
@@ -29,20 +29,32 @@ class Assignees:
 
     def insertData(self, dataset: dict) -> None:
         for dataPoint in range(len(dataset)):
-            id = dataset[dataPoint]["id"]
-            login = dataset[dataPoint]["login"]
-            userType = dataset[dataPoint]["type"]
-            siteAdmin = str(dataset[dataPoint]["site_admin"])
 
-            sql = "INSERT OR IGNORE INTO Assigness (ID, Login, Type, Site_Admin) VALUES (?,?,?,?);"
+            try:
+                id = str(dataset[dataPoint]["id"])
+            except KeyError:
+                id = dataset[dataPoint]["email"]
+            try:
+                login = dataset[dataPoint]["login"]
+            except KeyError:
+                login = dataset[dataPoint]["name"]
+            type = dataset[dataPoint]["type"]
+            try:
+                siteAdmin = str(dataset[dataPoint]["site_admin"])
+            except KeyError:
+                siteAdmin = "False"
+            contributions = str(dataset[dataPoint]["contributions"])
+
+            sql = "INSERT OR IGNORE INTO Contributors (ID, Login, Type, Site_Admin, Contributions) VALUES (?,?,?,?,?)"
 
             self.connection.executeSQL(
                 sql,
                 (
                     id,
                     login,
-                    userType,
+                    type,
                     siteAdmin,
+                    contributions,
                 ),
                 True,
             )
@@ -55,9 +67,7 @@ class Assignees:
             return False
 
         self.currentPage += 1
-        self.url = (
-            "https://api.github.com/repos/{}/{}/assignees?per_page=100&page={}".format(
-                self.username, self.repository, self.currentPage
-            )
+        self.url = "https://api.github.com/repos/{}/{}/contributors?anon=true&per_page=100&page={}".format(
+            self.username, self.repository, self.currentPage
         )
         return True
