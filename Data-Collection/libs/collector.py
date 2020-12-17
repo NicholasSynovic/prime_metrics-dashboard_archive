@@ -13,6 +13,7 @@ class Collector:
         username: str,
         url: str,
     ):
+        print("HELLO WORLD")
         self.connection = dbConnection
         self.currentPage = 1
         self.githubConnection = GitHubConnector(oauthToken=oauthToken)

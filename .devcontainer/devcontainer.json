@@ -4,8 +4,7 @@
         "ms-python.python",
         "ms-python.vscode-pylance",
         "lextudio.restructuredtext",
-        "yzhang.markdown-all-in-one",
-        "alexcvzz.vscode-sqlite"
+        "yzhang.markdown-all-in-one"
     ],
     "settings": {
         "python.autoComplete.addBrackets": true,

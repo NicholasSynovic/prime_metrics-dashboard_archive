@@ -54,6 +54,8 @@ class DataCollection:
             url="https://api.github.com/repos/{}/{}?per_page=100&page={}",
         )
 
+        _collectData(repositoryCollector)
+
 
 if __name__ == "__main__":
     cmdLineArgs = arguementHandling()
