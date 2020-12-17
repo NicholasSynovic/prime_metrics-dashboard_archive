@@ -2,6 +2,8 @@ from sqlite3 import Connection
 from libs.cmdLineInterface import arguementHandling
 from libs.databaseConnector import DatabaseConnector
 from repository import Repository
+from languages import Languages
+from branches import Branches
 
 
 class DataCollection:
@@ -25,19 +27,22 @@ class DataCollection:
 
     def createFileTablesColumns(self, dbConnection: Connection) -> bool:
 
+        branchesSQL = (
+            "CREATE TABLE Branches (ID INTEGER, Name TEXT, SHA TEXT, PRIMARY KEY(ID))"
+        )
+
+        languagesSQL = "CREATE TABLE Languages (ID INTEGER, Language TEXT, Bytes_of_Code INTEGER, PRIMARY KEY(ID))"
+
         repositorySQL = "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Private TEXT, Fork TEXT, Created_At TEXT, Updated_At TEXT, Pushed_At TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
 
+        self.dbConnector.executeSQL(sql=branchesSQL, commit=True)
+        self.dbConnector.executeSQL(sql=languagesSQL, commit=True)
         self.dbConnector.executeSQL(sql=repositorySQL, commit=True)
 
     def startDataCollection(self) -> None:
         def _collectData(collector) -> None:
             while True:
-                print(
-                    """...\tDownloading information from:
-    \t{}\n""".format(
-                        collector.url
-                    )
-                )
+                print("...\tDownloading information")
                 data = collector.getData()
                 collector.insertData(dataset=data[0])
                 if not collector.iterateNext(data[1]):
@@ -45,6 +50,22 @@ class DataCollection:
 
         databaseConnection = self.checkForFile()
         self.createFileTablesColumns(dbConnection=databaseConnection)
+
+        branchCollector = Branches(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+            url="https://api.github.com/repos/{}/{}/branches?per_page=100&page={}",
+        )
+
+        languageCollector = Languages(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+            url="https://api.github.com/repos/{}/{}/languages?per_page=100&page={}",
+        )
 
         repositoryCollector = Repository(
             dbConnection=self.dbConnector,
@@ -54,7 +75,9 @@ class DataCollection:
             url="https://api.github.com/repos/{}/{}?per_page=100&page={}",
         )
 
-        _collectData(repositoryCollector)
+        _collectData(languageCollector)  # One request only
+        _collectData(repositoryCollector)  # One request only
+        _collectData(branchCollector)  # Estimated < 10 requests
 
 
 if __name__ == "__main__":

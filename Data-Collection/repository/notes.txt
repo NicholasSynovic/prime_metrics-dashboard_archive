@@ -2,10 +2,6 @@ What does this repository contain?
 
 It contains the Data Collection portion of this project that:
 
-Reaches out to the repository API endpoint and pulls down all of the meta data for the repository and all of the API endpoints associated with it (https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#get-a-repository)
-
-The languages used in the repository (https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#list-repository-languages)
-
 The branches in the repository (https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#list-branches)
 
 The commits under a specific branch (https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#list-commits)
