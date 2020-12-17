@@ -5,3 +5,5 @@ requests
 tqdm
 travis-sphinx
 flask
+black
+isort
