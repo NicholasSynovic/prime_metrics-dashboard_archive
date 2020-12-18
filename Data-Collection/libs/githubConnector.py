@@ -23,7 +23,10 @@ class GitHubConnector:
                 links = response.headers["Link"].split(",")
                 for link in links:
                     if link.find('rel="last"') != -1:
-                        return int("".join(re.findall("=([0-9]+)>", link)))
+                        try:
+                            return int("".join(re.findall("&page=([0-9]+)>", link)))
+                        except ValueError:
+                            return int("".join(re.findall("&page=([0-9]+)&", link)))
                 return -1
             except KeyError:
                 return -1

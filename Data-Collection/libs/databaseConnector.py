@@ -1,6 +1,6 @@
 import sqlite3
 from os import error
-from sqlite3 import Connection, Cursor, IntegrityError, OperationalError
+from sqlite3 import Connection, Cursor, OperationalError
 
 
 class DatabaseConnector:
@@ -19,8 +19,7 @@ class DatabaseConnector:
             return True
 
     def openDatabaseConnection(self) -> None:
-        databaseConnection = sqlite3.connect(self.file)
-        self.databaseConnection = databaseConnection
+        self.databaseConnection = sqlite3.connect(self.file)
 
     def executeSQL(
         self,
@@ -73,3 +72,9 @@ class DatabaseConnector:
                     self.fileName, self.file
                 )
         return "✔️ Changed file to {} at {}".format(self.fileName, self.file)
+
+    def selectColumn(self, table: str, column: str) -> list:
+        command = self.databaseConnection.execute(
+            "SELECT {} FROM {}".format(column, table)
+        )
+        return command.fetchall()

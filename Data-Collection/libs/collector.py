@@ -23,17 +23,18 @@ class Collector_4:
         self.url = lambda u, r, cp, sha: url.format(u, r, cp, sha)
 
     def getData(self) -> list:
+        print(self.url(self.username, self.repository, self.currentPage, self.sha))
         response = self.githubConnection.openConnection(
             url=self.url(self.username, self.repository, self.currentPage, self.sha)
         )
         return [response.json(), response]
 
     def iterateNext(self, responseHeaders: Response) -> bool:
-        # print(
-        #     self.githubConnection.parseResponseHeaders(responseHeaders)[
-        #         "X-RateLimit-Remaining"
-        #     ]
-        # )
+        print(
+            self.githubConnection.parseResponseHeaders(responseHeaders)[
+                "X-RateLimit-Remaining"
+            ]
+        )
         if (
             self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]
             == -1
@@ -67,11 +68,11 @@ class Collector_3:
         return [response.json(), response]
 
     def iterateNext(self, responseHeaders: Response) -> bool:
-        # print(
-        #     self.githubConnection.parseResponseHeaders(responseHeaders)[
-        #         "X-RateLimit-Remaining"
-        #     ]
-        # )
+        print(
+            self.githubConnection.parseResponseHeaders(responseHeaders)[
+                "X-RateLimit-Remaining"
+            ]
+        )
         if (
             self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]
             == -1

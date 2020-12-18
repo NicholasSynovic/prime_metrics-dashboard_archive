@@ -63,14 +63,6 @@ class DataCollection:
             url="https://api.github.com/repos/{}/{}/branches?per_page=100&page={}",
         )
 
-        commitsCollector = Commits(
-            dbConnection=self.dbConnector,
-            oauthToken=self.token,
-            repository=self.repository,
-            username=self.username,
-            url="https://api.github.com/repos/{}/{}/commits?per_page=100&page={}&sha={}",
-        )
-
         languageCollector = Languages(
             dbConnection=self.dbConnector,
             oauthToken=self.token,
@@ -90,7 +82,19 @@ class DataCollection:
         _collectData(languageCollector)  # One request only
         _collectData(repositoryCollector)  # One request only
         _collectData(branchCollector)  # Estimated < 10 requests
-        _collectData(commitsCollector)  # Estimated to have the most requests
+
+        branchList = self.dbConnector.selectColumn(table="Branches", column="SHA")
+
+        for branch in branchList:
+            commitsCollector = Commits(
+                dbConnection=self.dbConnector,
+                oauthToken=self.token,
+                repository=self.repository,
+                sha=branch[0],
+                username=self.username,
+                url="https://api.github.com/repos/{}/{}/commits?per_page=100&page={}&sha={}",
+            )
+            _collectData(commitsCollector)  # Estimated to have the most requests
 
 
 if __name__ == "__main__":
