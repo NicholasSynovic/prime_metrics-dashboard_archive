@@ -68,7 +68,7 @@ class DataCollection:
             oauthToken=self.token,
             repository=self.repository,
             username=self.username,
-            url="https://api.github.com/repos/{}/{}/commits?per_page=100&page={}",
+            url="https://api.github.com/repos/{}/{}/commits?per_page=100&page={}&sha={}",
         )
 
         languageCollector = Languages(

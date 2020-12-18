@@ -1,11 +1,7 @@
-from requests import Response
-
-from libs.databaseConnector import DatabaseConnector
-from libs.githubConnector import GitHubConnector
-from libs.collector import Collector
+from libs.collector import Collector_3
 
 
-class Branches(Collector):
+class Branches(Collector_3):
     def insertData(self, dataset: dict) -> None:
         id = 0
 

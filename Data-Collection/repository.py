@@ -1,11 +1,7 @@
-from requests import Response
-
-from libs.databaseConnector import DatabaseConnector
-from libs.githubConnector import GitHubConnector
-from libs.collector import Collector
+from libs.collector import Collector_3
 
 
-class Repository(Collector):
+class Repository(Collector_3):
     def insertData(self, dataset: dict) -> None:
         id = dataset["id"]
         name = dataset["name"]

@@ -1,11 +1,7 @@
-from requests import Response
-
-from libs.databaseConnector import DatabaseConnector
-from libs.githubConnector import GitHubConnector
-from libs.collector import Collector
+from libs.collector import Collector_4
 
 
-class Commits(Collector):
+class Commits(Collector_4):
     def insertData(self, dataset: dict) -> None:
         id = 0
         for dataPoint in range(len(dataset)):
