@@ -4,7 +4,6 @@ from assignees import Assignees
 from collaborators import Collaborators
 from communityMetrics import CommunityMetrics
 from issueComments import IssueComments
-from commits import Commits
 from contributors import Contributors
 from issueEvents import IssueEvents
 from issues import Issues
@@ -45,7 +44,6 @@ class DataCollection:
 
         commentsSQL = "CREATE TABLE Comments (ID INTEGER, Author TEXT, Author_Association TEXT, Message TEXT, Created_At TEXT, Updated_At TEXT, PRIMARY KEY(ID))"
 
-        commitsSQL = "CREATE TABLE Commits (SHA TEXT, Commit_Date TEXT, Author TEXT, Message TEXT, Comment_Count INTEGER, PRIMARY KEY(SHA));"
 
         contributorsSQL = "CREATE TABLE Contributors (ID TEXT, Login TEXT, Type TEXT, Site_Admin TEXT, Contributions TEXT, PRIMARY KEY(ID))"
 
@@ -64,7 +62,6 @@ class DataCollection:
         self.dbConnector.executeSQL(sql=assigneesSQL, commit=True)
         self.dbConnector.executeSQL(sql=collaboratorsSQL, commit=True)
         self.dbConnector.executeSQL(sql=commentsSQL, commit=True)
-        self.dbConnector.executeSQL(sql=commitsSQL, commit=True)
         self.dbConnector.executeSQL(sql=contributorsSQL, commit=True)
         self.dbConnector.executeSQL(sql=issuesSQL, commit=True)
         self.dbConnector.executeSQL(sql=issueEventsSQL, commit=True)
@@ -111,12 +108,7 @@ class DataCollection:
             username=self.username,
         )
 
-        commitsCollector = Commits(
-            dbConnection=self.dbConnector,
-            oauthToken=self.token,
-            repository=self.repository,
-            username=self.username,
-        )
+
 
         contributorCollector = Contributors(
             dbConnection=self.dbConnector,
@@ -177,7 +169,6 @@ class DataCollection:
         # _collectData(assigneeCollector)
         _collectData(collaboratorCollector)
         # _collectData(commentCollector)
-        # _collectData(commitsCollector)
         # _collectData(contributorCollector)
         # _collectData(issueCollector)
         # _collectData(issueEventCollector)
