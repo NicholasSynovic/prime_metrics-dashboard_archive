@@ -32,7 +32,7 @@ class DataCollection:
             "CREATE TABLE Branches (ID INTEGER, Name TEXT, SHA TEXT, PRIMARY KEY(ID))"
         )
 
-        commitsSQL = "CREATE TABLE Commits (ID INTEGER, SHA TEXT, Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count INTEGER, PRIMARY KEY(ID));"
+        commitsSQL = "CREATE TABLE Commits (ID INTEGER, SHA TEXT, Branch TEXT, Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count INTEGER, PRIMARY KEY(ID));"
 
         languagesSQL = "CREATE TABLE Languages (ID INTEGER, Language TEXT, Bytes_of_Code INTEGER, PRIMARY KEY(ID))"
 
