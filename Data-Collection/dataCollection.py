@@ -5,6 +5,7 @@ from repository import Repository
 from languages import Languages
 from branches import Branches
 from commits import Commits
+from forks import Forks
 
 
 class DataCollection:
@@ -34,12 +35,15 @@ class DataCollection:
 
         commitsSQL = "CREATE TABLE Commits (ID INTEGER, SHA TEXT, Branch TEXT, Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count INTEGER, PRIMARY KEY(ID));"
 
+        forksSQL = "CREATE TABLE Forks (ID TEXT, Name TEXT, Owner TEXT, Created_At TEXT, Updated_At TEXT, Pushed_At TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
+
         languagesSQL = "CREATE TABLE Languages (ID INTEGER, Language TEXT, Bytes_of_Code INTEGER, PRIMARY KEY(ID))"
 
         repositorySQL = "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Private TEXT, Fork TEXT, Created_At TEXT, Updated_At TEXT, Pushed_At TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
 
         self.dbConnector.executeSQL(sql=branchesSQL, commit=True)
         self.dbConnector.executeSQL(sql=commitsSQL, commit=True)
+        self.dbConnector.executeSQL(sql=forksSQL, commit=True)
         self.dbConnector.executeSQL(sql=languagesSQL, commit=True)
         self.dbConnector.executeSQL(sql=repositorySQL, commit=True)
 
@@ -63,6 +67,14 @@ class DataCollection:
             url="https://api.github.com/repos/{}/{}/branches?per_page=100&page={}",
         )
 
+        forksCollector = Forks(
+            dbConnection=self.dbConnector,
+            oauthToken=self.token,
+            repository=self.repository,
+            username=self.username,
+            url="https://api.github.com/repos/{}/{}/forks?per_page=100&page={}",
+        )
+
         languageCollector = Languages(
             dbConnection=self.dbConnector,
             oauthToken=self.token,
@@ -82,6 +94,7 @@ class DataCollection:
         _collectData(languageCollector)  # One request only
         _collectData(repositoryCollector)  # One request only
         _collectData(branchCollector)  # Estimated < 10 requests
+        _collectData(forksCollector)  # Estimated < 10 requests
 
         branchList = self.dbConnector.selectColumn(table="Branches", column="SHA")
 

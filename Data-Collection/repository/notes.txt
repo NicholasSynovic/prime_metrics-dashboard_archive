@@ -1,5 +1,3 @@
 What does this repository contain?
 
 It contains the Data Collection portion of this project that:
-
-The forks of the repository (https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#list-forks)
