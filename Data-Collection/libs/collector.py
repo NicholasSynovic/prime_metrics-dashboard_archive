@@ -30,11 +30,6 @@ class Collector_4:
         return [response.json(), response]
 
     def iterateNext(self, responseHeaders: Response) -> bool:
-        print(
-            self.githubConnection.parseResponseHeaders(responseHeaders)[
-                "X-RateLimit-Remaining"
-            ]
-        )
         if (
             self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]
             == -1
@@ -68,11 +63,6 @@ class Collector_3:
         return [response.json(), response]
 
     def iterateNext(self, responseHeaders: Response) -> bool:
-        print(
-            self.githubConnection.parseResponseHeaders(responseHeaders)[
-                "X-RateLimit-Remaining"
-            ]
-        )
         if (
             self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]
             == -1

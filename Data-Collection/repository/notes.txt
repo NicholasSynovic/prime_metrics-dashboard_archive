@@ -1,3 +1,0 @@
-What does this repository contain?
-
-It contains the Data Collection portion of this project that:
