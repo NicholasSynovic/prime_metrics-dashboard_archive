@@ -60,7 +60,9 @@ class DataCollection:
             return collector.iterateNext(data[1])
 
         def _showProgression(collector, maxIterations: int) -> None:
-            for iteration in tqdm(range(0, abs(maxIterations))):
+            for iteration in tqdm(
+                range(0, abs(maxIterations)),
+            ):
                 _collectData(collector)
 
         databaseConnection = self.checkForFile()
