@@ -1,4 +1,5 @@
 from sqlite3 import Connection
+from tqdm import tqdm
 
 from branches import Branches
 from commits import Commits
@@ -53,13 +54,14 @@ class DataCollection:
         self.dbConnector.executeSQL(sql=repositorySQL, commit=True)
 
     def startDataCollection(self) -> None:
-        def _collectData(collector) -> None:
-            while True:
-                # print("...\tDownloading information")
-                data = collector.getData()
-                collector.insertData(dataset=data[0])
-                if not collector.iterateNext(data[1]):
-                    break
+        def _collectData(collector) -> int or bool:
+            data = collector.getData()
+            collector.insertData(dataset=data[0])
+            return collector.iterateNext(data[1])
+
+        def _showProgression(collector, maxIterations: int) -> None:
+            for iteration in tqdm(range(0, abs(maxIterations))):
+                _collectData(collector)
 
         databaseConnection = self.checkForFile()
         self.createFileTablesColumns(dbConnection=databaseConnection)
@@ -104,12 +106,13 @@ class DataCollection:
             url="https://api.github.com/repos/{}/{}?per_page=100&page={}",
         )
 
-        _collectData(languageCollector)  # One request only
-        _collectData(repositoryCollector)  # One request only
-        _collectData(branchCollector)  # Estimated < 10 requests
-        _collectData(forksCollector)  # Estimated < 10 requests
-        _collectData(issuesCollector)  # Estimated < 20 requests
-
+        # language = _collectData(languageCollector)  # One request only
+        # _showProgression(languageCollector, language)
+        # _collectData(repositoryCollector)  # One request only
+        # _collectData(branchCollector)  # Estimated < 10 requests
+        language = _collectData(forksCollector)  # Estimated < 10 requests
+        # _collectData(issuesCollector)  # Estimated < 20 requests
+        _showProgression(forksCollector, language)
         branchList = self.dbConnector.selectColumn(table="Branches", column="SHA")
 
         for branch in branchList:

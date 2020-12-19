@@ -37,7 +37,7 @@ class Collector_4:
             return False
 
         self.currentPage += 1
-        return True
+        return self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]
 
 
 class Collector_3:
@@ -70,4 +70,4 @@ class Collector_3:
             return False
 
         self.currentPage += 1
-        return True
+        return self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]
