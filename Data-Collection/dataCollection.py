@@ -106,16 +106,30 @@ class DataCollection:
             url="https://api.github.com/repos/{}/{}?per_page=100&page={}",
         )
 
-        # language = _collectData(languageCollector)  # One request only
-        # _showProgression(languageCollector, language)
-        # _collectData(repositoryCollector)  # One request only
-        # _collectData(branchCollector)  # Estimated < 10 requests
-        language = _collectData(forksCollector)  # Estimated < 10 requests
-        # _collectData(issuesCollector)  # Estimated < 20 requests
-        _showProgression(forksCollector, language)
+        print("\nRepository Languages")
+        languagePages = _collectData(languageCollector)  # One request only
+        _showProgression(languageCollector, languagePages)
+
+        print("\nRepository Information")
+        repositoryPages = _collectData(repositoryCollector)  # One request only
+        _showProgression(repositoryCollector, repositoryPages)
+
+        print("\nRepository Branches")
+        branchPages = _collectData(branchCollector)  # Estimated < 10 requests
+        _showProgression(branchCollector, branchPages)
+
+        print("\nRepository Forks")
+        forkPages = _collectData(forksCollector)  # Estimated < 10 requests
+        _showProgression(forksCollector, forkPages)
+
+        print("\nRepository Issues")
+        issuePages = _collectData(issuesCollector)  # Estimated < 20 requests
+        _showProgression(issuesCollector, issuePages)
+
         branchList = self.dbConnector.selectColumn(table="Branches", column="SHA")
 
         for branch in branchList:
+            print("\nRepository Branch {} Commits".format(branch))
             commitsCollector = Commits(
                 dbConnection=self.dbConnector,
                 oauthToken=self.token,
@@ -124,7 +138,10 @@ class DataCollection:
                 username=self.username,
                 url="https://api.github.com/repos/{}/{}/commits?per_page=100&page={}&sha={}",
             )
-            _collectData(commitsCollector)  # Estimated to have the most requests
+            commitPages = _collectData(
+                commitsCollector
+            )  # Estimated to have the most requests
+            _showProgression(commitsCollector, commitPages)
 
 
 if __name__ == "__main__":

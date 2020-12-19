@@ -1,9 +1,10 @@
+black
+colorama
+flask
+isort
 pandas
+requests
 sphinx
 sphinx-rtd-theme
-requests
-tqdm
 travis-sphinx
-flask
-black
-isort
+tqdm
