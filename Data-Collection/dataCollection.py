@@ -1,12 +1,13 @@
 from sqlite3 import Connection
-from libs.cmdLineInterface import arguementHandling
-from libs.databaseConnector import DatabaseConnector
-from repository import Repository
-from languages import Languages
+
 from branches import Branches
 from commits import Commits
 from forks import Forks
 from issues import Issues
+from languages import Languages
+from libs.cmdLineInterface import arguementHandling
+from libs.databaseConnector import DatabaseConnector
+from repository import Repository
 
 
 class DataCollection:
