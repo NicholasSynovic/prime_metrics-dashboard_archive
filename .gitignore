@@ -437,15 +437,8 @@ fabric.properties
 .vscode
 test.json
 
-database/nicholassynovic.github.io_historical.db
-
-database/
-
 #VS Code
 .vscode/
-
-# DB files
-#*.db
 
 # Sphinx build directory
 build
@@ -454,4 +447,3 @@ build
 .project
 .pydevproject
 
-*.db
