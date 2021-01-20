@@ -1,3 +1,5 @@
+# TODO: Fix the inputs of the classes to be generic instead of specific
+
 from requests import Response
 
 from libs.databaseConnector import DatabaseConnector
@@ -22,7 +24,9 @@ class Collector_4:
         self.repository = repository
         self.sha = sha
         self.username = username
-        self.url = lambda u, r, cp, sha: url.format(u, r, cp, sha)
+        self.url = lambda param1, param2, param3, param4: url.format(
+            param1, param2, param3, param4
+        )
 
     def getData(self) -> list:
         response = self.githubConnection.openConnection(
@@ -58,7 +62,11 @@ class Collector_3:
         self.githubConnection = GitHubConnector(oauthToken=oauthToken)
         self.repository = repository
         self.username = username
-        self.url = lambda u, r, cp: url.format(u, r, cp)
+        self.url = lambda param1, param2, param3,: url.format(
+            param1,
+            param2,
+            param3,
+        )
 
     def getData(self) -> list:
         response = self.githubConnection.openConnection(
