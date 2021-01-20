@@ -56,9 +56,14 @@ class Collector_3:
         repository: str,
         username: str,
         url: str,
+        currentPage: str = "1",
+        id: int = 0,
+        branch: str = None,
     ):
+        self.id = id
+        self.branch = branch
         self.connection = dbConnection
-        self.currentPage = 1
+        self.currentPage = currentPage
         self.githubConnection = GitHubConnector(oauthToken=oauthToken)
         self.repository = repository
         self.username = username
@@ -83,3 +88,6 @@ class Collector_3:
 
         self.currentPage += 1
         return self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]
+
+    def exportID(self) -> int:
+        return self.id

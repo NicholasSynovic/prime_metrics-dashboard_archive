@@ -3,6 +3,7 @@ from tqdm import tqdm
 
 from branches import Branches
 from commits import Commits
+from files import Files
 from forks import Forks
 from issues import Issues
 from languages import Languages
@@ -131,11 +132,10 @@ class DataCollection:
         issuePages = _collectData(issuesCollector)  # Estimated < 20 requests
         _showProgression(issuesCollector, issuePages)
 
-        branchList = self.dbConnector.selectColumn(table="Branches", column="Name")
-
         commitsID = 0
+        branchList = self.dbConnector.selectColumn(table="Branches", column="Name")
         for branch in branchList:
-            print("\nRepository Branch {} Commits".format(branch))
+            print("\nRepository Commits from Branch {}".format(branch[0]))
             commitsCollector = Commits(
                 dbConnection=self.dbConnector,
                 id=commitsID,
@@ -150,6 +150,37 @@ class DataCollection:
             )  # Estimated to have the most requests
             _showProgression(commitsCollector, commitPages)
             commitsID = commitsCollector.exportID()
+
+        # Creates a combined list of every commit paired with its corresponding branch
+        branchList = self.dbConnector.selectColumn(table="Commits", column="Branch")
+        commitSHAList = self.dbConnector.selectColumn(
+            table="Commits", column="Commit_SHA"
+        )
+        # https://www.geeksforgeeks.org/python-merge-two-lists-into-list-of-tuples/
+        mergedList = tuple(zip(branchList, commitSHAList))
+
+        filesID = 0
+        for pair in mergedList:
+            branch = pair[0][0]
+            commit = pair[1][0]
+            print(
+                "\nRepository Files from Branch {} from Commit {}".format(
+                    branch, commit
+                )
+            )
+            # TODO: Fix all collectors to use generic arguement names
+            filesCollector = Files(
+                dbConnection=self.dbConnector,
+                oauthToken=self.token,
+                repository=self.repository,
+                username=self.username,
+                currentPage=commit,
+                id=filesID,
+                branch=branch,
+                url="https://api.github.com/repos/{}/{}/git/trees/{}?recursive=1",
+            )
+            _collectData(filesCollector)
+            filesID = filesCollector.exportID()
 
 
 if __name__ == "__main__":
