@@ -1,3 +1,4 @@
+from typing import ByteString
 from libs.collector import Collector_3
 
 

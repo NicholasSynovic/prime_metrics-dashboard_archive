@@ -61,7 +61,7 @@ class DataCollection:
 
         def _showProgression(collector, maxIterations: int) -> None:
             for iteration in tqdm(
-                range(0, abs(maxIterations)),
+                range(0, abs(maxIterations) - 1),
             ):
                 _collectData(collector)
 
@@ -128,12 +128,14 @@ class DataCollection:
         issuePages = _collectData(issuesCollector)  # Estimated < 20 requests
         _showProgression(issuesCollector, issuePages)
 
-        branchList = self.dbConnector.selectColumn(table="Branches", column="SHA")
+        branchList = self.dbConnector.selectColumn(table="Branches", column="Name")
 
+        commitsID = 0
         for branch in branchList:
             print("\nRepository Branch {} Commits".format(branch))
             commitsCollector = Commits(
                 dbConnection=self.dbConnector,
+                id=commitsID,
                 oauthToken=self.token,
                 repository=self.repository,
                 sha=branch[0],
@@ -144,6 +146,7 @@ class DataCollection:
                 commitsCollector
             )  # Estimated to have the most requests
             _showProgression(commitsCollector, commitPages)
+            commitsID = commitsCollector.exportID()
 
 
 if __name__ == "__main__":

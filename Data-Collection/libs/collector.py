@@ -8,6 +8,7 @@ class Collector_4:
     def __init__(
         self,
         dbConnection: DatabaseConnector,
+        id: int,
         oauthToken: str,
         repository: str,
         sha: str,
@@ -17,13 +18,13 @@ class Collector_4:
         self.connection = dbConnection
         self.currentPage = 1
         self.githubConnection = GitHubConnector(oauthToken=oauthToken)
+        self.id = id
         self.repository = repository
         self.sha = sha
         self.username = username
         self.url = lambda u, r, cp, sha: url.format(u, r, cp, sha)
 
     def getData(self) -> list:
-        print(self.url(self.username, self.repository, self.currentPage, self.sha))
         response = self.githubConnection.openConnection(
             url=self.url(self.username, self.repository, self.currentPage, self.sha)
         )
@@ -38,6 +39,9 @@ class Collector_4:
 
         self.currentPage += 1
         return self.githubConnection.parseResponseHeaders(responseHeaders)["Last-Page"]
+
+    def exportID(self) -> int:
+        return self.id
 
 
 class Collector_3:
