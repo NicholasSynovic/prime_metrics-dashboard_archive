@@ -11,6 +11,9 @@ from libs.cmdLineInterface import arguementHandling
 from libs.databaseConnector import DatabaseConnector
 from repository import Repository
 
+# TODO: Add documentation for all files
+# TODO: Improve this code to make it concurrent/ multithreaded and performant
+
 
 class DataCollection:
     def __init__(
