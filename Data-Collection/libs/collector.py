@@ -1,11 +1,11 @@
-# TODO: Fix the inputs of the classes to be generic instead of specific
+# TODO: Fix the arguements of the classes to have generic names instead of specific ones
 
 from requests import Response
 
 from libs.databaseConnector import DatabaseConnector
 from libs.githubConnector import GitHubConnector
 
-
+# TODO: Collector_4 is called this because the lambda function takes four inputs. Improve reasoning or name.
 class Collector_4:
     def __init__(
         self,
@@ -46,6 +46,10 @@ class Collector_4:
 
     def exportID(self) -> int:
         return self.id
+
+
+# TODO: Collector_3 is called this because the lambda function takes three inputs. Improve reasoning or name.
+# TODO: The arguements seem needlessly complex. Can we improve the ID and Branch arguements?
 
 
 class Collector_3:

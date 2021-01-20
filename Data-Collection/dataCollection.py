@@ -151,6 +151,9 @@ class DataCollection:
             _showProgression(commitsCollector, commitPages)
             commitsID = commitsCollector.exportID()
 
+        # TODO: Implement a loading bar for the Files module
+        # TODO: Reduce complexity where possible in the Files module
+
         # Creates a combined list of every commit paired with its corresponding branch
         branchList = self.dbConnector.selectColumn(table="Commits", column="Branch")
         commitSHAList = self.dbConnector.selectColumn(
@@ -168,7 +171,6 @@ class DataCollection:
                     branch, commit
                 )
             )
-            # TODO: Fix all collectors to use generic arguement names
             filesCollector = Files(
                 dbConnection=self.dbConnector,
                 oauthToken=self.token,
