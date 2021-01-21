@@ -27,6 +27,7 @@ This initializes the class and sets class specific variables.
         '''
 Returns the JSON data of the commits GitHub API endpoint as a dict.
         '''
+        
         return self.access_GitHubAPISpecificEndpoint(endpoint="/commits?state=all")
     
     def access_GitHubRepoIssues(self)  ->  dict:
