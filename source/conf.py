@@ -6,7 +6,7 @@ version = "0.01"
 release = "alpha"
 
 # General Configuration
-extensions = ["sphinx.ext.todo", "sphinx.ext.autosectionlabel"]
+extensions = ["sphinx.ext.todo", "sphinx.ext.autosectionlabel", "sphinx.ext.napoleon"]
 source_suffix = {".rst": "restructuredtext"}
 source_encoding = "utf-8-sig"
 # source_parsers =
