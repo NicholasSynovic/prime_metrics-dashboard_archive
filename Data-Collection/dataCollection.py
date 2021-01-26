@@ -13,6 +13,7 @@ from repository import Repository
 
 # TODO: Add documentation for all files
 # TODO: Improve this code to make it concurrent/ multithreaded and performant
+# TODO: Add ability for the code to slow itself down if it comes too close to the rate limit OR limit itself because it knows that it will be making too many calls
 
 
 class DataCollection:

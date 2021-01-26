@@ -60,7 +60,7 @@ class Collector_3:
         repository: str,
         username: str,
         url: str,
-        currentPage: str = "1",
+        currentPage: str = 1,
         id: int = 0,
         branch: str = None,
     ):
