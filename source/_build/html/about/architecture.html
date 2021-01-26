@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>1.2. Architecture &mdash; SSL Metrics Dashboard</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1.3. Developer Guide" href="developerGuide.html" />
+    <link rel="prev" title="1.1. Abstract" href="abstract.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: maroon" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Software and Systems Laboratory Metrics Dashboard
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">1. About</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="abstract.html">1.1. Abstract</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1.2. Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html">1.3. Developer Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="projectTooling.html">1.4. Project Tooling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userGuide.html">1.5. User Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation/index.html">2. Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../blogs/index.html">3. Blogs</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Software and Systems Laboratory Metrics Dashboard</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html"><span class="section-number">1. </span>About</a> &raquo;</li>
+        
+      <li><span class="section-number">1.2. </span>Architecture</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            
+              <!-- User defined GitHub URL -->
+              <a href="https://github.com/SoftwareSystemsLaboratory/Metrics-Dashboard" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="architecture">
+<h1><span class="section-number">1.2. </span>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">Authors</dt>
+<dd class="field-odd"><p>Nicholas M. Synovic</p>
+</dd>
+</dl>
+<div class="contents local topic" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id10">Overview</a></p></li>
+<li><p><a class="reference internal" href="#main-pipeline" id="id11">Main Pipeline</a></p>
+<ul>
+<li><p><a class="reference internal" href="#github-api" id="id12">GitHub API</a></p></li>
+<li><p><a class="reference internal" href="#data-collection-tier" id="id13">Data Collection Tier</a></p></li>
+<li><p><a class="reference internal" href="#calculations-tier" id="id14">Calculations Tier</a></p></li>
+<li><p><a class="reference internal" href="#graph-tier" id="id15">Graph Tier</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#execution-pipeline" id="id16">Execution Pipeline</a></p>
+<ul>
+<li><p><a class="reference internal" href="#execution-tier" id="id17">Execution Tier</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="overview">
+<span id="overview-link"></span><h2><a class="toc-backref" href="#table-of-contents"><span class="section-number">1.2.1. </span>Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The current architecture of the :doc: <cite>SSL Metrics Dashboard &lt;../index&gt;</cite> is fairly simple and straightforward.</p>
+<p>There are essentially three tiers to the dashboard that are built on top of each other. In the order of the lowest tier to the highest tier, there is the:</p>
+<ol class="arabic simple">
+<li><dl class="field-list simple">
+<dt class="field-odd">ref</dt>
+<dd class="field-odd"><p><cite>Data Collection Tier &lt;data_collection_tier_link&gt;</cite></p>
+</dd>
+</dl>
+</li>
+<li><dl class="field-list simple">
+<dt class="field-odd">ref</dt>
+<dd class="field-odd"><p><cite>Calculations Tier &lt;calculations_tier_link&gt;</cite></p>
+</dd>
+</dl>
+</li>
+<li><dl class="field-list simple">
+<dt class="field-odd">ref</dt>
+<dd class="field-odd"><p><cite>Graph Tier &lt;graph_tier_link&gt;</cite></p>
+</dd>
+</dl>
+</li>
+<li><dl class="field-list simple">
+<dt class="field-odd">ref</dt>
+<dd class="field-odd"><p><cite>Execution Tier &lt;execution_tier_link&gt;</cite></p>
+</dd>
+</dl>
+</li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The <a class="reference internal" href="#execution-tier-link"><span class="std std-ref">Execution Tier</span></a> is more of a wrapper that wraps tiers together. None the less, it should have its own spot on this list as of how important it is.</p>
+</div>
+<p>Each one of these tiers rightfully deserves their own subsection for a complete explanation as to what they do. However, in essence, the:</p>
+<ul class="simple">
+<li><dl class="field-list simple">
+<dt class="field-odd">ref</dt>
+<dd class="field-odd"><p><cite>Data Collection Tier &lt;data_collection_tier_link&gt;</cite> is responsible for accessing the GitHub API and collecting information on a specific repository.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="field-list simple">
+<dt class="field-odd">ref</dt>
+<dd class="field-odd"><p><cite>Calculations Tier &lt;calculations_tier_link&gt;</cite> is responsible for taking the information in the :doc: <cite>SQLlite Database &lt;projectTooling&gt;</cite> and performing math to generate software metrics.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="field-list simple">
+<dt class="field-odd">ref</dt>
+<dd class="field-odd"><p><cite>Graph Tier &lt;graph_tier_link&gt;</cite> is responsible for accessing the :doc: <cite>SQLite Database &lt;projectTooling&gt;</cite> table and graphing said values. Since the metrics are calculated for every day since the repository’s creation, the graphs can allow for developers, project managers, and the public eye to monitor the health and growth of a project over time.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="field-list simple">
+<dt class="field-odd">ref</dt>
+<dd class="field-odd"><p><cite>Execution Tier &lt;execution_tier_link&gt;</cite> is responsible for wrapping all of the previously mentioned tiers together. Furthermore, this tier is responsible for the parallelization of tasks and transforming the user’s input (that’s :doc: <cite>YOU! &lt;userGuide&gt;</cite>) into data that the other tiers can utilize.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="main-pipeline">
+<span id="main-pipeline-link"></span><h2><a class="toc-backref" href="#table-of-contents"><span class="section-number">1.2.2. </span>Main Pipeline</a><a class="headerlink" href="#main-pipeline" title="Permalink to this headline">¶</a></h2>
+<p>The pipeline is how :doc: <cite>SSL Metrics Dashboard &lt;../index&gt;</cite> collects, handles, and stores data. Some of the steps of the pipeline were described above, however, this subsection is meant to provide a concrete understanding of the pipeline that is in place.</p>
+<p>Quite frankly, the pipeline is best described using a diagram. So please take a look at the one below.</p>
+<div class="figure align-center" id="id6">
+<a class="reference internal image-reference" href="../_images/pipelineNoExecution.png"><img alt="Pipeline for Metrics Dashboard without the :ref:`Execution Tier &lt;execution_tier_link&gt;`." src="../_images/pipelineNoExecution.png" style="width: 850.5px; height: 381.0px;" /></a>
+<p class="caption"><span class="caption-text">Pipeline for Metrics Dashboard without the Execution tier. :download: <cite>Source. &lt;files/pipelineNoExecution.drawio&gt;</cite></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<p>Looking at the pipeline as it stands, there are a few key items to point out:</p>
+<ol class="arabic simple">
+<li><p>There is no :ref: <cite>Execution Tier &lt;execution_tier_link&gt;</cite> in this pipeline diagram.</p></li>
+<li><p>There appears to be a bottleneck that prevents the :ref: <cite>Calculations Tier &lt;calculations_tier_link&gt;</cite> from running until the data from the :ref: <cite>Data Collection Tier &lt;data_collection_tier_link&gt;</cite> tier has been stored into the table <strong>CENTRAL</strong>.</p></li>
+<li><p>There appears to be another bottleneck that prevents the :ref: <cite>Graph Tier &lt;graph_tier_link&gt;</cite> from running until the data from the :ref: <cite>Calculations Tier &lt;calculations_tier_link&gt;</cite> has been stored into <strong>CENTRAL</strong>.</p></li>
+</ol>
+<p>The first of these points is trivial to answer. While the second and third points do have technical and practical reasons for why they appear as they are in the graph.</p>
+<p>To provide an answer to the first point, the <a class="reference internal" href="#execution-tier-link"><span class="std std-ref">Execution Tier</span></a> is missing from this pipeline diagram is because it simply does not fit in. The <a class="reference internal" href="#execution-tier-link"><span class="std std-ref">Execution Tier</span></a> is purely meant to spin up all of the other tiers by providing helper functions. These functions mostly revolve around I/O operations such as ensuring that <strong>CENTRAL</strong> has been created and passing along command-line arguments to the tiers so that they can format their outputs correctly.</p>
+<p>The second point has a more technical answer. Essentially, there is no bottleneck in practice, only in the diagram. This is because :doc: <cite>SQLite &lt;projectTooling&gt;</cite> has a feature called <strong>Write-Ahead Logging (WAL)</strong> which can be learned about <a class="reference external" href="https://sqlite.org/wal.html">here</a>. What these features allows <a class="reference external" href="../index.html">SSL Metrics Dashboard</a> to do is write to different tables all at once without worrying about a race condition. This is an enforced safety feature because every module writes to its own specific table.</p>
+<p>Unlike the second point, there is an actual bottleneck between the <a class="reference internal" href="#calculations-tier-link"><span class="std std-ref">Calculations Tier</span></a> and the <a class="reference internal" href="#graph-tier-link"><span class="std std-ref">Graph Tier</span></a>. This is because the <a class="reference internal" href="#graph-tier-link"><span class="std std-ref">Graph Tier</span></a> needs to make sure that all of the data has been calculated before displaying a graph. Without this bottleneck, graphs could be presented as incomplete at best and downright wrong at worst. Thus, there is a bottleneck between the modules to enforce that the graphs will be accurate.</p>
+<p>This does not mean that every calculation needs to be completed before they are graphed. Rather, it means that each specific calculation must be completed before its specific graph(s) can be displayed. Thus, if one calculation is taking longer than another, that works. The completed calculation can be plotted and displayed.</p>
+<div class="section" id="github-api">
+<span id="github-api-link"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="section-number">1.2.2.1. </span>GitHub API</a><a class="headerlink" href="#github-api" title="Permalink to this headline">¶</a></h3>
+<p>Metrics Dashboard utilizes the <a class="reference external" href="https://docs.github.com/en/free-pro-team&#64;latest/rest">GitHub REST API v3</a> to extract repository information. This provides a simple, yet limited, view into a repositories meta information.</p>
+<p>The simplicity of the view is derived from the JSON content that is returned per request. With every request, we get a complete look at all of the information associated with a particular data set.</p>
+<p>As an example, gathering all of the information associated with the repository’s Issues can be collected via one URI (<a class="reference external" href="https://api.github.com/SoftwareSystemsLaboratory/Metrics-Dashboard/issues?">https://api.github.com/SoftwareSystemsLaboratory/Metrics-Dashboard/issues?</a>) and will return not only the most recent 30 issues but also (and not limited to):</p>
+<ul class="simple">
+<li><p>Who created the issue</p></li>
+<li><p>Who is assigned to the issue</p></li>
+<li><p>Issue labels</p></li>
+<li><p>Issue title and description</p></li>
+</ul>
+<p>All of this data is in an easy to read and parse and extracted to a :doc: <cite>SQLite Database &lt;projectTooling&gt;</cite> with ease.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Move all of this to the project tooling page</p>
+</div>
+<p>At the time of writing, there are several projects out there that interact with the GitHub REST API. However, for this project, it is much simpler to create a custom REST API handler. The reason being is that the projects that handle the REST API are too robust; they have too many features that this project simply does not need.</p>
+<p>This custom handler can:</p>
+<ul class="simple">
+<li><p>Authenticate itself with GitHub</p></li>
+<li><p>Send GET requests to the GitHub REST API with the appropriate headers, parameters, and request body</p></li>
+<li><p>Convert the response from the aforementioned GET call into JSON</p></li>
+<li><p>Return the response headers from the aforementioned GET call</p></li>
+</ul>
+</div>
+<div class="section" id="data-collection-tier">
+<span id="data-collection-tier-link"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="section-number">1.2.2.2. </span>Data Collection Tier</a><a class="headerlink" href="#data-collection-tier" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#data-collection-tier-link"><span class="std std-ref">Data Collection Tier</span></a> has four tasks that it must accomplish:</p>
+<ol class="arabic simple">
+<li><p>Get the data from the <a class="reference internal" href="#github-api-link"><span class="std std-ref">GitHub API</span></a></p></li>
+<li><p>Extract data from the API response(s)</p></li>
+<li><p>Format the extracted data into SQLlite compatible data types</p></li>
+<li><p>Store the formatted data into the SQLlite database into its respected table</p></li>
+</ol>
+<p>From a technical standpoint, this is probably the simplest of the four tiers to develop. It also has to be the most robust of the four.</p>
+<p>The simplicity is derived from its lack of computations. Aside from changing data types and manipulating JSON data, there is little to no computations required for the <a class="reference internal" href="#data-collection-tier-link"><span class="std std-ref">Data Collection Tier</span></a> to execute to accomplish its goal.</p>
+<p>Below is a diagram of how a <a class="reference internal" href="#data-collection-tier-link"><span class="std std-ref">Data Collection Tier</span></a> module would interact with its tier controller and other <a class="reference internal" href="#data-collection-tier-link"><span class="std std-ref">Data Collection Tier</span></a> modules.</p>
+<div class="figure align-center" id="id7">
+<a class="reference internal image-reference" href="../_images/dataCollectionTier.png"><img alt="Pipeline for Metrics Dashboard :ref:`Data Collection Tier &lt;data_collection_tier_link&gt;`." src="../_images/dataCollectionTier.png" style="width: 380.5px; height: 431.0px;" /></a>
+<p class="caption"><span class="caption-text">Pipeline for Metrics Dashboard <a class="reference internal" href="#data-collection-tier-link"><span class="std std-ref">Data Collection Tier</span></a>. <a class="reference download internal" download="" href="../_downloads/ed59899fecf049e686a6103de8d41619/dataCollectionTier.drawio"><code class="xref download docutils literal notranslate"><span class="pre">Source</span></code></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="calculations-tier">
+<span id="calculations-tier-link"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="section-number">1.2.2.3. </span>Calculations Tier</a><a class="headerlink" href="#calculations-tier" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#calculations-tier-link"><span class="std std-ref">Calculations Tier</span></a> is the computationally heavy tier of the project. Here, data is read from the :doc:` SQLite Database &lt;projectTooling&gt;` and software metrics are computed concerning which table the data is stored in. These metrics are then stored back within the same database from which they were read, however now in a different table.</p>
+<p>As there are many software metrics out there, only a select few that are computed in this project will be listed below:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="userGuide.html"><span class="doc">Number of Issues per Day</span></a></p></li>
+<li><p><a class="reference internal" href="userGuide.html"><span class="doc">Number of Commits per Day</span></a></p></li>
+<li><p><a class="reference internal" href="userGuide.html"><span class="doc">Defect Density per Day</span></a></p></li>
+<li><p><a class="reference internal" href="userGuide.html"><span class="doc">Issue Spoilage per Day</span></a></p></li>
+</ul>
+<p>One should notice that the metrics listed above are calculated at a singular time interval. The reason being for this is that if metrics are calculated on a more granular level, the focus of the Metrics Dashboard project changes from a <strong>project-wide</strong> metrics analysis to that of an <a class="reference internal" href="developerGuide.html"><span class="doc">Individual Developer</span></a> metrics analysis. Furthermore, if metrics were calculated on a weekly, monthly, or yearly basis then many more tables would need to be created within the SQLlite database, adding more to the already growing space complexity of the program.</p>
+<p>Below is a diagram of how a <a class="reference internal" href="#calculations-tier-link"><span class="std std-ref">Calculations Tier</span></a> module would interact with its tier controller and other <a class="reference internal" href="#calculations-tier-link"><span class="std std-ref">Calculations Tier</span></a> modules.</p>
+<div class="figure align-center" id="id8">
+<a class="reference internal image-reference" href="../_images/calculationsTier.png"><img alt="Pipeline for Metrics Dashboard :ref:`Calculations Tier &lt;calculations_tier_link&gt;`." src="../_images/calculationsTier.png" style="width: 388.0px; height: 424.5px;" /></a>
+<p class="caption"><span class="caption-text">Pipeline for Metrics Dashboard <a class="reference internal" href="#calculations-tier-link"><span class="std std-ref">Calculations Tier</span></a>. <a class="reference download internal" download="" href="../_downloads/a5d4573c5d1424880ca5661663469086/calculationsTier.drawio"><code class="xref download docutils literal notranslate"><span class="pre">Source</span></code></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="graph-tier">
+<span id="graph-tier-link"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="section-number">1.2.2.4. </span>Graph Tier</a><a class="headerlink" href="#graph-tier" title="Permalink to this headline">¶</a></h3>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>Have Sophie write up the architecture of the Graph Tier</p>
+</div>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>Create an architecture diagram of how a module would interact within the tier</p>
+</div>
+</div>
+</div>
+<div class="section" id="execution-pipeline">
+<span id="execution-pipeline-link"></span><h2><a class="toc-backref" href="#table-of-contents"><span class="section-number">1.2.3. </span>Execution Pipeline</a><a class="headerlink" href="#execution-pipeline" title="Permalink to this headline">¶</a></h2>
+<p>The pipeline is essentially how <a class="reference external" href="../index.html">SSL Metrics Dashboard</a> collects and handles command-line arguments and executes the modules of the different tiers. Some of the steps of the pipeline were mentioned above, however, this subsection is meant to provide a concrete understanding of the pipeline that is in place.</p>
+<p>Quite frankly, the pipeline is best described using a diagram. So please take a look at the one below.</p>
+<div class="figure align-center" id="id9">
+<a class="reference internal image-reference" href="../_images/executionPipeline.png"><img alt=":ref:`Execution Pipeline &lt;execution_pipeline_link&gt;`." src="../_images/executionPipeline.png" style="width: 364.5px; height: 340.5px;" /></a>
+<p class="caption"><span class="caption-text">Execution Pipeline for Metrics Dashboard. <a class="reference download internal" download="" href="../_downloads/1111059602e55dc5805e75cf793af8bd/executionPipeline.drawio"><code class="xref download docutils literal notranslate"><span class="pre">Source</span></code></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+<p>Looking at the pipeline as it stands, there are a few key items to point out:</p>
+<ol class="arabic simple">
+<li><p>The :doc: <cite>SQLite Database &lt;projectTooling&gt;</cite> is created before any tier is executed.</p></li>
+<li><p>The tiers are executed before the individual modules within those tiers</p></li>
+</ol>
+<p>The first of these points is trivial to answer. While the second point has a practical reason for why it appears the way it is.</p>
+<p>To provide an answer to the first point, the :doc: <cite>SQLite Database &lt;projectTooling&gt;</cite> is created before any of the tiers are running to assure that the tiers can all interact with the same database. Without this step, every tier would have to generate its own unique database, and then the databases would be merged back into one before the <a class="reference internal" href="#graph-tier-link"><span class="std std-ref">Graph Tier</span></a> could be executed.</p>
+<p>The second point has both a technical and practical reason for being the way that it is. The practical reason is to abstract the tiers from one another. The point of the tiers and module separation is so that the tiers act as controllers for said modules. This way, the view of the application (in this instance a command-line interface) does not have to do a ton of preprocessing to spin up the program. Rather the tiers handle that providing both a layer of abstraction that allows for better tests to be created and larger test coverage to be achieved as well as the ability for each tier to be executed as its own separate program if the situation calls for it.</p>
+<p>All tiers are running sequentially, while all modules within a tier are running in parallel. This is because each tier is reliant upon the one before it to complete its task before it can begin its own. However, the individual modules do not need to interact with each other to accomplish the same task. They may all accomplish the same goal within a module, and may even do similar steps to achieve that goal, but they themselves are not reliant upon one another to achieve that goal.</p>
+<span class="target" id="execution-tier-link"></span><div class="section" id="execution-tier">
+<span id="index-0"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="section-number">1.2.3.1. </span>Execution Tier</a><a class="headerlink" href="#execution-tier" title="Permalink to this headline">¶</a></h3>
+<div class="admonition-todo admonition" id="id5">
+<p class="admonition-title">Todo</p>
+<p>Create an architecture diagram of how a module would interact within the tier</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Software and Systems Laboratory.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
