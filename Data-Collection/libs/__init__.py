@@ -1,3 +1,1 @@
-"""
-Empty file intended for modularization of Metrics Dashboard
-"""
+"""Empty file intended for modularization of Metrics Dashboard"""

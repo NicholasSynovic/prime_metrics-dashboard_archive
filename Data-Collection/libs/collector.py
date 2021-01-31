@@ -7,30 +7,44 @@ from libs.githubConnector import GitHubConnector
 
 # TODO: Collector_4 is called this because the lambda function takes four inputs. Improve reasoning or name.
 class Collector_4:
+    """Class to use when the GitHub API request URI requires four arguements representing what data to access.
+
+    This class will send a request and recieve a response from the GitHub API as well as parse the response header and JSON recieved. It can also store the JSON data in a database file.
+
+    Note:
+        Typically, the four arguements are, but are not limited to:
+            1. Repository Owner
+            2. Repository Name
+            3. Specific data to access (commits. issues, forks, etc.)
+            4. Data specific information (hash code or SHA)
+    """
+
     def __init__(
         self,
         dbConnection: DatabaseConnector,
-        id: int,
         oauthToken: str,
-        repository: str,
-        sha: str,
-        username: str,
         url: str,
+        param_1: int,
+        param_2: str,
+        param_3: str,
+        param_4: str,
     ):
+        """Initializes the class as well as builds the GitHub API request URI.
+
+        Note:
+            The self.url lambda function requires that the url arguement has compatible Python string formatting curly brackets ({}).
+        """
         self.connection = dbConnection
         self.currentPage = 1
         self.githubConnection = GitHubConnector(oauthToken=oauthToken)
-        self.id = id
-        self.repository = repository
-        self.sha = sha
-        self.username = username
+        self.params = [param_1, param_2, param_3, param_4]
         self.url = lambda param1, param2, param3, param4: url.format(
             param1, param2, param3, param4
         )
 
     def getData(self) -> list:
         response = self.githubConnection.openConnection(
-            url=self.url(self.username, self.repository, self.currentPage, self.sha)
+            url=self.url(self.params[0], self.params[1], self.params[2], self.params[3])
         )
         return [response.json(), response]
 
