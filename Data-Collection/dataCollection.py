@@ -47,7 +47,7 @@ class DataCollection:
 
         forksSQL = "CREATE TABLE Forks (ID TEXT, Name TEXT, Owner TEXT, Created_At TEXT, Updated_At TEXT, Pushed_At TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
 
-        issuesSQL = "CREATE TABLE Issues (ID INTEGER, Count INTEGER, Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, Created_At TEXT, Updated_At TEXT, Closed_At TEXT, PRIMARY KEY(ID));"
+        issuesSQL = "CREATE TABLE Issues (ID INTEGER, Count INTEGER, Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, State TEXT, Created_At TEXT, Updated_At TEXT, Closed_At TEXT, PRIMARY KEY(ID));"
 
         languagesSQL = "CREATE TABLE Languages (ID INTEGER, Language TEXT, Bytes_of_Code INTEGER, PRIMARY KEY(ID))"
 
@@ -158,7 +158,7 @@ class DataCollection:
         # TODO: Implement a loading bar for the Files module
         # TODO: Reduce complexity where possible in the Files module
 
-        # Creates a combined list of every commit paired with its corresponding branch
+        # Creates a combined list of every commit paired with its corresponding     branch
         branchList = self.dbConnector.selectColumn(table="Commits", column="Branch")
         commitSHAList = self.dbConnector.selectColumn(
             table="Commits", column="Commit_SHA"

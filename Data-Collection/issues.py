@@ -26,11 +26,12 @@ class Issues(Collector_3):
             author = dataset[dataPoint]["user"]["login"]
             assignees = _asigneeCollection(index=dataPoint)
             labels = _labelCollection(index=dataPoint)
+            state = dataset[dataPoint]["state"]
             createdAt = dataset[dataPoint]["created_at"]
             updatedAt = dataset[dataPoint]["updated_at"]
             closedAt = dataset[dataPoint]["closed_at"]
 
-            sql = "INSERT OR IGNORE INTO Issues (ID, Count, Title, Author, Assignees, Labels, Created_At, Updated_At, Closed_At) VALUES (?,?,?,?,?,?,?,?,?);"
+            sql = "INSERT OR IGNORE INTO Issues (ID, Count, Title, Author, Assignees, Labels, State, Created_At, Updated_At, Closed_At) VALUES (?,?,?,?,?,?,?,?,?,?);"
 
             self.connection.executeSQL(
                 sql,
@@ -41,6 +42,7 @@ class Issues(Collector_3):
                     author,
                     assignees,
                     labels,
+                    state,
                     createdAt,
                     updatedAt,
                     closedAt,

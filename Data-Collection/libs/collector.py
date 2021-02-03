@@ -21,11 +21,11 @@ class Collector_4:
         self,
         dbConnection: DatabaseConnector,
         oauthToken: str,
-        apiEndpoint: str,
-        param_1: int,
-        param_2: str,
-        param_3: str,
-        param_4: str,
+        repository: str,
+        sha: str,
+        username: str,
+        url: str,
+        id: int,
     ):
         """Initializes the class as well as builds the GitHub API request URI.
 
@@ -40,6 +40,7 @@ class Collector_4:
             param_2 (str): The GitHub repository name that is being analyzed.
             param_3(str): The GitHub API enpoint.
             param_4 (str): A unique identifier of an object that is being accessed via the GitHub API.
+            id (int): A primary key value of a table
 
         Returns:
             None: An instance of he class is initalized.
@@ -47,10 +48,11 @@ class Collector_4:
         self.connection = dbConnection
         self.currentPage = 1
         self.githubConnection = GitHubConnector(oauthToken=oauthToken)
-        self.params = [param_1, param_2, param_3, param_4]
-        self.url = lambda param1, param2, param3, param4: apiEndpoint.format(
-            param1, param2, param3, param4
-        )
+        self.repository = repository
+        self.sha = sha
+        self.username = username
+        self.url = lambda u, r, cp, sha: url.format(u, r, cp, sha)
+        self.id = id
 
     def getData(self) -> list:
         """Returns the data recieved from the GitHub API request.
@@ -59,7 +61,7 @@ class Collector_4:
             list: A list containing the response JSON data and the response headers.
         """
         response = self.githubConnection.openConnection(
-            url=self.url(self.params[0], self.params[1], self.params[2], self.params[3])
+            url=self.url(self.username, self.repository, self.currentPage, self.sha)
         )
         return [response.json(), response]
 
