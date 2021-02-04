@@ -209,8 +209,6 @@ fabric.properties
 .vscode
 test.json
 
-database/nicholassynovic.github.io_historical.db
-
 database/
 
 #VS Code
@@ -447,3 +445,6 @@ build
 .project
 .pydevproject
 
+*.db
+
+docs/

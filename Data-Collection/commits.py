@@ -29,10 +29,10 @@ class Commits(Collector_4):
             treeSHA = dataset[dataPoint]["commit"]["tree"]["sha"]
             commentCount = dataset[dataPoint]["commit"]["comment_count"]
 
-            sql = "INSERT OR IGNORE INTO Commits (ID, SHA, Branch, Author, Commit_Date, Tree_SHA, Comment_Count) VALUES (?,?,?,?,?,?,?);"
+            sql = "INSERT OR IGNORE INTO Commits (ID, Commit_SHA, Branch, Author, Commit_Date, Tree_SHA, Comment_Count) VALUES (?,?,?,?,?,?,?);"
 
             self.connection.executeSQL(
-                sql, (id, sha, self.sha, author, date, treeSHA, commentCount), True
+                sql, (self.id, sha, self.sha, author, date, treeSHA, commentCount), True
             )
 
-            id += 1
+            self.id += 1
