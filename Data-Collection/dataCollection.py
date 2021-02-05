@@ -41,17 +41,17 @@ class DataCollection:
             "CREATE TABLE Branches (ID INTEGER, Name TEXT, SHA TEXT, PRIMARY KEY(ID))"
         )
 
-        commitsSQL = "CREATE TABLE Commits (ID INTEGER, Commit_SHA TEXT, Branch TEXT, Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count INTEGER, PRIMARY KEY(ID))"
+        commitsSQL = "CREATE TABLE Commits (ID INTEGER, Commit_SHA TEXT, Branch TEXT, Author TEXT, Commit_Date INTEGER, Tree_SHA TEXT, Comment_Count INTEGER, PRIMARY KEY(ID))"
 
         filesSQL = "CREATE TABLE Files (ID INTEGER, Commit_SHA TEXT, Branch TEXT, Filename TEXT, PRIMARY KEY(ID))"
 
-        forksSQL = "CREATE TABLE Forks (ID TEXT, Name TEXT, Owner TEXT, Created_At TEXT, Updated_At TEXT, Pushed_At TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
+        forksSQL = "CREATE TABLE Forks (ID TEXT, Name TEXT, Owner TEXT, Created_At_Date INTEGER, Updated_At_Date INTEGER, Pushed_At_Date INTEGER, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
 
-        issuesSQL = "CREATE TABLE Issues (ID INTEGER, Count INTEGER, Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, State TEXT, Created_At TEXT, Updated_At TEXT, Closed_At TEXT, PRIMARY KEY(ID));"
+        issuesSQL = "CREATE TABLE Issues (ID INTEGER, Count INTEGER, Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, State TEXT, Created_At_Date INTEGER, Updated_At_Date INTEGER, Closed_At_Date INTEGER, PRIMARY KEY(ID));"
 
         languagesSQL = "CREATE TABLE Languages (ID INTEGER, Language TEXT, Bytes_of_Code INTEGER, PRIMARY KEY(ID))"
 
-        repositorySQL = "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Private TEXT, Fork TEXT, Created_At TEXT, Updated_At TEXT, Pushed_At TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
+        repositorySQL = "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Private TEXT, Fork TEXT, Created_At_Date INTEGER, Updated_At_Date INTEGER, Pushed_At_Date INTEGER, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
 
         self.dbConnector.executeSQL(sql=branchesSQL, commit=True)
         self.dbConnector.executeSQL(sql=commitsSQL, commit=True)
