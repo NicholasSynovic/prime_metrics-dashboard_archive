@@ -1,14 +1,34 @@
 import re
 
 import requests
-from requests import Request, Response
+from requests import Response
 
 
 class GitHubConnector:
+    """Class to access the GitHub API."""
+
     def __init__(self, oauthToken: str = None) -> None:
+        """Initalizes the class.
+
+        Parameters:
+            oauthToken (str): The personal access token needed to access the GitHub API.
+
+        Returns:
+            None: The class is initalized.
+        """
         self.token = oauthToken
 
     def openConnection(self, url: str) -> Response:
+        """Sends a request to a GitHub API endpoint.
+
+        Configures all of the headers prior to sending the request.
+
+        Parameters:
+            url (str): The GitHub API endpoint that is to be accessed.
+
+        Returns:
+            Reponse: The response data sent back to the application from the GitHub API endpoint.
+        """
         headers = {
             "Accept": "application/vnd.github.v3+json",
             "User-Agent": "Metrics-Dashboard",
@@ -18,7 +38,23 @@ class GitHubConnector:
         return requests.get(url=url, headers=headers)
 
     def parseResponseHeaders(self, response: Response) -> dict:
+        """Get specific information from the response headers.
+
+        The data that is carred about is the rate limit and reset, as well as  the next and last pages of the request if the response has been truncated.
+
+        Parameters:
+            response (Response): The response object sent back to the application from a request.
+
+        Returns:
+            dict: A dictionary of key-value pairs that only has the important information needed for the application to function properly.
+        """
+
         def _findLastPage() -> int:
+            """Finds the last page within the header data.
+
+            Returns:
+                int: Returns the value of the last page of a request.
+            """
             try:
                 links = response.headers["Link"].split(",")
                 for link in links:
@@ -40,6 +76,11 @@ class GitHubConnector:
         }
 
     def returnRateLimit(self) -> int:
+        """Gets the current rate limit of the oauthToken.
+
+        Returns:
+            int: The current rate limit of the oauthToken provided to the application.
+        """
         headers = {
             "Accept": "application/vnd.github.v3+json",
             "User-Agent": "Metrics-Dashboard",
