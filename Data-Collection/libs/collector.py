@@ -1,7 +1,7 @@
 from requests import Response
 
 from libs.databaseConnector import DatabaseConnector
-from libs.githubConnector import GitHubConnector
+from libs.githubConnector import GitHubConnector, GitHubCommitWebScraper
 
 
 class Collector_4:
@@ -186,3 +186,18 @@ class Collector_3:
             int: The current primary key of the working table in the database.
         """
         return self.id
+
+
+class Collector_CommitWebScraper:
+    def __init__(self, dbConnection: DatabaseConnector, url: str) -> None:
+        self.connection = dbConnection
+        self.githubConnection = GitHubCommitWebScraper()
+        self.soup = None
+        self.url = lambda user, repo, commitSHA,: url.format(
+            user,
+            repo,
+            commitSHA,
+        )
+
+    def getData(self) -> None:
+        self.soup = self.githubConnection.openConnection(url=self.url)

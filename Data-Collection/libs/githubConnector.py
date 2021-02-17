@@ -1,3 +1,5 @@
+from bs4 import BeautifulSoup
+
 import re
 
 import requests
@@ -92,3 +94,23 @@ class GitHubConnector:
         ).json()
 
         return data["resources"]["core"]["remaining"]
+
+
+class GitHubCommitWebScraper:
+    """Class to scrape HTML content from GitHub commit pages."""
+
+    def __init__(self) -> None:
+        """Initalizes the class."""
+        self.soup = None
+
+    def openConnection(self, url: str) -> None:
+        """Creates a BeautifulSoup object that is stored as a class variable.
+
+        Parameters:
+            url: A string that is formatted: https://github.com/{user}/{repo}/{commit}. Will be accessed via a GET request and its HTML content will be made availible as a BeautifulSoup object accessible via the *soup* class variable.
+
+        Returns:
+            None.
+        """
+        resp = requests.get(url=url).text
+        self.soup = BeautifulSoup(markup=resp, features="html.parser")
