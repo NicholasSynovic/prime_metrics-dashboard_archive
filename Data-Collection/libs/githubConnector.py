@@ -101,16 +101,16 @@ class GitHubCommitWebScraper:
 
     def __init__(self) -> None:
         """Initalizes the class."""
-        self.soup = None
+        pass
 
-    def openConnection(self, url: str) -> None:
+    def openConnection(self, url: str) -> BeautifulSoup:
         """Creates a BeautifulSoup object that is stored as a class variable.
 
         Parameters:
             url: A string that is formatted: https://github.com/{user}/{repo}/{commit}. Will be accessed via a GET request and its HTML content will be made availible as a BeautifulSoup object accessible via the *soup* class variable.
 
         Returns:
-            None.
+            An instance of a BeautifulSoup Web Scraper.
         """
         resp = requests.get(url=url).text
-        self.soup = BeautifulSoup(markup=resp, features="html.parser")
+        return BeautifulSoup(markup=resp, features="html.parser")

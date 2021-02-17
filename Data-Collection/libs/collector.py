@@ -1,7 +1,11 @@
+from os import name
+from bs4.element import ResultSet, Tag
 from requests import Response
 
-from libs.databaseConnector import DatabaseConnector
-from libs.githubConnector import GitHubConnector, GitHubCommitWebScraper
+from bs4 import BeautifulSoup
+
+from databaseConnector import DatabaseConnector
+from githubConnector import GitHubConnector, GitHubCommitWebScraper
 
 
 class Collector_4:
@@ -189,15 +193,51 @@ class Collector_3:
 
 
 class Collector_CommitWebScraper:
-    def __init__(self, dbConnection: DatabaseConnector, url: str) -> None:
+    def __init__(
+        self,
+        commitSHA: str,
+        dbConnection: DatabaseConnector,
+        repository: str,
+        username: str,
+        url: str,
+    ) -> None:
+        self.commitSHA = commitSHA
         self.connection = dbConnection
         self.githubConnection = GitHubCommitWebScraper()
-        self.soup = None
+        self.repository = repository
+        self.soup: BeautifulSoup
+        self.username = username
         self.url = lambda user, repo, commitSHA,: url.format(
             user,
             repo,
             commitSHA,
         )
 
+    def getPage(self) -> None:
+        self.soup = self.githubConnection.openConnection(
+            url=self.url(self.username, self.repository, self.commitSHA)
+        )
+
     def getData(self) -> None:
-        self.soup = self.githubConnection.openConnection(url=self.url)
+        def _scrapeData(className: str, change: str) -> list:
+
+            fileURL = lambda fileTree: "https://github.com/{}/{}/blob/{}/{}".format(
+                self.username, self.repository, self.commitSHA, fileTree
+            )
+
+            data = []
+            filesList: ResultSet = self.soup.find_all(
+                name="svg", attrs={"class": "{}".format(className)}
+            )
+
+            for tag in filesList:
+                sibling = tag.find_next_sibling(name="a")
+                data.append((sibling.text, change, fileURL(fileTree=sibling.text)))
+
+            return data
+
+        added = _scrapeData(className="octicon-diff-added", change="added")
+        modified = _scrapeData(className="octicon-diff-modified", change="modified")
+        removed = _scrapeData(className="octicon-diff-removed", change="removed")
+
+        return added + modified + removed
