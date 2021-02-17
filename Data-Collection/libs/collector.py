@@ -3,9 +3,10 @@ from bs4.element import ResultSet, Tag
 from requests import Response
 
 from bs4 import BeautifulSoup
+import requests
 
-from databaseConnector import DatabaseConnector
-from githubConnector import GitHubConnector, GitHubCommitWebScraper
+from libs.databaseConnector import DatabaseConnector
+from libs.githubConnector import GitHubConnector, GitHubCommitWebScraper
 
 
 class Collector_4:
@@ -196,14 +197,18 @@ class Collector_CommitWebScraper:
     def __init__(
         self,
         commitSHA: str,
+        branch: str,
         dbConnection: DatabaseConnector,
+        id: int,
         repository: str,
         username: str,
         url: str,
     ) -> None:
         self.commitSHA = commitSHA
         self.connection = dbConnection
+        self.branch = branch
         self.githubConnection = GitHubCommitWebScraper()
+        self.id = id
         self.repository = repository
         self.soup: BeautifulSoup
         self.username = username
@@ -220,9 +225,10 @@ class Collector_CommitWebScraper:
 
     def getData(self) -> None:
         def _scrapeData(className: str, change: str) -> list:
-
-            fileURL = lambda fileTree: "https://github.com/{}/{}/blob/{}/{}".format(
-                self.username, self.repository, self.commitSHA, fileTree
+            fileURL = (
+                lambda fileTree: "https://raw.githubusercontent.com/{}/{}/{}/{}".format(
+                    self.username, self.repository, self.commitSHA, fileTree
+                )
             )
 
             data = []
@@ -241,3 +247,28 @@ class Collector_CommitWebScraper:
         removed = _scrapeData(className="octicon-diff-removed", change="removed")
 
         return added + modified + removed
+
+    def getLOC(self, rawURL: str) -> int:
+        code = requests.get(url=rawURL).text
+        code = code.split("\n")
+
+        for index in range(len(code)):
+            try:
+                if code[index] == "":
+                    code.pop(index)
+                elif code[index].isspace():
+                    code.pop(index)
+                else:
+                    pass
+            except IndexError:
+                pass
+
+        return len(code)
+
+    def exportID(self) -> int:
+        """A getter method to return the current primary key of the working table in the database.
+
+        Returns:
+            int: The current primary key of the working table in the database.
+        """
+        return self.id
