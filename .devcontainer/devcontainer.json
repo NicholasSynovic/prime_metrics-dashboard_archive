@@ -14,7 +14,8 @@
         "python.linting.enabled": true,
         "python.testing.unittestEnabled": true,
         "python.analysis.completeFunctionParens": true,
-        "restructuredtext.linter.run": "onSave"
+        "restructuredtext.linter.run": "onSave",
+        "restructuredtext.confPath": "${workspaceFolder}/source"
     },
     "forwardPorts": [
         5000,

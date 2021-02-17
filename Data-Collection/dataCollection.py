@@ -3,12 +3,17 @@ from tqdm import tqdm
 
 from branches import Branches
 from commits import Commits
+from files import Files
 from forks import Forks
 from issues import Issues
 from languages import Languages
 from libs.cmdLineInterface import arguementHandling
 from libs.databaseConnector import DatabaseConnector
 from repository import Repository
+
+# TODO: Add documentation for all files
+# TODO: Improve this code to make it concurrent/ multithreaded and performant
+# TODO: Add ability for the code to slow itself down if it comes too close to the rate limit OR limit itself because it knows that it will be making too many calls
 
 
 class DataCollection:
@@ -36,18 +41,21 @@ class DataCollection:
             "CREATE TABLE Branches (ID INTEGER, Name TEXT, SHA TEXT, PRIMARY KEY(ID))"
         )
 
-        commitsSQL = "CREATE TABLE Commits (ID INTEGER, SHA TEXT, Branch TEXT, Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count INTEGER, PRIMARY KEY(ID));"
+        commitsSQL = "CREATE TABLE Commits (ID INTEGER, Commit_SHA TEXT, Branch TEXT, Author TEXT, Commit_Date INTEGER, Tree_SHA TEXT, Comment_Count INTEGER, PRIMARY KEY(ID))"
 
-        forksSQL = "CREATE TABLE Forks (ID TEXT, Name TEXT, Owner TEXT, Created_At TEXT, Updated_At TEXT, Pushed_At TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
+        filesSQL = "CREATE TABLE Files (ID INTEGER, Commit_SHA TEXT, Branch TEXT, File_Tree TEXT, Status TEXT, Raw_URL TEXT, Lines_Of_Code INTEGER, PRIMARY KEY(ID))"
 
-        issuesSQL = "CREATE TABLE Issues (ID INTEGER, Count INTEGER, Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, Created_At TEXT, Updated_At TEXT, Closed_At TEXT, PRIMARY KEY(ID));"
+        forksSQL = "CREATE TABLE Forks (ID TEXT, Name TEXT, Owner TEXT, Created_At_Date INTEGER, Updated_At_Date INTEGER, Pushed_At_Date INTEGER, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
+
+        issuesSQL = "CREATE TABLE Issues (ID INTEGER, Count INTEGER, Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, State TEXT, Created_At_Date INTEGER, Updated_At_Date INTEGER, Closed_At_Date INTEGER, PRIMARY KEY(ID));"
 
         languagesSQL = "CREATE TABLE Languages (ID INTEGER, Language TEXT, Bytes_of_Code INTEGER, PRIMARY KEY(ID))"
 
-        repositorySQL = "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Private TEXT, Fork TEXT, Created_At TEXT, Updated_At TEXT, Pushed_At TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
+        repositorySQL = "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Private TEXT, Fork TEXT, Created_At_Date INTEGER, Updated_At_Date INTEGER, Pushed_At_Date INTEGER, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
 
         self.dbConnector.executeSQL(sql=branchesSQL, commit=True)
         self.dbConnector.executeSQL(sql=commitsSQL, commit=True)
+        self.dbConnector.executeSQL(sql=filesSQL, commit=True)
         self.dbConnector.executeSQL(sql=forksSQL, commit=True)
         self.dbConnector.executeSQL(sql=issuesSQL, commit=True)
         self.dbConnector.executeSQL(sql=languagesSQL, commit=True)
@@ -59,9 +67,13 @@ class DataCollection:
             collector.insertData(dataset=data[0])
             return collector.iterateNext(data[1])
 
+        def _scrapeData(collector) -> int or bool:
+            collector.insertData()
+            return 0
+
         def _showProgression(collector, maxIterations: int) -> None:
             for iteration in tqdm(
-                range(0, abs(maxIterations)),
+                range(0, abs(maxIterations) - 1),
             ):
                 _collectData(collector)
 
@@ -128,12 +140,13 @@ class DataCollection:
         issuePages = _collectData(issuesCollector)  # Estimated < 20 requests
         _showProgression(issuesCollector, issuePages)
 
-        branchList = self.dbConnector.selectColumn(table="Branches", column="SHA")
-
+        commitsID = 0
+        branchList = self.dbConnector.selectColumn(table="Branches", column="Name")
         for branch in branchList:
-            print("\nRepository Branch {} Commits".format(branch))
+            print("\nRepository Commits from Branch {}".format(branch[0]))
             commitsCollector = Commits(
                 dbConnection=self.dbConnector,
+                id=commitsID,
                 oauthToken=self.token,
                 repository=self.repository,
                 sha=branch[0],
@@ -144,6 +157,39 @@ class DataCollection:
                 commitsCollector
             )  # Estimated to have the most requests
             _showProgression(commitsCollector, commitPages)
+            commitsID = commitsCollector.exportID()
+
+        # TODO: Implement a loading bar for the Files module
+        # TODO: Reduce complexity where possible in the Files module
+
+        # Creates a combined list of every commit paired with its corresponding     branch
+        branchList = self.dbConnector.selectColumn(table="Commits", column="Branch")
+        commitSHAList = self.dbConnector.selectColumn(
+            table="Commits", column="Commit_SHA"
+        )
+        # https://www.geeksforgeeks.org/python-merge-two-lists-into-list-of-tuples/
+        mergedList = tuple(zip(branchList, commitSHAList))
+
+        filesID = 0
+        for pair in mergedList:
+            branch = pair[0][0]
+            commit = pair[1][0]
+            print(
+                "\nRepository Files from Branch {} from Commit {}".format(
+                    branch, commit
+                )
+            )
+            filesCollector = Files(
+                commitSHA=commit,
+                branch=branch,
+                dbConnection=self.dbConnector,
+                id=filesID,
+                repository=self.repository,
+                username=self.username,
+                url="https://github.com/{}/{}/commit/{}",
+            )
+            _scrapeData(filesCollector)
+            filesID = filesCollector.exportID()
 
 
 if __name__ == "__main__":
