@@ -1,6 +1,4 @@
 from libs.collector import Collector_4
-from datetime import datetime
-import time
 
 
 class Commits(Collector_4):

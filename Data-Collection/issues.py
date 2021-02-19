@@ -1,6 +1,4 @@
 from libs.collector import Collector_3
-from datetime import datetime
-import time
 
 
 class Issues(Collector_3):
