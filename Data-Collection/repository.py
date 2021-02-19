@@ -1,6 +1,4 @@
 from libs.collector import Collector_3
-from datetime import datetime
-import time
 
 
 class Repository(Collector_3):
@@ -27,16 +25,12 @@ class Repository(Collector_3):
         owner = dataset["owner"]["login"]
         private = str(dataset["private"])
         fork = str(dataset["fork"])
-        createdAt = datetime.strptime(dataset["created_at"], "%Y-%m-%dT%H:%M:%SZ")
-        updatedAt = datetime.strptime(dataset["updated_at"], "%Y-%m-%dT%H:%M:%SZ")
-        pushedAt = datetime.strptime(dataset["pushed_at"], "%Y-%m-%dT%H:%M:%SZ")
+        createdAt = dataset["created_at"]
+        updatedAt = dataset["updated_at"]
+        pushedAt = dataset["pushed_at"]
         size = dataset["size"]
         forks = dataset["forks_count"]
         openIssues = dataset["open_issues_count"]
-
-        createdAt = int(time.mktime(createdAt.timetuple()))
-        updatedAt = int(time.mktime(updatedAt.timetuple()))
-        pushedAt = int(time.mktime(pushedAt.timetuple()))
 
         sql = "INSERT OR IGNORE INTO Repository (ID, Name, Owner, Private, Fork, Created_At_Date, Updated_At_Date, Pushed_At_Date, Size, Forks, Open_Issues) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
 

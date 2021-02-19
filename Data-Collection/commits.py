@@ -27,13 +27,9 @@ class Commits(Collector_4):
         for dataPoint in range(len(dataset)):
             sha = dataset[dataPoint]["sha"]
             author = dataset[dataPoint]["commit"]["author"]["name"]
-            date = datetime.strptime(
-                dataset[dataPoint]["commit"]["committer"]["date"], "%Y-%m-%dT%H:%M:%SZ"
-            )
+            date = dataset[dataPoint]["commit"]["committer"]["date"]
             treeSHA = dataset[dataPoint]["commit"]["tree"]["sha"]
             commentCount = dataset[dataPoint]["commit"]["comment_count"]
-
-            date = int(time.mktime(date.timetuple()))
 
             sql = "INSERT OR IGNORE INTO Commits (ID, Commit_SHA, Branch, Author, Commit_Date, Tree_SHA, Comment_Count) VALUES (?,?,?,?,?,?,?);"
 
