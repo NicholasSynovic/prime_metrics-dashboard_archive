@@ -1,6 +1,4 @@
 from libs.collector import Collector_3
-from datetime import datetime
-import time
 
 
 class Issues(Collector_3):
@@ -71,22 +69,9 @@ class Issues(Collector_3):
             assignees = _asigneeCollection(index=dataPoint)
             labels = _labelCollection(index=dataPoint)
             state = dataset[dataPoint]["state"]
-            createdAt = datetime.strptime(
-                dataset[dataPoint]["created_at"], "%Y-%m-%dT%H:%M:%SZ"
-            )
-            updatedAt = datetime.strptime(
-                dataset[dataPoint]["updated_at"], "%Y-%m-%dT%H:%M:%SZ"
-            )
-            try:
-                closedAt = datetime.strptime(
-                    dataset[dataPoint]["closed_at"], "%Y-%m-%dT%H:%M:%SZ"
-                )
-                closedAt = int(time.mktime(closedAt.timetuple()))
-            except TypeError:
-                closedAt = None
-
-            createdAt = int(time.mktime(createdAt.timetuple()))
-            updatedAt = int(time.mktime(updatedAt.timetuple()))
+            createdAt = dataset[dataPoint]["created_at"]
+            updatedAt = dataset[dataPoint]["updated_at"]
+            closedAt = dataset[dataPoint]["closed_at"]
 
             sql = "INSERT OR IGNORE INTO Issues (ID, Count, Title, Author, Assignees, Labels, State, Created_At_Date, Updated_At_Date, Closed_At_Date) VALUES (?,?,?,?,?,?,?,?,?,?);"
 

@@ -1,6 +1,4 @@
 from libs.collector import Collector_3
-from datetime import datetime
-import time
 
 
 class Forks(Collector_3):
@@ -26,16 +24,12 @@ class Forks(Collector_3):
             id = fork["id"]
             name = fork["name"]
             owner = fork["owner"]["login"]
-            createdAt = datetime.strptime(fork["created_at"], "%Y-%m-%dT%H:%M:%SZ")
-            updatedAt = datetime.strptime(fork["updated_at"], "%Y-%m-%dT%H:%M:%SZ")
-            pushedAt = datetime.strptime(fork["pushed_at"], "%Y-%m-%dT%H:%M:%SZ")
+            createdAt = fork["created_at"]
+            updatedAt = fork["updated_at"]
+            pushedAt = fork["pushed_at"]
             size = fork["size"]
             forks = fork["forks_count"]
             openIssues = fork["open_issues_count"]
-
-            createdAt = int(time.mktime(createdAt.timetuple()))
-            updatedAt = int(time.mktime(updatedAt.timetuple()))
-            pushedAt = int(time.mktime(pushedAt.timetuple()))
 
             sql = "INSERT OR IGNORE INTO Forks (ID, Name, Owner, Created_At_Date, Updated_At_Date, Pushed_At_Date, Size, Forks, Open_Issues) VALUES (?,?,?,?,?,?,?,?,?)"
 
