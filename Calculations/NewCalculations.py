@@ -74,7 +74,7 @@ class Calculations:
 
     def get_closing_efficiency(self,conn: Connection) -> str:
         ''' 
-        Returns efficiency, based on the principle of efficiency in physics, efficiency = output/input, where output = closed issues, input = total issues
+        Returns efficiency, efficiency = output/input, where output = closed issues, input = total issues
         :param conn: The db connection
         '''
         total = self.get_total_issues(conn)
@@ -99,6 +99,32 @@ class Calculations:
         time_difference = date_last_commit - date_first_commit
         time_difference = time_difference.total_seconds()
         return time_difference
+
+    def calculate_issue_density(self, conn:Connection) -> float: 
+        '''
+        Returns Issue density per kloc
+        :param conn: The db connection
+        '''
+        total_issues = self.get_total_issues(conn)
+        total_loc = self.get_tloc(conn)
+        kloc = total_loc / 1000
+        issue_density = total_issues / kloc
+        issue_density = round(issue_density,2)
+        print("Issue density: ", issue_density)
+        return  issue_density
+
+    def get_tloc(self,conn:Connection) -> int:
+        '''
+        Return total loc for main branch
+        :param conn: The db connection
+        '''
+        cur = conn.cursor()
+        query = "SELECT SUM(Lines_Of_Code) from Files where Branch='main'"
+        cur.execute(query)
+        result = cur.fetchall()[0][0]
+        print("TOTTAL LOC: ", result)
+
+        return result
 
     def get_avg_days_to_close_issue(self,conn: Connection) -> float:
         ''' 

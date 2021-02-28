@@ -1,13 +1,14 @@
 import sqlite3 
 from sqlite3 import Cursor, Connection
-from SomeCalculations import Calculations
+from NewCalculations import Calculations
 import sys
 def main():
     db_file = sys.argv[1]
     calc = Calculations(db_file)
     conn = calc.create_connection(db_file)
     cursor= conn.cursor()
-    calc.get_team_effort(conn)
+    calc.get_tloc(conn)
+    calc.calculate_issue_density(conn)
     # cursor.execute(
     #     "CREATE TABLE IF NOT EXISTS ISSUES_CALCULATIONS (calc_name VARCHAR(3000), value VARCHAR(3000));"
     # )
