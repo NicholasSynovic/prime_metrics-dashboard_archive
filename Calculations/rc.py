@@ -9,17 +9,19 @@ def main():
     cursor= conn.cursor()
     calc.get_tloc(conn)
     calc.calculate_issue_density(conn)
-    # cursor.execute(
-    #     "CREATE TABLE IF NOT EXISTS ISSUES_CALCULATIONS (calc_name VARCHAR(3000), value VARCHAR(3000));"
-    # )
-    # data = [
-    #     ('closed to open ratio',calc.get_closed_to_open_ratio(conn)),
-    #     ('closing efficiency (%)',calc.get_closing_efficiency(conn)),
-    #     ('average days to close issues',calc.get_avg_days_to_close_issue(conn)),
-    # ]
-    # sql = 'insert into ISSUES_CALCULATIONS(calc_name,value) VALUES(?,?);'
-    # cursor.executemany(sql,data)
-    # conn.commit()
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS CALCULATIONS (calc_name VARCHAR(3000), value VARCHAR(3000));"
+    )
+    data = [
+        ('Team Effort',calc.get_team_effort(conn)),
+        ('Issue density',calc.calculate_issue_density(conn)),
+        ('closed to open ratio',calc.get_closed_to_open_ratio(conn)),
+        ('closing efficiency (%)',calc.get_closing_efficiency(conn)),
+        ('average days to close issues',calc.get_avg_days_to_close_issue(conn)),
+    ]
+    sql = 'insert into ISSUES_CALCULATIONS(calc_name,value) VALUES(?,?);'
+    cursor.executemany(sql,data)
+    conn.commit()
     # insert calculations into table
     print("Inserted calculations into table")
 

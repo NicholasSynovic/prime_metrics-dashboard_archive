@@ -122,7 +122,6 @@ class Calculations:
         query = "SELECT SUM(Lines_Of_Code) from Files where Branch='main'"
         cur.execute(query)
         result = cur.fetchall()[0][0]
-        print("TOTTAL LOC: ", result)
 
         return result
 
