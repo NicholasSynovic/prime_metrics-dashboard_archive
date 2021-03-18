@@ -2,7 +2,7 @@
 
 cwd=$PWD
 # Set VOLUMENAME
-VOLUMENAME="dataCollecting"
+VOLUMENAME="dataCollected"
 
 # Create docker volume
 docker volume create $VOLUMENAME
