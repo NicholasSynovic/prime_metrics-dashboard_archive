@@ -1,7 +1,7 @@
 from sqlite3 import Connection
 
 from tqdm import tqdm
-
+from datetime import datetime as dt # used for logging time
 from branches import Branches
 from commits import Commits
 from files import Files
@@ -194,6 +194,7 @@ class DataCollection:
 
 
 if __name__ == "__main__":
+    start = dt.now()#start time
     cmdLineArgs = arguementHandling()
 
     dc = DataCollection(
@@ -204,3 +205,5 @@ if __name__ == "__main__":
     )
 
     dc.startDataCollection()
+    end = dt.now()
+    print("Completed in: {}".format(end-start))
