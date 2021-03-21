@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM python:3-buster
 RUN mkdir -p /metrics
 COPY code/ /app
 WORKDIR /app
