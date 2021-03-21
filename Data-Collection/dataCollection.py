@@ -1,4 +1,5 @@
 from sqlite3 import Connection
+
 from tqdm import tqdm
 
 from branches import Branches

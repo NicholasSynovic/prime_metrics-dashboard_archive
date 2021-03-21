@@ -19,7 +19,7 @@ class Files(Collector_CommitWebScraper):
                     info[0],
                     info[1],
                     info[2],
-                    self.getLOC(rawURL=info[2]),
+                    self.getLOCNOC(rawURL=info[2])[0],
                 ),
                 True,
             )

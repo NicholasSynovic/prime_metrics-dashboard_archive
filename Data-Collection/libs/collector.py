@@ -1,12 +1,12 @@
 from os import name
+
+import requests
+from bs4 import BeautifulSoup
 from bs4.element import ResultSet, Tag
 from requests import Response
 
-from bs4 import BeautifulSoup
-import requests
-
 from libs.databaseConnector import DatabaseConnector
-from libs.githubConnector import GitHubConnector, GitHubCommitWebScraper
+from libs.githubConnector import GitHubCommitWebScraper, GitHubConnector
 
 
 class Collector_4:
@@ -193,6 +193,9 @@ class Collector_3:
         return self.id
 
 
+# TODO: Add documentation
+
+
 class Collector_CommitWebScraper:
     def __init__(
         self,
@@ -248,7 +251,7 @@ class Collector_CommitWebScraper:
 
         return added + modified + removed
 
-    def getLOC(self, rawURL: str) -> int:
+    def getLOCNOC(self, rawURL: str) -> tuple:
         code = requests.get(url=rawURL).text
         code = code.split("\n")
 
@@ -263,7 +266,13 @@ class Collector_CommitWebScraper:
             except IndexError:
                 pass
 
-        return len(code)
+        index: str
+        noc = 0
+        for index in code:
+            temp = list(index)
+            temp.
+
+        return (len(code), noc)
 
     def exportID(self) -> int:
         """A getter method to return the current primary key of the working table in the database.
