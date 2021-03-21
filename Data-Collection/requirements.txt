@@ -1,0 +1,11 @@
+black
+bs4
+colorama
+flask
+isort
+pandas
+requests
+sphinx
+sphinx-rtd-theme
+travis-sphinx
+tqdm
