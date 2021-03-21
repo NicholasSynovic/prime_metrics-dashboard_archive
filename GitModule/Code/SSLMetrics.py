@@ -1,14 +1,14 @@
+import argparse
+import itertools
+import json
+import multiprocessing as mp
 import os
+import sqlite3
 import sys
 from datetime import datetime, timedelta
 from typing import Dict, List
 
 from tqdm import tqdm
-import sqlite3
-import json
-import argparse
-import multiprocessing as mp
-import itertools
 from tqdm.contrib.concurrent import process_map
 
 """

@@ -1,8 +1,9 @@
 import unittest
+
 from IssuesCalculation import Calculations
 
-class TestIssuesCalculation(unittest.TestCase):
 
+class TestIssuesCalculation(unittest.TestCase):
     def setUp(self):
         self.testCalc = Calculations("alt-tab-macos.db")
         self.conn = self.testCalc.conn
@@ -10,13 +11,14 @@ class TestIssuesCalculation(unittest.TestCase):
     def test_successful_db_conn(self):
         result = self.conn
         self.assertFalse(result is None)
+
     def test_total_issues(self):
-        expected = 645 
+        expected = 645
         result = self.testCalc.get_total_issues(self.conn)
         self.assertTrue(expected == result)
 
     def test_get_open_count(self):
-        expected = 52 
+        expected = 52
         result = self.testCalc.get_open_count(self.conn)
         self.assertTrue(expected == result)
 
@@ -41,6 +43,5 @@ class TestIssuesCalculation(unittest.TestCase):
         self.assertTrue(expected == result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
-        

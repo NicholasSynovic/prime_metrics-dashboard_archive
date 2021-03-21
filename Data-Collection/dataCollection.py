@@ -1,7 +1,6 @@
+from datetime import datetime as dt  # used for logging time
 from sqlite3 import Connection
 
-from tqdm import tqdm
-from datetime import datetime as dt # used for logging time
 from branches import Branches
 from commits import Commits
 from files import Files
@@ -11,6 +10,7 @@ from languages import Languages
 from libs.cmdLineInterface import arguementHandling
 from libs.databaseConnector import DatabaseConnector
 from repository import Repository
+from tqdm import tqdm
 
 # TODO: Add documentation for all files
 # TODO: Improve this code to make it concurrent/ multithreaded and performant
@@ -194,7 +194,7 @@ class DataCollection:
 
 
 if __name__ == "__main__":
-    start = dt.now()#start time
+    start = dt.now()  # start time
     cmdLineArgs = arguementHandling()
 
     dc = DataCollection(
@@ -206,4 +206,4 @@ if __name__ == "__main__":
 
     dc.startDataCollection()
     end = dt.now()
-    print("Completed in: {}".format(end-start))
+    print("Completed in: {}".format(end - start))

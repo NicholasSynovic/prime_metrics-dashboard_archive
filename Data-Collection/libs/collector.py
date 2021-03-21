@@ -1,14 +1,13 @@
-from os import name
 import re
+from os import name
 from sys import getsizeof
 
 import requests
 from bs4 import BeautifulSoup
 from bs4.element import ResultSet, Tag
-from requests import Response
-
 from libs.databaseConnector import DatabaseConnector
 from libs.githubConnector import GitHubCommitWebScraper, GitHubConnector
+from requests import Response
 
 
 class Collector_4:

@@ -1,10 +1,11 @@
 # all the imports
 import os
-import sys
 import sqlite3
+import sys
+from contextlib import closing
+
 import pandas as pd
 from flask import Flask, g, render_template
-from contextlib import closing
 
 # Extracting name from args
 ##dbname = sys.argv[1].split("/")[-1]

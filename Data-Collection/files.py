@@ -1,6 +1,6 @@
-from libs.collector import Collector_CommitWebScraper
-
 from collections import defaultdict
+
+from libs.collector import Collector_CommitWebScraper
 
 
 class Files(Collector_CommitWebScraper):
