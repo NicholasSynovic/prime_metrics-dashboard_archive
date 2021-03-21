@@ -1,4 +1,5 @@
 from os import name
+import re
 
 import requests
 from bs4 import BeautifulSoup
@@ -266,11 +267,15 @@ class Collector_CommitWebScraper:
             except IndexError:
                 pass
 
-        index: str
         noc = 0
-        for index in code:
-            temp = list(index)
-            temp.
+        for string in code:
+            splitString = list(string)
+            matches = re.findall("\s", string)
+
+            for match in matches:
+                splitString.remove(match)
+
+            noc += len(splitString)
 
         return (len(code), noc)
 

@@ -8,7 +8,7 @@ class Files(Collector_CommitWebScraper):
         data = self.getData()
 
         for info in data:
-            sql = "INSERT OR IGNORE INTO Files (ID, Commit_SHA, Branch, File_Tree, Status, Raw_URL, Lines_Of_Code) VALUES (?,?,?,?,?,?,?)"
+            sql = "INSERT OR IGNORE INTO Files (ID, Commit_SHA, Branch, File_Tree, Status, Raw_URL, Lines_Of_Code, Number_Of_Characters) VALUES (?,?,?,?,?,?,?,?)"
 
             self.connection.executeSQL(
                 sql,
@@ -20,6 +20,7 @@ class Files(Collector_CommitWebScraper):
                     info[1],
                     info[2],
                     self.getLOCNOC(rawURL=info[2])[0],
+                    self.getLOCNOC(rawURL=info[2])[1],
                 ),
                 True,
             )
