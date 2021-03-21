@@ -42,7 +42,7 @@ class DataCollection:
             "CREATE TABLE Branches (ID INTEGER, Name TEXT, SHA TEXT, PRIMARY KEY(ID))"
         )
 
-        commitsSQL = "CREATE TABLE Commits (Commit_SHA TEXT, Branch TEXT, Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count INTEGER, PRIMARY KEY(Commit_SHA))"
+        commitsSQL = "CREATE TABLE Commits (Commit_SHA TEXT, Branch TEXT, Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count INTEGER, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, Size_In_Bytes INTEGER, PRIMARY KEY(Commit_SHA))"
 
         filesSQL = "CREATE TABLE Files (ID INTEGER, Commit_SHA TEXT, Branch TEXT, File_Tree TEXT, Status TEXT, Raw_URL TEXT, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, Size_In_Bytes INTEGER, PRIMARY KEY(ID), FOREIGN KEY(Commit_SHA) REFERENCES Commits(Commit_SHA))"
 
