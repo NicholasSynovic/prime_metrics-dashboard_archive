@@ -21,7 +21,6 @@ class Commits(Collector_4):
             No return value
         """
 
-        id = 0
         for dataPoint in range(len(dataset)):
             sha = dataset[dataPoint]["sha"]
             author = dataset[dataPoint]["commit"]["author"]["name"]
@@ -29,12 +28,10 @@ class Commits(Collector_4):
             treeSHA = dataset[dataPoint]["commit"]["tree"]["sha"]
             commentCount = dataset[dataPoint]["commit"]["comment_count"]
 
-            sql = "INSERT OR IGNORE INTO Commits (ID, Commit_SHA, Branch, Author, Commit_Date, Tree_SHA, Comment_Count) VALUES (?,?,?,?,?,?,?);"
+            sql = "INSERT OR IGNORE INTO Commits (Commit_SHA, Branch, Author, Commit_Date, Tree_SHA, Comment_Count) VALUES (?,?,?,?,?,?);"
 
             self.connection.executeSQL(
                 sql,
-                (self.id, sha, self.sha, author, date, treeSHA, commentCount),
+                (sha, self.sha, author, date, treeSHA, commentCount),
                 True,
             )
-
-            self.id += 1
