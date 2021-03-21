@@ -44,7 +44,7 @@ class DataCollection:
 
         commitsSQL = "CREATE TABLE Commits (ID INTEGER, Commit_SHA TEXT, Branch TEXT, Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count INTEGER, PRIMARY KEY(ID))"
 
-        filesSQL = "CREATE TABLE Files (ID INTEGER, Commit_SHA TEXT, Branch TEXT, File_Tree TEXT, Status TEXT, Raw_URL TEXT, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, PRIMARY KEY(ID))"
+        filesSQL = "CREATE TABLE Files (ID INTEGER, Commit_SHA TEXT, Branch TEXT, File_Tree TEXT, Status TEXT, Raw_URL TEXT, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, Size_In_Bytes INTEGER, PRIMARY KEY(ID))"
 
         forksSQL = "CREATE TABLE Forks (ID TEXT, Name TEXT, Owner TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Pushed_At_Date TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
 

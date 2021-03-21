@@ -1,5 +1,6 @@
 from os import name
 import re
+from sys import getsizeof
 
 import requests
 from bs4 import BeautifulSoup
@@ -252,9 +253,10 @@ class Collector_CommitWebScraper:
 
         return added + modified + removed
 
-    def getLOCNOC(self, rawURL: str) -> tuple:
-        code = requests.get(url=rawURL).text
-        code = code.split("\n")
+    def getLOCNOC_Size(self, rawURL: str) -> tuple:
+        code = requests.get(url=rawURL)
+        size = len(code.content)
+        code = code.text.split("\n")
 
         for index in range(len(code)):
             try:
@@ -277,7 +279,7 @@ class Collector_CommitWebScraper:
 
             noc += len(splitString)
 
-        return (len(code), noc)
+        return (len(code), noc, size)
 
     def exportID(self) -> int:
         """A getter method to return the current primary key of the working table in the database.
