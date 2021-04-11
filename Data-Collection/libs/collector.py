@@ -250,14 +250,33 @@ class Collector_CommitWebScraper:
                 previousSibling: Tag = tag.find_previous_sibling(
                     name="span", attrs={"class": "diffstat float-right"}
                 )
-                addedLines = previousSibling.find(
-                    name="span", attrs={"class": "color-text-success"}
-                ).text
-
-                print(addedLines)
+                try:
+                    addedLines = re.findall(
+                        pattern="\d+",
+                        string=previousSibling.find(
+                            name="span", attrs={"class": "color-text-success"}
+                        ).text,
+                    )[0]
+                except AttributeError:
+                    addedLines = 0
+                try:
+                    removedLines = re.findall(
+                        pattern="\d+",
+                        string=previousSibling.find(
+                            name="span", attrs={"class": "color-text-danger"}
+                        ).text,
+                    )[0]
+                except AttributeError:
+                    removedLines = 0
 
                 data.append(
-                    (nextSibling.text, change, fileURL(fileTree=nextSibling.text))
+                    (
+                        nextSibling.text,
+                        change,
+                        fileURL(fileTree=nextSibling.text),
+                        addedLines,
+                        removedLines,
+                    )
                 )
 
             return data

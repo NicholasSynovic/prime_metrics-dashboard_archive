@@ -18,7 +18,7 @@ class Files(Collector_CommitWebScraper):
 
         for info in data:
 
-            filesSQL = "INSERT OR IGNORE INTO Files (ID, Commit_SHA, Branch, File_Tree, Status, Raw_URL, Lines_Of_Code, Number_Of_Characters, Size_In_Bytes) VALUES (?,?,?,?,?,?,?,?,?)"
+            filesSQL = "INSERT OR IGNORE INTO Files (ID, Commit_SHA, Branch, File_Tree, Status, Raw_URL, Lines_Of_Code, Number_Of_Characters, Added_Lines, Removed_Lines, Size_In_Bytes) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
 
             locNOC_Size = self.getLOCNOC_Size(rawURL=info[2])
 
@@ -33,6 +33,8 @@ class Files(Collector_CommitWebScraper):
                     info[2],
                     locNOC_Size[0],
                     locNOC_Size[1],
+                    info[3],
+                    info[4],
                     locNOC_Size[2],
                 ),
                 True,
