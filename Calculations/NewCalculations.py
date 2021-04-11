@@ -69,7 +69,7 @@ class Calculations:
         '''
         open_count = self.get_open_count(conn)
         closed_count = self.get_closed_count(conn)
-        ratio = round((closed_count/ open_count),2)
+        ratio = round((closed_count/ open_count),2) if open_count > 0 else 0
         return ratio
 
     def get_closing_efficiency(self,conn: Connection) -> str:
@@ -79,51 +79,76 @@ class Calculations:
         '''
         total = self.get_total_issues(conn)
         closed_count = self.get_closed_count(conn)
-        closing_efficiency = round((closed_count / total),2)
+        closing_efficiency = round((closed_count / total),2) if total > 0 else 0
         closing_efficiency_percent = closing_efficiency * 100
         result = str(closing_efficiency_percent) + "%"
         return result
 
-    def get_team_effort(self,conn: Connection) -> float: 
-        ''' 
-        Returns TeamEffort, = T(lastCommit) - T(firstCommit)
-        :param conn: The db connection
+    # deprecated team_effort
+    # def get_team_effort(self,conn: Connection) -> float: 
+    #     ''' 
+    #     Returns TeamEffort, = T(lastCommit) - T(firstCommit)
+    #     :param conn: The db connection
+    #     '''
+    #     cur = conn.cursor()
+    #     cur.execute("SELECT MIN(Commit_Date) from Commits ")
+    #     first_commit = cur.fetchall()[0][0]
+    #     date_first_commit = dt.datetime.strptime(first_commit, "%Y-%m-%dT%H:%M:%SZ")
+    #     cur.execute("SELECT MAX(Commit_Date) from Commits ")
+    #     last_commit = cur.fetchall()[0][0]
+    #     date_last_commit = dt.datetime.strptime(last_commit, "%Y-%m-%dT%H:%M:%SZ")
+    #     time_difference = date_last_commit - date_first_commit
+    #     # print("TIME DIFFERENCE: ", time_difference)
+    #     time_difference = time_difference.total_seconds()
+    #     return time_difference
+
+    def team_effort_per_commit(self,conn: Connection) -> list:
         '''
+        Returns Team Effort per commit = T(last commit) - T(first commit)
+        '''
+        # helper func, take two times, ti(initial time) and tf(end time), and get the diff in seconds:
+        def do_time_diff(ti,tf):
+            date_ti = dt.datetime.strptime(ti, "%Y-%m-%dT%H:%M:%SZ")
+            date_tf = dt.datetime.strptime(tf, "%Y-%m-%dT%H:%M:%SZ")
+            time_diff = date_tf - date_ti
+            return time_diff.total_seconds()
+
+
         cur = conn.cursor()
-        cur.execute("SELECT MIN(Commit_Date) from Commits ")
-        first_commit = cur.fetchall()[0][0]
-        date_first_commit = dt.datetime.strptime(first_commit, "%Y-%m-%dT%H:%M:%SZ")
-        cur.execute("SELECT MAX(Commit_Date) from Commits ")
-        last_commit = cur.fetchall()[0][0]
-        date_last_commit = dt.datetime.strptime(last_commit, "%Y-%m-%dT%H:%M:%SZ")
-        time_difference = date_last_commit - date_first_commit
-        # print("TIME DIFFERENCE: ", time_difference)
-        time_difference = time_difference.total_seconds()
-        return time_difference
+        cur.execute("SELECT Commit_SHA,MIN(Commit_Date) from Commits ")
+        # first_commit = cur.fetchall()[0][0]
+        first_commit = cur.fetchall()[0]  # (commit_sha, date)
+        date_first_commit = dt.datetime.strptime(first_commit[1], "%Y-%m-%dT%H:%M:%SZ")
+        cur.execute("SELECT Commit_SHA,Commit_Date from Commits ")
+        # commits = cur.fetchall()[0][0]
+        commits = cur.fetchall()
+        effort = [(i[0], do_time_diff(first_commit[1],i[1])) for i in commits] # populate effort (commit_sha, team_effort)
+        return effort
 
-    def calculate_issue_density(self, conn:Connection) -> float: 
-        '''
-        Returns Issue density per kloc
-        :param conn: The db connection
-        '''
-        total_issues = self.get_total_issues(conn)
-        total_loc = self.get_tloc(conn)
-        kloc = total_loc / 1000
-        issue_density = total_issues / kloc
-        issue_density = round(issue_density,2)
-        return issue_density
-
-    def get_tloc(self,conn:Connection) -> int:
-        '''
-        Return total loc for main branch
-        :param conn: The db connection
-        '''
-        cur = conn.cursor()
-        query = "SELECT SUM(Lines_Of_Code) from Files where Branch='main'"
-        cur.execute(query)
-        result = cur.fetchall()[0][0]
-
-        return result
+    # deprecated, will be implemented as a function of time or per commit
+    # def calculate_issue_density(self, conn:Connection) -> float: 
+    #     '''
+    #     Returns Issue density per kloc
+    #     :param conn: The db connection
+    #     '''
+    #     total_issues = self.get_total_issues(conn)
+    #     total_loc = self.get_tloc(conn)
+    #     kloc = total_loc / 1000
+    #     issue_density = total_issues / kloc
+    #     issue_density = round(issue_density,2)
+    #     return issue_density
+    #
+    # def get_tloc(self,conn:Connection) -> int:
+    #     '''
+    #     Return total loc for main branch
+    #     :param conn: The db connection
+    #     '''
+    #     cur = conn.cursor()
+    #     query = "SELECT SUM(Lines_Of_Code) from Files where Branch='main'"
+    #     cur.execute(query)
+    #     result = cur.fetchall()[0][0]
+    #
+    #     return result
 
     def get_avg_days_to_close_issue(self,conn: Connection) -> float:
         ''' 
@@ -135,7 +160,7 @@ class Calculations:
         cur.execute(query)
         result = cur.fetchall()
         days = [i[0] for i in result]
-        avg = round((sum(days) / len(days)),2)
+        avg = round((sum(days) / len(days)),2) if len(days) > 0 else 0
         cur.close()
         return avg
         
