@@ -227,7 +227,7 @@ class Collector_CommitWebScraper:
             url=self.url(self.username, self.repository, self.commitSHA)
         )
 
-    def getData(self) -> None:
+    def getData(self) -> list:
         def _scrapeData(className: str, change: str) -> list:
             fileURL = (
                 lambda fileTree: "https://raw.githubusercontent.com/{}/{}/{}/{}".format(
