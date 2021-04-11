@@ -1,13 +1,13 @@
 import re
 from os import name
-from sys import getsizeof
 
 import requests
 from bs4 import BeautifulSoup
 from bs4.element import ResultSet, Tag
+from requests import Response
+
 from libs.databaseConnector import DatabaseConnector
 from libs.githubConnector import GitHubCommitWebScraper, GitHubConnector
-from requests import Response
 
 
 class Collector_4:
@@ -228,21 +228,37 @@ class Collector_CommitWebScraper:
         )
 
     def getData(self) -> list:
+        """
+        Returns a list of files, their state in commit (changed, added, removed), a URL to the file's text, number of lines added, and number of lines removed.
+        """
+
         def _scrapeData(className: str, change: str) -> list:
+            data = []
             fileURL = (
                 lambda fileTree: "https://raw.githubusercontent.com/{}/{}/{}/{}".format(
                     self.username, self.repository, self.commitSHA, fileTree
                 )
             )
 
-            data = []
             filesList: ResultSet = self.soup.find_all(
                 name="svg", attrs={"class": "{}".format(className)}
             )
 
+            tag: Tag
             for tag in filesList:
-                sibling = tag.find_next_sibling(name="a")
-                data.append((sibling.text, change, fileURL(fileTree=sibling.text)))
+                nextSibling = tag.find_next_sibling(name="a")
+                previousSibling: Tag = tag.find_previous_sibling(
+                    name="span", attrs={"class": "diffstat float-right"}
+                )
+                addedLines = previousSibling.find(
+                    name="span", attrs={"class": "color-text-success"}
+                ).text
+
+                print(addedLines)
+
+                data.append(
+                    (nextSibling.text, change, fileURL(fileTree=nextSibling.text))
+                )
 
             return data
 

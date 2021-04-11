@@ -1,5 +1,6 @@
-from libs.collector import Collector_3
 from requests import Response
+
+from libs.collector import Collector_3
 
 
 class Languages(Collector_3):
