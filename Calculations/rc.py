@@ -1,4 +1,4 @@
-import sqlite3 
+import sqlite3
 from sqlite3 import Cursor, Connection
 from NewCalculations import Calculations
 import sys
