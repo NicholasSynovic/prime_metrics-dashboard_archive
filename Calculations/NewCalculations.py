@@ -1,3 +1,4 @@
+from sqlite3 import Cursor, Connection
 import datetime as dt
 import sqlite3
 from sqlite3 import Connection, Cursor
@@ -5,7 +6,6 @@ from sqlite3 import Connection, Cursor
 
 class Calculations:
     def __init__(self, db_file: str) -> None:
-        """
         Initialize class variables
         :param db_file: The db file to be used by the class
         """
@@ -24,24 +24,24 @@ class Calculations:
 
         return conn
 
-    def get_total_issues(self, conn: Connection) -> int:
-        """
+    def get_total_issues(self,conn: Connection) -> int:
+        '''
         Returns the total number of issues
         :param conn: The db connection
-        """
+        '''
         cur = conn.cursor()
         cur.execute("SELECT COUNT(*) from ISSUES ")
         result = cur.fetchall()[0][0]  # get first item in tuple
         cur.close()
         return result
 
-    def count_rows_by_col_value(self, col: str, value: str, conn: Connection) -> int:
-        """
+    def count_rows_by_col_value(self,col: str, value: str, conn: Connection) -> int:
+        '''
         counts rows filtered by given column and specified value
         :param col: The column name
         :param value: The value for filtering
         :param conn: The db connection
-        """
+        '''
         cur = conn.cursor()
         cur.execute(
             "SELECT COUNT(*) {columnS} from ISSUES where {columnS}='{valueS}'".format(
@@ -75,9 +75,7 @@ class Calculations:
         """
         open_count = self.get_open_count(conn)
         closed_count = self.get_closed_count(conn)
-        ratio = round((closed_count / open_count), 2)
-        return ratio
-
+        """
     def get_closing_efficiency(self, conn: Connection) -> str:
         """
         Returns efficiency, efficiency = output/input, where output = closed issues, input = total issues
@@ -85,7 +83,7 @@ class Calculations:
         """
         total = self.get_total_issues(conn)
         closed_count = self.get_closed_count(conn)
-        closing_efficiency = round((closed_count / total), 2)
+        closing_efficiency = round((closed_count / total),2) if total > 0 else 0
         closing_efficiency_percent = closing_efficiency * 100
         result = str(closing_efficiency_percent) + "%"
         return result
@@ -124,24 +122,16 @@ class Calculations:
         Return total loc for main branch
         :param conn: The db connection
         """
-        cur = conn.cursor()
-        query = "SELECT SUM(Lines_Of_Code) from Files where Branch='main'"
-        cur.execute(query)
-        result = cur.fetchall()[0][0]
-
-        return result
 
     def get_avg_days_to_close_issue(self, conn: Connection) -> float:
         """
-        Returns average number of days it takes to close an Issue
-        :param conn: The db connection
         """
         cur = conn.cursor()
         query = "SELECT julianday(Closed_At_Date) - julianday(Created_At_Date) from ISSUES where state='closed'"
         cur.execute(query)
         result = cur.fetchall()
         days = [i[0] for i in result]
-        avg = round((sum(days) / len(days)), 2)
+        avg = round((sum(days) / len(days)),2) if len(days) > 0 else 0
         cur.close()
         return avg
 
