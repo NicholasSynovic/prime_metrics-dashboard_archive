@@ -4,7 +4,7 @@ import os
 def open_connection(repo_name):
     '''
 This is some SQL code that creates the tables and columns in a database named after the repository its data is holding.
-    '''    
+    '''
     try:
         connection = sqlite3.connect('/metrics/' + str(repo_name) + '.db')
     except sqlite3.OperationalError:
@@ -22,7 +22,7 @@ This is some SQL code that creates the tables and columns in a database named af
             committer_date VARCHAR(3000),
             message VARCHAR(30000),
             comment_count VARCHAR(3000));''')
-    
+
     # Create table - ISSUES
     cursor.execute('''CREATE TABLE IF NOT EXISTS ISSUES
             (user VARCHAR(3000) ,
@@ -98,5 +98,5 @@ This is some SQL code that creates the tables and columns in a database named af
             Avg VARCHAR(300));''')
 
     connection.commit()
-    
+
     return cursor, connection
