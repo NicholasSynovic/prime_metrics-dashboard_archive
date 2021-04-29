@@ -60,22 +60,22 @@ class Git:
         return set(output)
 
     def gitRepoCreate(self, src: str, dst: str, chc) -> None:
-        src: str = self.cwd + "/" + src
+        src: str = "/" + src
 
         chdir(dst)
 
-        print("Running command git init -q ...")
+        # print("Running command git init -q ...")
         system("git init -q")
 
         upstreamStr: str = "git remote add upstream {}".format(src)
-        print("Running command {} ...".format(upstreamStr))
+        # print("Running command {} ...".format(upstreamStr))
         system(upstreamStr)
 
-        print("Running command git fetch upstream -q ...")
+        # print("Running command git fetch upstream -q ...")
         system("git fetch upstream -q")
 
         checkoutStr: str = "git checkout {} -q".format(chc)
-        print("Running command {} ...".format(checkoutStr))
+        # print("Running command {} ...".format(checkoutStr))
         system(checkoutStr)
 
         chdir(self.cwd)

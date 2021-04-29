@@ -80,9 +80,7 @@ class DataCollection:
         )
 
         os.chdir(programDir)
-        os.system("python git-all-python.py -u {} -s {}".format(repo, srcDir))
-
-        quit()
+        os.system("python3 git-all-python.py -u {} -s {}".format(repo, srcDir))
 
         pass
 
