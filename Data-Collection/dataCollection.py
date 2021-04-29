@@ -1,4 +1,3 @@
-from datetime import datetime as dt  # used for logging time
 from sqlite3 import Connection
 
 from tqdm import tqdm
@@ -12,10 +11,6 @@ from languages import Languages
 from libs.cmdLineInterface import arguementHandling
 from libs.databaseConnector import DatabaseConnector
 from repository import Repository
-
-# TODO: Add documentation for all files
-# TODO: Improve this code to make it concurrent/ multithreaded and performant
-# TODO: Add ability for the code to slow itself down if it comes too close to the rate limit OR limit itself because it knows that it will be making too many calls
 
 
 class DataCollection:
@@ -195,7 +190,6 @@ class DataCollection:
 
 
 if __name__ == "__main__":
-    start = dt.now()  # start time
     cmdLineArgs = arguementHandling()
 
     dc = DataCollection(
@@ -206,5 +200,3 @@ if __name__ == "__main__":
     )
 
     dc.startDataCollection()
-    end = dt.now()
-    print("Completed in: {}".format(end - start))
