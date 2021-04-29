@@ -445,6 +445,7 @@ build
 .project
 .pydevproject
 
+# Project specific files
 *.db
-
 docs/
+temp*
