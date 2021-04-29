@@ -14,6 +14,7 @@ from libs.cmdLineInterface import arguementHandling
 from libs.databaseConnector import DatabaseConnector
 from repository import Repository
 
+
 class DataCollection:
     def __init__(
         self,
@@ -66,19 +67,20 @@ class DataCollection:
     def localCloneGitRepo(self) -> None:
         # Step 4
 
-        print(os.path.dirname(__file__))
+        repo: str
+        if self.url.find(".git") == -1:
+            repo = self.url + ".git"
+        else:
+            repo = self.url
+
+        programDir = os.path.dirname(os.path.realpath(__file__))
 
         srcDir = os.path.dirname(os.path.realpath(__file__)) + "/{}".format(
             self.repository
         )
 
-        print(srcDir)
-
-        os.system(
-            "python workspaces/Metrics-Dashboard/git-all-python/git-all-python.py -u {} -s {}".format(
-                self.url, srcDir
-            )
-        )
+        os.chdir(programDir)
+        os.system("python git-all-python.py -u {} -s {}".format(repo, srcDir))
 
         quit()
 
