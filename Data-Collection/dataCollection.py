@@ -1,4 +1,6 @@
 from sqlite3 import Connection
+import sys, os
+from importlib import import_module
 
 from tqdm import tqdm
 
@@ -12,27 +14,30 @@ from libs.cmdLineInterface import arguementHandling
 from libs.databaseConnector import DatabaseConnector
 from repository import Repository
 
-
 class DataCollection:
     def __init__(
         self,
         oauthToken: str,
         outfile: str,
-        repository: str,
+        url: str,
         username: str,
     ) -> None:
+        # Step 1
         self.file = outfile
-        self.repository = repository
+        self.repository = url.split("/")[-1]
+        self.url = url
         self.token = oauthToken
         self.username = username
 
         self.dbConnector = DatabaseConnector(databaseFileName=outfile)
 
     def checkForFile(self) -> Connection:
+        # Step 2
         self.dbConnector.createDatabase()
         self.dbConnector.openDatabaseConnection()
 
     def createFileTablesColumns(self, dbConnection: Connection) -> bool:
+        # Step 3
 
         branchesSQL = (
             "CREATE TABLE Branches (ID INTEGER, Name TEXT, SHA TEXT, PRIMARY KEY(ID))"
@@ -58,7 +63,30 @@ class DataCollection:
         self.dbConnector.executeSQL(sql=languagesSQL, commit=True)
         self.dbConnector.executeSQL(sql=repositorySQL, commit=True)
 
+    def localCloneGitRepo(self) -> None:
+        # Step 4
+
+        print(os.path.dirname(__file__))
+
+        srcDir = os.path.dirname(os.path.realpath(__file__)) + "/{}".format(
+            self.repository
+        )
+
+        print(srcDir)
+
+        os.system(
+            "python workspaces/Metrics-Dashboard/git-all-python/git-all-python.py -u {} -s {}".format(
+                self.url, srcDir
+            )
+        )
+
+        quit()
+
+        pass
+
     def startDataCollection(self) -> None:
+        # Step 5
+
         def _collectData(collector) -> int or bool:
             data = collector.getData()
             collector.insertData(dataset=data[0])
@@ -195,8 +223,10 @@ if __name__ == "__main__":
     dc = DataCollection(
         oauthToken=cmdLineArgs.token[0],
         outfile=cmdLineArgs.outfile[0],
-        repository=cmdLineArgs.url[0].split("/")[-1],
+        url=cmdLineArgs.url[0],
         username=cmdLineArgs.url[0].split("/")[-2],
     )
+
+    dc.localCloneGitRepo()
 
     dc.startDataCollection()

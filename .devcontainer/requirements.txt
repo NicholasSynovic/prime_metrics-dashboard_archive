@@ -6,3 +6,4 @@ isort
 pandas
 requests
 tqdm
+progress
