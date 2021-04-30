@@ -22,16 +22,19 @@ class Commits(Collector_4):
         """
 
         for dataPoint in range(len(dataset)):
-            sha = dataset[dataPoint]["sha"]
-            author = dataset[dataPoint]["commit"]["author"]["name"]
-            date = dataset[dataPoint]["commit"]["committer"]["date"]
-            treeSHA = dataset[dataPoint]["commit"]["tree"]["sha"]
-            commentCount = dataset[dataPoint]["commit"]["comment_count"]
+            try:
+                sha = dataset[dataPoint]["sha"]
+                author = dataset[dataPoint]["commit"]["author"]["name"]
+                date = dataset[dataPoint]["commit"]["committer"]["date"]
+                treeSHA = dataset[dataPoint]["commit"]["tree"]["sha"]
+                commentCount = dataset[dataPoint]["commit"]["comment_count"] 
+                sql = "INSERT OR IGNORE INTO Commits (Commit_SHA, Branch, Author, Commit_Date, Tree_SHA, Comment_Count) VALUES (?,?,?,?,?,?);"
 
-            sql = "INSERT OR IGNORE INTO Commits (Commit_SHA, Branch, Author, Commit_Date, Tree_SHA, Comment_Count) VALUES (?,?,?,?,?,?);"
+                self.connection.executeSQL(
+                    sql,
+                    (sha, self.sha, author, date, treeSHA, commentCount),
+                    True,
+                )
+            except KeyError:
+                pass
 
-            self.connection.executeSQL(
-                sql,
-                (sha, self.sha, author, date, treeSHA, commentCount),
-                True,
-            )
