@@ -9,6 +9,40 @@ def arguementHandling() -> Namespace:
         description="This module was written by the Software and System's Laboratory (SSL) Metrics Dashboard team in order to facilitate the collection and storage of data derived from the GitHub APIs.",
         epilog="While this module can be ran on its own, it is best ran as part of the larger SSL Metrics Dashboard.",
     )
+    
+    parser.add_argument(
+        "-i",
+        "--issues",
+        nargs=1,
+        type=str,
+        help="""The URL to the issue tracker that the project currently uses."""
+    )
+
+    parser.add_argument(
+        "-d",
+        "--docs",
+        nargs=1,
+        type=str,
+        help="""The URL to the project's docs."""
+    )
+
+    parser.add_argument(
+        "-c",
+        "--conv",
+        nargs=1,
+        type=str,
+        help="""The URL to the project's conversation/ forum page/"""
+    )
+
+    parser.add_argument(
+        "-r",
+        "--repo",
+        nargs=1,
+        type=str,
+        help="""The Git Remote hosting service.
+        Default is github.
+        Options are: github, bitbucket, gitlab, sourceforge"""
+    )
 
     parser.add_argument(
         "-u",
@@ -17,7 +51,7 @@ def arguementHandling() -> Namespace:
         default="https://github.com/SoftwareSystemsLaboratory/Metrics-Dashboard",
         type=str,
         required=True,
-        help="The GitHub repository URL.",
+        help="The project's Git Remote URL."
     )
 
     parser.add_argument(
@@ -26,7 +60,7 @@ def arguementHandling() -> Namespace:
         nargs=1,
         type=str,
         required=True,
-        help="A GitHub OAuth Token/ Personal Access Token with the 'repo' scope enabled.",
+        help="A GitHub Personal Access Token with the 'repo' scope enabled.",
     )
 
     parser.add_argument(
