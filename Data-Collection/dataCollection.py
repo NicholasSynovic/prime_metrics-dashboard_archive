@@ -1,3 +1,10 @@
+# TODO: Create a requirements.txt file
+# TODO: Replace tqdm with progress
+# TODO: Multithread what we can
+# TODO: Replace branches, files, and language collectors with a version that
+# runs off of the output of git-all-python
+# TODO: Implement a better solution of git-all-python
+
 from sqlite3 import Connection
 import sys, os
 from importlib import import_module
@@ -23,7 +30,6 @@ class DataCollection:
         url: str,
         username: str,
     ) -> None:
-        # Step 1
         self.file = outfile
         self.repository = url.split("/")[-1]
         self.url = url
@@ -33,12 +39,10 @@ class DataCollection:
         self.dbConnector = DatabaseConnector(databaseFileName=outfile)
 
     def checkForFile(self) -> Connection:
-        # Step 2
         self.dbConnector.createDatabase()
         self.dbConnector.openDatabaseConnection()
 
     def createFileTablesColumns(self, dbConnection: Connection) -> bool:
-        # Step 3
 
         branchesSQL = (
             "CREATE TABLE Branches (ID INTEGER, Name TEXT, SHA TEXT, PRIMARY KEY(ID))"
@@ -65,8 +69,6 @@ class DataCollection:
         self.dbConnector.executeSQL(sql=repositorySQL, commit=True)
 
     def localCloneGitRepo(self) -> None:
-        # Step 4
-
         repo: str
         if self.url.find(".git") == -1:
             repo = self.url + ".git"
@@ -80,13 +82,11 @@ class DataCollection:
         )
 
         os.chdir(programDir)
-        os.system("python3 git-all-python.py -u {} -s {}".format(repo, srcDir))
+        os.system("python3 git-all-python/git-all-python -u {} -s {}".format(repo, srcDir))
 
         pass
 
     def startDataCollection(self) -> None:
-        # Step 5
-
         def _collectData(collector) -> int or bool:
             data = collector.getData()
             collector.insertData(dataset=data[0])
