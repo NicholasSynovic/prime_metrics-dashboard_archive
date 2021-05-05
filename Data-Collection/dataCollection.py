@@ -7,7 +7,6 @@
 
 from sqlite3 import Connection
 import sys, os
-from importlib import import_module
 
 from tqdm import tqdm
 
@@ -85,23 +84,17 @@ class DataCollection:
         os.system("python3 git-all-python/git-all-python -u {} -s {}".format(repo, srcDir))
 
         pass
+    
+    def collectOnlineData(collector) -> int or bool:
+        data = collector.getData()
+        collector.insertData(dataset=data[0])
+        return collector.iterateNext(data[1])
+
+    def storeData(collector) -> int or bool:
+        collector.insertData()
+        return 0
 
     def startDataCollection(self) -> None:
-        def _collectData(collector) -> int or bool:
-            data = collector.getData()
-            collector.insertData(dataset=data[0])
-            return collector.iterateNext(data[1])
-
-        def _scrapeData(collector) -> int or bool:
-            collector.insertData()
-            return 0
-
-        def _showProgression(collector, maxIterations: int) -> None:
-            for iteration in tqdm(
-                range(0, abs(maxIterations) - 1),
-            ):
-                _collectData(collector)
-
         databaseConnection = self.checkForFile()
         self.createFileTablesColumns(dbConnection=databaseConnection)
 
