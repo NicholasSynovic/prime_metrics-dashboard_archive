@@ -1,0 +1,3 @@
+[submodule "Data-Collection/git-all-python"]
+	path = Data-Collection/git-all-python
+	url = git@github.com:NicholasSynovic/git-all-python.git
