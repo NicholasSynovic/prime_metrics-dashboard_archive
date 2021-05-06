@@ -42,30 +42,35 @@ class DataCollection:
         self.dbConnector.openDatabaseConnection()
 
     def createFileTablesColumns(self, dbConnection: Connection) -> bool:
+        sqlCode: Dict = {"branches": "CREATE TABLE Branches (ID INTEGER, Name
+                TEXT, SHA TEXT, PRIMARY KEY(ID))",
+                "commits": "CREATE TABLE Commits (Commit_SHA TEXT, Branch TEXT,
+                Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count
+                INTEGER, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER,
+                Size_In_Bytes INTEGER, PRIMARY KEY(Commit_SHA))",
+                "files": "CREATE TABLE Files (ID INTEGER, Commit_SHA TEXT,
+                Branch TEXT, File_Tree TEXT, Status TEXT, Raw_URL TEXT,
+                Lines_Of_Code INTEGER, Number_Of_Characters INTEGER,
+                Added_Lines INTEGER, Removed_Lines INTEGER, Size_In_Bytes
+                INTEGER, PRIMARY KEY(ID), FOREIGN KEY(Commit_SHA) REFERENCES
+                Commits(Commit_SHA))",
+                "forks": "CREATE TABLE Forks (ID TEXT, Name TEXT, Owner TEXT,
+                Created_At_Date TEXT, Updated_At_Date TEXT, Pushed_At_Date
+                TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY
+                KEY(ID))",
+                "issues": "CREATE TABLE Issues (ID INTEGER, Count INTEGER,
+                Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, State
+                TEXT, Created_At_Date TEXT, Updated_At_Date TEXT,
+                Closed_At_Date TEXT, PRIMARY KEY(ID));",
+                "languages": "CREATE TABLE Languages (ID INTEGER, Language
+                TEXT, Bytes_of_Code INTEGER, PRIMARY KEY(ID))",
+                "repository": "CREATE TABLE Repository (ID INTEGER, Name TEXT,
+                Owner TEXT, Private TEXT, Fork TEXT, Created_At_Date TEXT,
+                Updated_At_Date TEXT, Pushed_At_Date TEXT, Size INTEGER, Forks
+                INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"}
 
-        branchesSQL = (
-            "CREATE TABLE Branches (ID INTEGER, Name TEXT, SHA TEXT, PRIMARY KEY(ID))"
-        )
-
-        commitsSQL = "CREATE TABLE Commits (Commit_SHA TEXT, Branch TEXT, Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count INTEGER, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, Size_In_Bytes INTEGER, PRIMARY KEY(Commit_SHA))"
-
-        filesSQL = "CREATE TABLE Files (ID INTEGER, Commit_SHA TEXT, Branch TEXT, File_Tree TEXT, Status TEXT, Raw_URL TEXT, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, Added_Lines INTEGER, Removed_Lines INTEGER, Size_In_Bytes INTEGER, PRIMARY KEY(ID), FOREIGN KEY(Commit_SHA) REFERENCES Commits(Commit_SHA))"
-
-        forksSQL = "CREATE TABLE Forks (ID TEXT, Name TEXT, Owner TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Pushed_At_Date TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
-
-        issuesSQL = "CREATE TABLE Issues (ID INTEGER, Count INTEGER, Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, State TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Closed_At_Date TEXT, PRIMARY KEY(ID));"
-
-        languagesSQL = "CREATE TABLE Languages (ID INTEGER, Language TEXT, Bytes_of_Code INTEGER, PRIMARY KEY(ID))"
-
-        repositorySQL = "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Private TEXT, Fork TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Pushed_At_Date TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"
-
-        self.dbConnector.executeSQL(sql=branchesSQL, commit=True)
-        self.dbConnector.executeSQL(sql=commitsSQL, commit=True)
-        self.dbConnector.executeSQL(sql=filesSQL, commit=True)
-        self.dbConnector.executeSQL(sql=forksSQL, commit=True)
-        self.dbConnector.executeSQL(sql=issuesSQL, commit=True)
-        self.dbConnector.executeSQL(sql=languagesSQL, commit=True)
-        self.dbConnector.executeSQL(sql=repositorySQL, commit=True)
+        for key in sqlCode.keys():
+            self.dbConnector.executeSQL(sql=sqlCode[key], commit=True)
 
     def localCloneGitRepo(self) -> None:
         repo: str
