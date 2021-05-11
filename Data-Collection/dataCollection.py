@@ -5,8 +5,9 @@
 # runs off of the output of git-all-python
 # TODO: Implement a better solution of git-all-python
 
+import os
+import sys
 from sqlite3 import Connection
-import sys, os
 
 from branches import Branches
 from commits import Commits
@@ -40,7 +41,15 @@ class DataCollection:
         self.dbConnector.openDatabaseConnection()
 
     def createFileTablesColumns(self) -> None:
-        sqlCode: dict = {"branches": "CREATE TABLE Branches (ID INTEGER, Name TEXT, SHA TEXT, PRIMARY KEY(ID))", "commits": "CREATE TABLE Commits (Commit_SHA TEXT, Branch TEXT, Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count INTEGER, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, Size_In_Bytes INTEGER, PRIMARY KEY(Commit_SHA))", "files": "CREATE TABLE Files (ID INTEGER, Commit_SHA TEXT, Branch TEXT, File_Tree TEXT, Status TEXT, Raw_URL TEXT, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, Added_Lines INTEGER, Removed_Lines INTEGER, Size_In_Bytes INTEGER, PRIMARY KEY(ID), FOREIGN KEY(Commit_SHA) REFERENCES Commits(Commit_SHA))", "forks": "CREATE TABLE Forks (ID TEXT, Name TEXT, Owner TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Pushed_At_Date TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))", "issues": "CREATE TABLE Issues (ID INTEGER, Count INTEGER, Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, State TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Closed_At_Date TEXT, PRIMARY KEY(ID));", "languages": "CREATE TABLE Languages (ID INTEGER, Language TEXT, Bytes_of_Code INTEGER, PRIMARY KEY(ID))", "repository": "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Private TEXT, Fork TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Pushed_At_Date TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"}
+        sqlCode: dict = {
+            "branches": "CREATE TABLE Branches (ID INTEGER, Name TEXT, SHA TEXT, PRIMARY KEY(ID))",
+            "commits": "CREATE TABLE Commits (Commit_SHA TEXT, Branch TEXT, Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count INTEGER, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, Size_In_Bytes INTEGER, PRIMARY KEY(Commit_SHA))",
+            "files": "CREATE TABLE Files (ID INTEGER, Commit_SHA TEXT, Branch TEXT, File_Tree TEXT, Status TEXT, Raw_URL TEXT, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, Added_Lines INTEGER, Removed_Lines INTEGER, Size_In_Bytes INTEGER, PRIMARY KEY(ID), FOREIGN KEY(Commit_SHA) REFERENCES Commits(Commit_SHA))",
+            "forks": "CREATE TABLE Forks (ID TEXT, Name TEXT, Owner TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Pushed_At_Date TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))",
+            "issues": "CREATE TABLE Issues (ID INTEGER, Count INTEGER, Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, State TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Closed_At_Date TEXT, PRIMARY KEY(ID));",
+            "languages": "CREATE TABLE Languages (ID INTEGER, Language TEXT, Bytes_of_Code INTEGER, PRIMARY KEY(ID))",
+            "repository": "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Private TEXT, Fork TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Pushed_At_Date TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))",
+        }
 
         for key in sqlCode.keys():
             self.dbConnector.executeSQL(sql=sqlCode[key], commit=True)
@@ -59,14 +68,37 @@ class DataCollection:
         )
 
         os.chdir(programDir)
-        os.system("python3 git-all-python/git-all-python -u {} -s {}".format(repo, srcDir))
+        os.system(
+            "python3 git-all-python/git-all-python -u {} -s {}".format(repo, srcDir)
+        )
 
     def collectOnlineData(self) -> None:
-        dataCollectors = [Forks(dbConnection=self.dbConnector, oauthToken=self.token, repository=self.repository, username=self.username, url="https://api.github.com/repos/{}/{}/forks?per_page=100&page={}"), Issues(dbConnection=self.dbConnector, oauthToken=self.token, repository=self.repository, username=self.username, url="https://api.github.com/repos/{}/{}/issues?state=all&per_page=100&page={}"), Repository(dbConnection=self.dbConnector, oauthToken=self.token, repository=self.repository, username=self.username, url="https://api.github.com/repos/{}/{}?per_page=100&page={}")]
+        dataCollectors = [
+            Forks(
+                dbConnection=self.dbConnector,
+                oauthToken=self.token,
+                repository=self.repository,
+                username=self.username,
+                url="https://api.github.com/repos/{}/{}/forks?per_page=100&page={}",
+            ),
+            Issues(
+                dbConnection=self.dbConnector,
+                oauthToken=self.token,
+                repository=self.repository,
+                username=self.username,
+                url="https://api.github.com/repos/{}/{}/issues?state=all&per_page=100&page={}",
+            ),
+            Repository(
+                dbConnection=self.dbConnector,
+                oauthToken=self.token,
+                repository=self.repository,
+                username=self.username,
+                url="https://api.github.com/repos/{}/{}?per_page=100&page={}",
+            ),
+        ]
 
         for collector in dataCollectors:
             pass
-        
 
     def storeData(collector) -> int or bool:
         collector.insertData()
