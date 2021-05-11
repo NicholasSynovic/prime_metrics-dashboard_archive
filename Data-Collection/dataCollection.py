@@ -8,8 +8,6 @@
 from sqlite3 import Connection
 import sys, os
 
-from tqdm import tqdm
-
 from branches import Branches
 from commits import Commits
 from files import Files
