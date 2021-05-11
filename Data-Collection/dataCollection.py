@@ -35,12 +35,12 @@ class DataCollection:
 
         self.dbConnector = DatabaseConnector(databaseFileName=outfile)
 
-    def checkForFile(self) -> Connection:
+    def checkForFile(self) -> None:
         self.dbConnector.createDatabase()
         self.dbConnector.openDatabaseConnection()
 
-    def createFileTablesColumns(self, dbConnection: Connection) -> bool:
-        sqlCode: Dict = {"branches": "CREATE TABLE Branches (ID INTEGER, Name TEXT, SHA TEXT, PRIMARY KEY(ID))", "commits": "CREATE TABLE Commits (Commit_SHA TEXT, Branch TEXT, Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count INTEGER, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, Size_In_Bytes INTEGER, PRIMARY KEY(Commit_SHA))", "files": "CREATE TABLE Files (ID INTEGER, Commit_SHA TEXT, Branch TEXT, File_Tree TEXT, Status TEXT, Raw_URL TEXT, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, Added_Lines INTEGER, Removed_Lines INTEGER, Size_In_Bytes INTEGER, PRIMARY KEY(ID), FOREIGN KEY(Commit_SHA) REFERENCES Commits(Commit_SHA))", "forks": "CREATE TABLE Forks (ID TEXT, Name TEXT, Owner TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Pushed_At_Date TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))", "issues": "CREATE TABLE Issues (ID INTEGER, Count INTEGER, Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, State TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Closed_At_Date TEXT, PRIMARY KEY(ID));", "languages": "CREATE TABLE Languages (ID INTEGER, Language TEXT, Bytes_of_Code INTEGER, PRIMARY KEY(ID))", "repository": "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Private TEXT, Fork TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Pushed_At_Date TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"}
+    def createFileTablesColumns(self) -> None:
+        sqlCode: dict = {"branches": "CREATE TABLE Branches (ID INTEGER, Name TEXT, SHA TEXT, PRIMARY KEY(ID))", "commits": "CREATE TABLE Commits (Commit_SHA TEXT, Branch TEXT, Author TEXT, Commit_Date TEXT, Tree_SHA TEXT, Comment_Count INTEGER, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, Size_In_Bytes INTEGER, PRIMARY KEY(Commit_SHA))", "files": "CREATE TABLE Files (ID INTEGER, Commit_SHA TEXT, Branch TEXT, File_Tree TEXT, Status TEXT, Raw_URL TEXT, Lines_Of_Code INTEGER, Number_Of_Characters INTEGER, Added_Lines INTEGER, Removed_Lines INTEGER, Size_In_Bytes INTEGER, PRIMARY KEY(ID), FOREIGN KEY(Commit_SHA) REFERENCES Commits(Commit_SHA))", "forks": "CREATE TABLE Forks (ID TEXT, Name TEXT, Owner TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Pushed_At_Date TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))", "issues": "CREATE TABLE Issues (ID INTEGER, Count INTEGER, Title TEXT, Author TEXT, Assignees TEXT, Labels TEXT, State TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Closed_At_Date TEXT, PRIMARY KEY(ID));", "languages": "CREATE TABLE Languages (ID INTEGER, Language TEXT, Bytes_of_Code INTEGER, PRIMARY KEY(ID))", "repository": "CREATE TABLE Repository (ID INTEGER, Name TEXT, Owner TEXT, Private TEXT, Fork TEXT, Created_At_Date TEXT, Updated_At_Date TEXT, Pushed_At_Date TEXT, Size INTEGER, Forks INTEGER, Open_Issues INTEGER, PRIMARY KEY(ID))"}
 
         for key in sqlCode.keys():
             self.dbConnector.executeSQL(sql=sqlCode[key], commit=True)
@@ -61,71 +61,24 @@ class DataCollection:
         os.chdir(programDir)
         os.system("python3 git-all-python/git-all-python -u {} -s {}".format(repo, srcDir))
 
-    def collectOnlineData(collector) -> int or bool:
-        # Online data includes:
-        # Issues
-        # Forks
-        apiURL = "https://api.github.com/repos/{}/{}/{}?per_page=100&page={}",
-        endpoints = ["forks", "issues"] # Repository meta-data does not have an endpoint
+    def collectOnlineData(self) -> None:
+        dataCollectors = [Forks(dbConnection=self.dbConnector, oauthToken=self.token, repository=self.repository, username=self.username, url="https://api.github.com/repos/{}/{}/forks?per_page=100&page={}"), Issues(dbConnection=self.dbConnector, oauthToken=self.token, repository=self.repository, username=self.username, url="https://api.github.com/repos/{}/{}/issues?state=all&per_page=100&page={}"), Repository(dbConnection=self.dbConnector, oauthToken=self.token, repository=self.repository, username=self.username, url="https://api.github.com/repos/{}/{}?per_page=100&page={}")]
 
-
-
-        forksCollector = Forks(
-            dbConnection=self.dbConnector,
-            oauthToken=self.token,
-            repository=self.repository,
-            username=self.username,
-            url="https://api.github.com/repos/{}/{}/forks?per_page=100&page={}",
-        )
-
-        issuesCollector = Issues(
-            dbConnection=self.dbConnector,
-            oauthToken=self.token,
-            repository=self.repository,
-            username=self.username,
-            url="https://api.github.com/repos/{}/{}/issues?state=all&per_page=100&page={}",
-        )
-
-        repositoryCollector = Repository(
-            dbConnection=self.dbConnector,
-            oauthToken=self.token,
-            repository=self.repository,
-            username=self.username,
-            url="https://api.github.com/repos/{}/{}?per_page=100&page={}",
-        )
-        collector.insertData(dataset=data[0])
-        return collector.iterateNext(data[1])
+        for collector in dataCollectors:
+            pass
+        
 
     def storeData(collector) -> int or bool:
         collector.insertData()
         return 0
 
     def startDataCollection(self) -> None:
-        databaseConnection = self.checkForFile()
-        self.createFileTablesColumns(dbConnection=databaseConnection)
-
         branchCollector = Branches(
             dbConnection=self.dbConnector,
             oauthToken=self.token,
             repository=self.repository,
             username=self.username,
             url="https://api.github.com/repos/{}/{}/branches?per_page=100&page={}",
-        )
-
-        forksCollector = Forks(
-            dbConnection=self.dbConnector,
-            oauthToken=self.token,
-            repository=self.repository,
-            username=self.username,
-            url="https://api.github.com/repos/{}/{}/forks?per_page=100&page={}",
-        )
-
-        issuesCollector = Issues(
-            dbConnection=self.dbConnector,
-            oauthToken=self.token,
-            repository=self.repository,
-            username=self.username,
-            url="https://api.github.com/repos/{}/{}/issues?state=all&per_page=100&page={}",
         )
 
         languageCollector = Languages(
@@ -135,29 +88,6 @@ class DataCollection:
             username=self.username,
             url="https://api.github.com/repos/{}/{}/languages?per_page=100&page={}",
         )
-
-        repositoryCollector = Repository(
-            dbConnection=self.dbConnector,
-            oauthToken=self.token,
-            repository=self.repository,
-            username=self.username,
-            url="https://api.github.com/repos/{}/{}?per_page=100&page={}",
-        )
-
-        print("\nRepository Languages")
-        _collectData(languageCollector)  # One request only
-
-        print("\nRepository Information")
-        _collectData(repositoryCollector)  # One request only
-
-        print("\nRepository Branches")
-        _collectData(branchCollector)  # Estimated < 10 requests
-
-        print("\nRepository Forks")
-        _collectData(forksCollector)  # Estimated < 10 requests
-
-        print("\nRepository Issues")
-        _collectData(issuesCollector)  # Estimated < 20 requests
 
         commitsID = 0
         branchList = self.dbConnector.selectColumn(table="Branches", column="Name")
